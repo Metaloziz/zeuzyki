@@ -1,0 +1,427 @@
+.page {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
+  background: #fbfbfd;
+  color: #1d1d1f;
+  padding-bottom: 96px; /* room for sticky bar on mobile */
+}
+
+/* === HERO === */
+.hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #000;
+  color: #f5f5f7;
+  padding: 60px 22px 60px;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+}
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at 20% 100%, rgba(6, 182, 212, 0.45) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(99, 102, 241, 0.32) 0%, transparent 60%);
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  max-width: 880px;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 15px;
+  color: rgba(245, 245, 247, 0.85);
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition: color 0.2s ease;
+}
+
+.back:hover {
+  color: #fff;
+}
+
+.back span {
+  font-size: 22px;
+  line-height: 1;
+  margin-right: 2px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5ac8fa;
+}
+
+.title {
+  margin: 0;
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #a1a1a6;
+  max-width: 640px;
+}
+
+.heroMeta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px 24px;
+  margin-top: 24px;
+  width: 100%;
+  max-width: 520px;
+  text-align: left;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metaLabel {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #86868b;
+  font-weight: 600;
+}
+
+.metaValue {
+  font-size: 20px;
+  font-weight: 600;
+  color: #f5f5f7;
+}
+
+.metaTotal {
+  font-size: 15px;
+  font-weight: 400;
+  color: #86868b;
+}
+
+.heroCta {
+  font-family: inherit;
+  margin-top: 28px;
+  padding: 14px 28px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  border: none;
+  border-radius: 980px;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.heroCta:hover {
+  background: #fff;
+}
+
+.heroCta:active {
+  transform: scale(0.98);
+}
+
+/* === SECTIONS === */
+.section {
+  padding: 80px 22px;
+  background: #fbfbfd;
+  color: #1d1d1f;
+}
+
+.sectionDark {
+  background: #f5f5f7;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  margin: 0 0 28px;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.1;
+}
+
+.prose p {
+  margin: 0 0 18px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #424245;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+.routeText {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #1d1d1f;
+}
+
+/* === PROGRAM === */
+.program {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.programDay {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.programDayBadge {
+  flex-shrink: 0;
+  width: 72px;
+  padding: 6px 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #1d1d1f;
+  color: #fff;
+  border-radius: 8px;
+}
+
+.programDayContent {
+  flex: 1;
+}
+
+.programDayTitle {
+  margin: 0 0 6px;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.programDayDescription {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #424245;
+}
+
+/* === INCLUDES === */
+.includes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.includeItem {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 17px;
+  line-height: 1.4;
+  color: #1d1d1f;
+}
+
+.includeCheck {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #06b6d4;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+/* === FINAL CTA === */
+.finalCta {
+  padding: 96px 22px;
+  background: #000;
+  color: #f5f5f7;
+  text-align: center;
+}
+
+.finalCtaTitle {
+  margin: 0 0 12px;
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+
+.finalCtaText {
+  margin: 0 0 28px;
+  font-size: 19px;
+  color: #a1a1a6;
+}
+
+.finalCtaButton {
+  font-family: inherit;
+  padding: 14px 32px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  border: none;
+  border-radius: 980px;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.finalCtaButton:hover {
+  background: #fff;
+}
+
+/* === STICKY MOBILE BAR === */
+.sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.stickyInfo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.stickyPrice {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+.stickySeats {
+  font-size: 12px;
+  color: #86868b;
+}
+
+.stickyButton {
+  font-family: inherit;
+  padding: 11px 22px;
+  background: #1d1d1f;
+  color: #fff;
+  border: none;
+  border-radius: 980px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.stickyButton:hover {
+  background: #333336;
+}
+
+/* === TABLET === */
+@media (min-width: 734px) {
+  .hero {
+    padding: 80px 40px 80px;
+    min-height: 640px;
+  }
+  .title {
+    font-size: 60px;
+  }
+  .subtitle {
+    font-size: 21px;
+  }
+  .heroMeta {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 720px;
+  }
+  .section {
+    padding: 100px 40px;
+  }
+  .sectionTitle {
+    font-size: 40px;
+  }
+  .programDayBadge {
+    width: 84px;
+  }
+}
+
+/* === DESKTOP === */
+@media (min-width: 1068px) {
+  .hero {
+    padding: 120px 64px 120px;
+    min-height: 720px;
+  }
+  .title {
+    font-size: 80px;
+    letter-spacing: -0.03em;
+  }
+  .subtitle {
+    font-size: 24px;
+  }
+  .section {
+    padding: 120px 64px;
+  }
+  .sectionTitle {
+    font-size: 48px;
+  }
+  .finalCtaTitle {
+    font-size: 56px;
+  }
+  /* hide sticky bar on desktop — hero CTA + final CTA enough */
+  .sticky {
+    display: none;
+  }
+  .page {
+    padding-bottom: 0;
+  }
+}
