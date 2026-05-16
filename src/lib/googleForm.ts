@@ -11,7 +11,12 @@
  *   - мы НЕ можем прочитать `response.ok` или статус
  *   - считаем submit успешным, если `fetch` не выбросил исключение (это сетевая ошибка)
  */
-import { FORM_FIELDS, FORM_ID, getFormField } from "../generated/form-schema";
+import {
+  FORM_FIELDS,
+  FORM_ID,
+  FORM_PAGE_COUNT,
+  getFormField,
+} from "../generated/form-schema";
 
 /** Семантическая карта entry ID → удобное имя в нашем UI. */
 export const ENTRY = {
@@ -59,6 +64,17 @@ export async function submitBooking(payload: BookingPayload): Promise<void> {
   data.append(ENTRY.phone, payload.phone);
   data.append(ENTRY.transfer, payload.transfer);
   data.append(ENTRY.participants, payload.participants);
+
+  // Для многостраничных форм ОБЯЗАТЕЛЬНО нужен pageHistory — без него
+  // Google сохранит только поля с первой страницы. Строка вида "0,1,2,..." — все индексы страниц.
+  if (FORM_PAGE_COUNT > 1) {
+    const pageHistory = Array.from(
+      { length: FORM_PAGE_COUNT },
+      (_, i) => i,
+    ).join(",");
+    data.append("pageHistory", pageHistory);
+    data.append("fvv", "1");
+  }
 
   await fetch(url, {
     method: "POST",

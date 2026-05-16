@@ -54,12 +54,20 @@ function parseFields(raw) {
   }
 
   const fields = [];
+  let sectionBreaks = 0;
+
   for (const q of questionsRaw) {
     if (!Array.isArray(q)) continue;
     const [internalId, label, , typeCode, answerBlock] = q;
     const type = TYPE_MAP[typeCode] ?? "unknown";
 
-    // Section breaks / info blocks have no entry ID — skip.
+    // Type 8 = section break («Новый раздел») — делает новую страницу.
+    if (typeCode === 8) {
+      sectionBreaks++;
+      continue;
+    }
+
+    // Section breaks / info blocks have no entry ID — skip from fields.
     if (!Array.isArray(answerBlock) || answerBlock.length === 0) continue;
 
     const inner = answerBlock[0];
@@ -82,7 +90,9 @@ function parseFields(raw) {
 
     fields.push(field);
   }
-  return fields;
+
+  const pageCount = sectionBreaks + 1;
+  return { fields, pageCount };
 }
 
 function parseTitle(raw, fields) {
@@ -92,7 +102,7 @@ function parseTitle(raw, fields) {
   return found ?? fields[0]?.label ?? "Google Form";
 }
 
-function emit(fields, title) {
+function emit(fields, title, pageCount) {
   const ts = new Date().toISOString();
   const fieldsLiteral = fields
     .map((f) => {
@@ -138,6 +148,9 @@ export const FORM_URL = ${JSON.stringify(FORM_URL)};
 export const FORM_TITLE = ${JSON.stringify(title)};
 export const FORM_GENERATED_AT = ${JSON.stringify(ts)};
 
+/** Количество страниц в форме (section breaks + 1). Нужно для параметра pageHistory при submit. */
+export const FORM_PAGE_COUNT = ${pageCount};
+
 export const FORM_FIELDS: readonly FormField[] = [
 ${fieldsLiteral}
 ] as const;
@@ -167,7 +180,7 @@ async function main() {
   }
 
   const raw = extractRaw(html);
-  const fields = parseFields(raw);
+  const { fields, pageCount } = parseFields(raw);
   const title = parseTitle(raw, fields);
 
   if (fields.length === 0) {
@@ -178,9 +191,9 @@ async function main() {
   }
 
   mkdirSync(dirname(OUT_PATH), { recursive: true });
-  writeFileSync(OUT_PATH, emit(fields, title), "utf8");
+  writeFileSync(OUT_PATH, emit(fields, title, pageCount), "utf8");
   console.log(
-    `[fetch-form-schema] Wrote ${OUT_PATH} — ${fields.length} field(s) from "${title}".`,
+    `[fetch-form-schema] Wrote ${OUT_PATH} — ${fields.length} field(s), ${pageCount} page(s) from "${title}".`,
   );
 }
 
