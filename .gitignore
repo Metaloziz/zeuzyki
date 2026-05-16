@@ -4,6 +4,9 @@ dist
 dist-ssr
 *.local
 
+# Auto-generated at build time from Google Form schema
+src/generated/
+
 # Editor
 .vscode/*
 !.vscode/extensions.json

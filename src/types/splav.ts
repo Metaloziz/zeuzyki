@@ -17,6 +17,8 @@ export interface Splav {
   startDate: string;
   /** Дата окончания, ISO yyyy-mm-dd */
   endDate: string;
+  /** Время старта в формате HH:MM */
+  startTime: string;
   /** Длительность в днях */
   durationDays: number;
   /** Цена с человека, BYN */
@@ -37,4 +39,10 @@ export interface Splav {
   includes: string[];
   /** Программа по дням */
   program: ProgramDay[];
+  /**
+   * Точная строка значения для поля «Дата похода» в Google Form
+   * (entry.287946786). Должна совпадать побайтно с одним из вариантов
+   * в форме, иначе Google проигнорирует значение.
+   */
+  formDateValue: string;
 }

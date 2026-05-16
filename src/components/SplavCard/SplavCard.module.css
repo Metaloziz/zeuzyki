@@ -1,0 +1,182 @@
+.card {
+    background: var(--surface-gray);
+    border-radius: 20px;
+    padding: 12px 12px 20px;
+    display: flex;
+    flex-direction: column;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Декоративный шум поверх градиента, чтобы не выглядело пресно */
+.image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(
+            ellipse 60% 50% at 30% 30%,
+            rgba(255, 255, 255, 0.25) 0%,
+            transparent 60%
+        ),
+        radial-gradient(
+            ellipse 50% 40% at 80% 90%,
+            rgba(0, 0, 0, 0.18) 0%,
+            transparent 60%
+        );
+    pointer-events: none;
+}
+
+/* Градиенты-плейсхолдеры в фирменных цветах */
+.gradient1 {
+    background: linear-gradient(135deg, var(--brand-cyan) 0%, #006d80 100%);
+}
+.gradient2 {
+    background: linear-gradient(
+        135deg,
+        var(--brand-green) 0%,
+        var(--brand-cyan) 100%
+    );
+}
+.gradient3 {
+    background: linear-gradient(
+        135deg,
+        var(--brand-cyan-light) 0%,
+        var(--brand-cyan-dark) 100%
+    );
+}
+.gradient4 {
+    background: linear-gradient(
+        135deg,
+        var(--brand-green-light) 0%,
+        var(--brand-green-dark) 100%
+    );
+}
+
+.content {
+    padding: 0 8px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.eyebrow {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--brand-green-dark);
+    letter-spacing: -0.005em;
+}
+
+.title {
+    margin: 0 0 10px;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+    letter-spacing: -0.015em;
+}
+
+.meta {
+    margin: 0 0 22px;
+    font-size: 15px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.river {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.dot {
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.time {
+    color: var(--text-secondary);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: auto;
+    flex-wrap: wrap;
+}
+
+.primary,
+.secondary {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 10px 22px;
+    border-radius: 980px;
+    text-decoration: none;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.1s ease;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.primary {
+    background: var(--brand-cyan);
+    color: #fff;
+    border: none;
+}
+
+.primary:hover {
+    background: var(--brand-cyan-dark);
+}
+
+.primary:active {
+    transform: scale(0.97);
+}
+
+.secondary {
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.secondary:hover {
+    background: var(--surface-soft);
+    border-color: var(--text-muted);
+}
+
+.secondary:active {
+    transform: scale(0.97);
+}
+
+/* На очень узких экранах кнопки в столбец */
+@media (max-width: 360px) {
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .primary,
+    .secondary {
+        width: 100%;
+    }
+}

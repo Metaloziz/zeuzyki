@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Rebuild daily at 03:00 UTC (06:00 Minsk) — pulls fresh dates from the
+  # Google Form even if no code changes.
+  schedule:
+    - cron: "0 3 * * *"
 
 # Allow only one concurrent deployment; cancel in-progress runs.
 concurrency:
