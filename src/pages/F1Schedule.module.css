@@ -1,0 +1,312 @@
+.hero {
+    background: linear-gradient(135deg, #1d1d1f 0%, #000 100%);
+    padding: 80px 22px 60px;
+    text-align: center;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.heroTitle {
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.heroAccent {
+    color: #e10600;
+}
+
+.heroSub {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    margin: 12px 0 0;
+    font-weight: 400;
+}
+
+.section {
+    background: #f5f5f7;
+    padding: 48px 22px 80px;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.cardStripe {
+    height: 4px;
+    background: #e10600;
+}
+
+.cardStripe.canceled {
+    background: #86868b;
+}
+
+.cardBody {
+    padding: 20px;
+}
+
+.cardHeader {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.roundBadge {
+    min-width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e10600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.roundBadge.canceledBadge {
+    background: #86868b;
+}
+
+.cardTitleWrap {
+    flex: 1;
+    min-width: 0;
+}
+
+.raceName {
+    font-size: 17px;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.circuit {
+    font-size: 13px;
+    color: #86868b;
+    margin: 2px 0 0;
+}
+
+.cardMeta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+}
+
+.date {
+    font-size: 14px;
+    color: #1d1d1f;
+    font-weight: 500;
+}
+
+.flag {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+}
+
+.completed {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.canceledStatus {
+    background: #f0f0f0;
+    color: #86868b;
+    text-decoration: line-through;
+}
+
+.upcoming {
+    background: #fff3f3;
+    color: #e10600;
+}
+
+.next {
+    background: #e10600;
+    color: #fff;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.podium {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.podiumTitle {
+    font-size: 11px;
+    font-weight: 600;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 8px;
+}
+
+.podiumList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.podiumItem {
+    font-size: 13px;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.podiumPos {
+    font-weight: 700;
+    min-width: 18px;
+}
+
+.podiumGold {
+    color: #ffd700;
+}
+.podiumSilver {
+    color: #c0c0c0;
+}
+.podiumBronze {
+    color: #cd7f32;
+}
+
+.podiumDriver {
+    font-weight: 500;
+}
+
+.podiumTeam {
+    color: #86868b;
+    font-size: 12px;
+}
+
+/* LOADER & ERROR */
+.loaderWrap {
+    display: flex;
+    justify-content: center;
+    padding: 80px 0;
+}
+
+.errorWrap {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.errorText {
+    font-size: 16px;
+    color: #1d1d1f;
+    margin: 0 0 16px;
+}
+
+.retryBtn {
+    display: inline-block;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background: #e10600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.retryBtn:hover {
+    opacity: 0.85;
+}
+
+/* TABLET */
+@media (min-width: 640px) {
+    .hero {
+        padding: 100px 40px 72px;
+    }
+    .heroTitle {
+        font-size: 52px;
+    }
+    .heroSub {
+        font-size: 18px;
+    }
+    .section {
+        padding: 56px 40px 100px;
+    }
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+/* DESKTOP */
+@media (min-width: 1024px) {
+    .hero {
+        padding: 120px 64px 88px;
+    }
+    .heroTitle {
+        font-size: 64px;
+    }
+    .heroSub {
+        font-size: 20px;
+        margin-top: 16px;
+    }
+    .section {
+        padding: 72px 64px 120px;
+    }
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+}
