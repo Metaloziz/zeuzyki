@@ -33,17 +33,11 @@ export interface RaceDetail {
   podium?: [PodiumEntry, PodiumEntry, PodiumEntry];
 }
 
-/* ────────────────────────────────────────────
- *  Track layout images — F1 media CDN
- * ──────────────────────────────────────────── */
+/* ── Track layout images (kept for future use) ── */
 const T = (name: string) =>
   `https://media.formula1.com/image/upload/f_auto/q_auto/v1677245035/content/dam/fom-website/2018-redesign-assets/Track%20702Maps%2016by9/${name}.png`;
 
-/* ────────────────────────────────────────────
- *  Static enrichment data keyed by circuitId
- *  (descriptions, lap records, track stats,
- *   images, flags — stuff the API doesn't have)
- * ──────────────────────────────────────────── */
+/* ── Static enrichment ── */
 interface CircuitMeta {
   nameRu: string;
   circuitRu: string;
@@ -54,6 +48,7 @@ interface CircuitMeta {
   raceDistance: string;
   firstGP: number;
   drsZones: number;
+  teamColor?: string;
   lapRecord?: { time: string; driver: string; year: number };
   description?: string;
 }
@@ -82,9 +77,23 @@ const COUNTRY_FLAGS: Record<string, string> = {
   UAE: "🇦🇪",
 };
 
+const TEAM_COLORS: Record<string, string> = {
+  Mercedes: "#00d2be",
+  Ferrari: "#dc0000",
+  McLaren: "#ff8700",
+  "Red Bull": "#3671c6",
+  "Aston Martin": "#006f62",
+  Alpine: "#0090ff",
+  Williams: "#005aff",
+  "RB F1 Team": "#6692ff",
+  "Haas F1 Team": "#b6babd",
+  Audi: "#ff0000",
+  "Cadillac F1 Team": "#1d1d1d",
+};
+
 const CIRCUIT_META: Record<string, CircuitMeta> = {
   albert_park: {
-    nameRu: "Гран-при Австралии",
+    nameRu: "Австралия",
     circuitRu: "Альберт-Парк, Мельбурн",
     flag: "🇦🇺",
     trackImage: T("Australia"),
@@ -95,10 +104,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     drsZones: 4,
     lapRecord: { time: "1:20.235", driver: "Ш. Леклер", year: 2024 },
     description:
-      "Быстрая уличная трасса вокруг озера Альберт-Парк в Мельбурне. После реконструкции 2022 года стала ещё быстрее с обновлёнными поребриками и расширенными зонами обгона.",
+      "Быстрая уличная трасса вокруг озера Альберт-Парк в Мельбурне.",
   },
   shanghai: {
-    nameRu: "Гран-при Китая",
+    nameRu: "Китай",
     circuitRu: "Шанхай Интернешнл",
     flag: "🇨🇳",
     trackImage: T("China"),
@@ -109,10 +118,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     drsZones: 2,
     lapRecord: { time: "1:32.238", driver: "М. Шумахер", year: 2004 },
     description:
-      "Шанхайская трасса знаменита уникальными поворотами, включая длинный левый вираж в первом секторе. Один из немногих контуров с прямой длиной более 1 км.",
+      "Шанхайская трасса знаменита уникальными поворотами, включая длинный левый вираж.",
   },
   suzuka: {
-    nameRu: "Гран-при Японии",
+    nameRu: "Япония",
     circuitRu: "Сузука",
     flag: "🇯🇵",
     trackImage: T("Japan"),
@@ -123,10 +132,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     drsZones: 2,
     lapRecord: { time: "1:30.983", driver: "Л. Хэмилтон", year: 2019 },
     description:
-      "Легендарная трасса в форме восьмёрки — единственная в календаре F1. «Эски» Сузуки считаются одной из самых сложных серий поворотов в автоспорте.",
+      "Легендарная трасса в форме восьмёрки — единственная в календаре F1.",
   },
   bahrain: {
-    nameRu: "Гран-при Бахрейна",
+    nameRu: "Бахрейн",
     circuitRu: "Сахир",
     flag: "🇧🇭",
     trackImage: T("Bahrain"),
@@ -139,7 +148,7 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     description: "Ночная гонка в пустыне Сахир.",
   },
   jeddah: {
-    nameRu: "Гран-при Саудовской Аравии",
+    nameRu: "Саудовская Аравия",
     circuitRu: "Джидда Корниш",
     flag: "🇸🇦",
     trackImage: T("Saudi%20Arabia"),
@@ -149,11 +158,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 2021,
     drsZones: 3,
     lapRecord: { time: "1:30.734", driver: "Л. Хэмилтон", year: 2021 },
-    description:
-      "Самая быстрая уличная трасса в мире — средняя скорость свыше 250 км/ч.",
+    description: "Самая быстрая уличная трасса в мире.",
   },
   miami: {
-    nameRu: "Гран-при Майами",
+    nameRu: "Майами",
     circuitRu: "Майами Интернешнл",
     flag: "🇺🇸",
     trackImage: T("Miami"),
@@ -163,11 +171,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 2022,
     drsZones: 3,
     lapRecord: { time: "1:29.708", driver: "М. Ферстаппен", year: 2023 },
-    description:
-      "Трасса вокруг стадиона Hard Rock в Майами-Гарденс. Яркое шоу под солнцем Флориды с длинной прямой и техничным вторым сектором.",
+    description: "Трасса вокруг стадиона Hard Rock в Майами-Гарденс.",
   },
   villeneuve: {
-    nameRu: "Гран-при Канады",
+    nameRu: "Канада",
     circuitRu: "Жиль Вильнёв, Монреаль",
     flag: "🇨🇦",
     trackImage: T("Canada"),
@@ -178,10 +185,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     drsZones: 2,
     lapRecord: { time: "1:13.078", driver: "В. Боттас", year: 2019 },
     description:
-      "Полупостоянная трасса на острове Нотр-Дам в Монреале. Знаменитая «Стена чемпионов» в последнем повороте стала ловушкой для многих лидеров.",
+      "Полупостоянная трасса на острове Нотр-Дам. «Стена чемпионов» — ловушка для лидеров.",
   },
   monaco: {
-    nameRu: "Гран-при Монако",
+    nameRu: "Монако",
     circuitRu: "Монте-Карло",
     flag: "🇲🇨",
     trackImage: T("Monaco"),
@@ -192,10 +199,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     drsZones: 1,
     lapRecord: { time: "1:12.909", driver: "Л. Хэмилтон", year: 2021 },
     description:
-      "Жемчужина Формулы 1. Самая узкая, медленная и гламурная трасса в календаре. Обгоны практически невозможны — всё решает квалификация и стратегия.",
+      "Жемчужина Формулы 1. Самая узкая и гламурная трасса в календаре.",
   },
   catalunya: {
-    nameRu: "Гран-при Барселона-Каталунья",
+    nameRu: "Барселона",
     circuitRu: "Каталунья, Монтмело",
     flag: "🇪🇸",
     trackImage: T("Spain"),
@@ -205,11 +212,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 1991,
     drsZones: 2,
     lapRecord: { time: "1:18.149", driver: "М. Ферстаппен", year: 2023 },
-    description:
-      "Классическая трасса для тестов и гонок. Требует идеального баланса болида из-за разнообразия поворотов.",
+    description: "Классическая трасса для тестов и гонок.",
   },
   red_bull_ring: {
-    nameRu: "Гран-при Австрии",
+    nameRu: "Австрия",
     circuitRu: "Ред Булл Ринг, Шпильберг",
     flag: "🇦🇹",
     trackImage: T("Austria"),
@@ -219,11 +225,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 1970,
     drsZones: 3,
     lapRecord: { time: "1:05.619", driver: "К. Сайнс", year: 2020 },
-    description:
-      "Короткая, но зрелищная трасса в Штирийских Альпах. Перепады высот и длинные прямые создают отличные условия для обгонов.",
+    description: "Короткая, но зрелищная трасса в Штирийских Альпах.",
   },
   silverstone: {
-    nameRu: "Гран-при Великобритании",
+    nameRu: "Великобритания",
     circuitRu: "Сильверстоун",
     flag: "🇬🇧",
     trackImage: T("Great%20Britain"),
@@ -234,10 +239,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     drsZones: 2,
     lapRecord: { time: "1:27.097", driver: "М. Ферстаппен", year: 2020 },
     description:
-      "Родина Формулы 1 — именно здесь прошла первая гонка чемпионата мира в 1950 году. Комплекс Маготтс-Бэкеттс-Чэпел — одна из самых захватывающих связок.",
+      "Родина Формулы 1. Комплекс Маготтс-Бэкеттс-Чэпел — захватывающая связка.",
   },
   spa: {
-    nameRu: "Гран-при Бельгии",
+    nameRu: "Бельгия",
     circuitRu: "Спа-Франкоршам",
     flag: "🇧🇪",
     trackImage: T("Belgium"),
@@ -248,10 +253,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     drsZones: 2,
     lapRecord: { time: "1:46.286", driver: "В. Боттас", year: 2018 },
     description:
-      "Легендарная трасса в Арденнских лесах. «О-Руж» и «Радийон» — визитная карточка Спа. Самый длинный контур в календаре.",
+      "Легендарная трасса в Арденнских лесах. «О-Руж» — визитная карточка Спа.",
   },
   hungaroring: {
-    nameRu: "Гран-при Венгрии",
+    nameRu: "Венгрия",
     circuitRu: "Хунгароринг, Будапешт",
     flag: "🇭🇺",
     trackImage: T("Hungary"),
@@ -261,11 +266,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 1986,
     drsZones: 2,
     lapRecord: { time: "1:16.627", driver: "Л. Хэмилтон", year: 2020 },
-    description:
-      "Извилистая трасса в долине, напоминающая «Монако без стен». Обгоны крайне сложны, а жара Будапешта изнуряет пилотов и шины.",
+    description: "Извилистая трасса в долине — «Монако без стен».",
   },
   zandvoort: {
-    nameRu: "Гран-при Нидерландов",
+    nameRu: "Нидерланды",
     circuitRu: "Зандворт",
     flag: "🇳🇱",
     trackImage: T("Netherlands"),
@@ -275,11 +279,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 1952,
     drsZones: 2,
     lapRecord: { time: "1:11.097", driver: "Л. Хэмилтон", year: 2024 },
-    description:
-      "Классическая трасса в дюнах Северного моря. Уникальные профилированные повороты с банкингом 18° делают Зандворт непохожим ни на что другое.",
+    description: "Классическая трасса в дюнах с уникальным банкингом 18°.",
   },
   monza: {
-    nameRu: "Гран-при Италии",
+    nameRu: "Италия",
     circuitRu: "Монца",
     flag: "🇮🇹",
     trackImage: T("Italy"),
@@ -289,11 +292,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 1950,
     drsZones: 2,
     lapRecord: { time: "1:21.046", driver: "Р. Баррикелло", year: 2004 },
-    description:
-      "«Храм скорости» — самая быстрая трасса в календаре F1. Тифози Ferrari создают незабываемую атмосферу.",
+    description: "«Храм скорости» — самая быстрая трасса в календаре F1.",
   },
   madring: {
-    nameRu: "Гран-при Испании (Мадрид)",
+    nameRu: "Испания (Мадрид)",
     circuitRu: "Мадрид IFEMA",
     flag: "🇪🇸",
     trackImage: T("Spain"),
@@ -302,11 +304,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     raceDistance: "306.488",
     firstGP: 2026,
     drsZones: 3,
-    description:
-      "Совершенно новая трасса в Мадриде! Построена рядом с выставочным комплексом IFEMA. Дебютирует в календаре Формулы 1 в 2026 году.",
+    description: "Новая трасса в Мадриде! Дебют в F1 в 2026 году.",
   },
   baku: {
-    nameRu: "Гран-при Азербайджана",
+    nameRu: "Азербайджан",
     circuitRu: "Баку Сити",
     flag: "🇦🇿",
     trackImage: T("Azerbaijan"),
@@ -316,11 +317,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 2016,
     drsZones: 2,
     lapRecord: { time: "1:43.009", driver: "Ш. Леклер", year: 2019 },
-    description:
-      "Уличная трасса вдоль набережной Каспия со знаменитым узким проездом через Старый город. Самая длинная прямая в F1 (2.2 км).",
+    description: "Уличная трасса с самой длинной прямой в F1 (2.2 км).",
   },
   marina_bay: {
-    nameRu: "Гран-при Сингапура",
+    nameRu: "Сингапур",
     circuitRu: "Марина Бэй",
     flag: "🇸🇬",
     trackImage: T("Singapore"),
@@ -330,11 +330,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 2008,
     drsZones: 3,
     lapRecord: { time: "1:35.867", driver: "Л. Хэмилтон", year: 2023 },
-    description:
-      "Первая ночная гонка в истории F1. Уличная трасса в сердце Сингапура при свете прожекторов.",
+    description: "Первая ночная гонка F1 — при свете прожекторов Сингапура.",
   },
   americas: {
-    nameRu: "Гран-при США",
+    nameRu: "США",
     circuitRu: "COTA, Остин",
     flag: "🇺🇸",
     trackImage: T("USA"),
@@ -345,10 +344,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     drsZones: 2,
     lapRecord: { time: "1:36.169", driver: "Ш. Леклер", year: 2019 },
     description:
-      "Circuit of the Americas — первая специально построенная трасса F1 в США. Подъём на 40 метров в первом повороте.",
+      "Circuit of the Americas — первая трасса F1, построенная специально в США.",
   },
   rodriguez: {
-    nameRu: "Гран-при Мексики",
+    nameRu: "Мексика",
     circuitRu: "Автодром Эрманос Родригес",
     flag: "🇲🇽",
     trackImage: T("Mexico"),
@@ -359,10 +358,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     drsZones: 3,
     lapRecord: { time: "1:17.774", driver: "В. Боттас", year: 2021 },
     description:
-      "Трасса на высоте 2240 метров — самая высокогорная в календаре. Стадион в последнем секторе — невероятная атмосфера!",
+      "Самая высокогорная трасса в календаре — 2240 м над уровнем моря.",
   },
   interlagos: {
-    nameRu: "Гран-при Бразилии",
+    nameRu: "Бразилия",
     circuitRu: "Интерлагос, Сан-Паулу",
     flag: "🇧🇷",
     trackImage: T("Brazil"),
@@ -372,11 +371,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 1973,
     drsZones: 2,
     lapRecord: { time: "1:10.540", driver: "В. Боттас", year: 2018 },
-    description:
-      "Легендарная контрчасовая трасса Интерлагос. Перепады высот, непредсказуемая погода и бразильские болельщики делают каждую гонку незабываемой.",
+    description: "Легендарная контрчасовая трасса Интерлагос.",
   },
   vegas: {
-    nameRu: "Гран-при Лас-Вегаса",
+    nameRu: "Лас-Вегас",
     circuitRu: "Лас-Вегас Стрип",
     flag: "🇺🇸",
     trackImage: T("Las%20Vegas"),
@@ -386,11 +384,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 2023,
     drsZones: 2,
     lapRecord: { time: "1:35.490", driver: "О. Пиастри", year: 2024 },
-    description:
-      "Ночная гонка по знаменитому Стрипу Лас-Вегаса! Неоновые огни, казино и болиды F1 мчатся мимо.",
+    description: "Ночная гонка по знаменитому Стрипу Лас-Вегаса.",
   },
   losail: {
-    nameRu: "Гран-при Катара",
+    nameRu: "Катар",
     circuitRu: "Лусаил",
     flag: "🇶🇦",
     trackImage: T("Qatar"),
@@ -400,11 +397,10 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     firstGP: 2021,
     drsZones: 2,
     lapRecord: { time: "1:24.319", driver: "М. Ферстаппен", year: 2023 },
-    description:
-      "Скоростная трасса в пустыне Катара. Ночное освещение создаёт атмосферу ближневосточной роскоши.",
+    description: "Скоростная трасса в пустыне Катара.",
   },
   yas_marina: {
-    nameRu: "Гран-при Абу-Даби",
+    nameRu: "Абу-Даби",
     circuitRu: "Яс Марина",
     flag: "🇦🇪",
     trackImage: T("Abu%20Dhabi"),
@@ -415,24 +411,35 @@ const CIRCUIT_META: Record<string, CircuitMeta> = {
     drsZones: 2,
     lapRecord: { time: "1:26.103", driver: "М. Ферстаппен", year: 2021 },
     description:
-      "Финал сезона! Гонка на закате — стартует при дневном свете и заканчивается под звёздами.",
+      "Финал сезона! Гонка на закате — стартует при свете и заканчивается под звёздами.",
   },
 };
 
-/* ────────────────────────────────────────────
- *  Merge API data with static enrichment
- * ──────────────────────────────────────────── */
+/* ── Merge helpers ── */
+
+function formatDateShort(iso: string): string {
+  const d = new Date(iso + "T12:00:00Z");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  const mon = d.toLocaleDateString("en-US", {
+    month: "short",
+    timeZone: "UTC",
+  });
+  return `${day} ${mon}`;
+}
 
 function formatDateRu(iso: string): string {
   const d = new Date(iso + "T12:00:00Z");
-  return d.toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
+  return d.toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long",
+    timeZone: "UTC",
+  });
 }
 
 function mergeRaces(apiRaces: ApiRace[]): RaceDetail[] {
   return apiRaces.map((api) => {
     const meta = CIRCUIT_META[api.circuitId];
     const flag = meta?.flag ?? COUNTRY_FLAGS[api.country] ?? "🏁";
-
     return {
       round: api.round,
       name: meta?.nameRu ?? api.raceName,
@@ -455,114 +462,61 @@ function mergeRaces(apiRaces: ApiRace[]): RaceDetail[] {
   });
 }
 
-/* ────────────────────────────────────────────
- *  UI Components
- * ──────────────────────────────────────────── */
-
-const statusLabel: Record<RaceStatus, string> = {
-  completed: "Завершён",
-  canceled: "Отменён",
-  next: "Следующий",
-  upcoming: "Предстоит",
-};
-
-const statusClass: Record<RaceStatus, string> = {
-  completed: styles.completed,
-  canceled: styles.canceledStatus,
-  next: styles.next,
-  upcoming: styles.upcoming,
-};
-
-const positionMedals = ["🥇", "🥈", "🥉"];
-
-function RaceCard({
-  race,
-  onClick,
-}: {
+/* Enriched row type for rendering table */
+interface TableRow {
   race: RaceDetail;
-  onClick: () => void;
-}) {
-  const isCanceled = race.status === "canceled";
-
-  return (
-    <article
-      className={styles.card}
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onClick();
-        }
-      }}
-    >
-      <div
-        className={`${styles.cardStripe}${isCanceled ? ` ${styles.canceled}` : ""}`}
-      />
-      <div className={styles.cardBody}>
-        <div className={styles.cardHeader}>
-          <span
-            className={`${styles.roundBadge}${isCanceled ? ` ${styles.canceledBadge}` : ""}`}
-          >
-            {race.round}
-          </span>
-          <div className={styles.cardTitleWrap}>
-            <h3 className={styles.raceName}>{race.name}</h3>
-            <p className={styles.circuit}>{race.circuit}</p>
-          </div>
-          <span className={styles.flag} role="img" aria-label={race.country}>
-            {race.flag}
-          </span>
-        </div>
-
-        <div className={styles.cardMeta}>
-          <span className={styles.date}>{race.date}</span>
-          <span className={`${styles.statusBadge} ${statusClass[race.status]}`}>
-            {statusLabel[race.status]}
-          </span>
-        </div>
-
-        {race.podium && (
-          <div className={styles.podium}>
-            <p className={styles.podiumTitle}>Подиум</p>
-            <ul className={styles.podiumList}>
-              {race.podium.map((entry, i) => (
-                <li key={i} className={styles.podiumItem}>
-                  <span>{positionMedals[i]}</span>
-                  <span className={styles.podiumDriver}>{entry.driver}</span>
-                  <span className={styles.podiumTeam}>({entry.team})</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    </article>
-  );
+  dateShort: string;
+  winnerName: string | null;
+  winnerInitial: string;
+  teamName: string | null;
+  teamColor: string;
+  time: string | null;
 }
 
-/* ────────────────────────────────────────────
- *  Page component
- * ──────────────────────────────────────────── */
+function buildRows(apiRaces: ApiRace[], races: RaceDetail[]): TableRow[] {
+  return races.map((race, i) => {
+    const api = apiRaces[i];
+    const winner = race.podium?.[0];
+    const teamColor = winner ? (TEAM_COLORS[winner.team] ?? "#888") : "#888";
+    const winnerInitial = winner
+      ? winner.driver.replace(/^.+\.\s*/, "").charAt(0)
+      : "";
+    return {
+      race,
+      dateShort: formatDateShort(api?.date ?? ""),
+      winnerName: winner?.driver ?? null,
+      winnerInitial,
+      teamName: winner?.team ?? null,
+      teamColor,
+      time: winner?.time ?? null,
+    };
+  });
+}
+
+/* ── Tab type ── */
+type Tab = "results" | "schedule";
+
+/* ── Component ── */
 
 export function F1Schedule() {
   const [opened, { open, close }] = useDisclosure(false);
   const [activeRace, setActiveRace] = useState<RaceDetail | null>(null);
   const [races, setRaces] = useState<RaceDetail[]>([]);
+  const [apiRaces, setApiRaces] = useState<ApiRace[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<Tab>("results");
 
   useEffect(() => {
     let cancelled = false;
-
     async function load() {
       try {
         setLoading(true);
         setError(null);
-        const apiRaces = await fetchF1Schedule();
+        const data = await fetchF1Schedule();
         if (!cancelled) {
-          setRaces(mergeRaces(apiRaces));
+          setApiRaces(data);
+          setRaces(mergeRaces(data));
         }
       } catch (err) {
         if (!cancelled) {
@@ -574,34 +528,60 @@ export function F1Schedule() {
         if (!cancelled) setLoading(false);
       }
     }
-
     load();
     return () => {
       cancelled = true;
     };
   }, []);
 
-  const completedCount = races.filter((r) => r.status === "completed").length;
-  const totalActive = races.filter((r) => r.status !== "canceled").length;
+  const completedRaces = races.filter((r) => r.status === "completed");
+  const upcomingRaces = races.filter((r) => r.status !== "completed");
 
-  const handleCardClick = (race: RaceDetail) => {
+  const completedRows = buildRows(
+    apiRaces.filter((a) => completedRaces.some((r) => r.round === a.round)),
+    completedRaces,
+  );
+  const upcomingRows = buildRows(
+    apiRaces.filter((a) => upcomingRaces.some((r) => r.round === a.round)),
+    upcomingRaces,
+  );
+
+  const handleClick = (race: RaceDetail) => {
     setActiveRace(race);
     open();
   };
 
   return (
-    <>
+    <div className={styles.page}>
+      {/* Hero */}
       <section className={styles.hero}>
         <h1 className={styles.heroTitle}>
-          Расписание <span className={styles.heroAccent}>F1</span> 2026
+          <span className={styles.heroAccent}>F1</span> 2026
         </h1>
         <p className={styles.heroSub}>
           {loading
             ? "Загрузка актуальных данных…"
-            : `${completedCount} из ${totalActive} гонок завершено · ${totalActive} Гран-при`}
+            : `${completedRaces.length} из ${races.length} гонок завершено`}
         </p>
       </section>
 
+      {/* Tabs */}
+      <div className={styles.tabs}>
+        <button
+          className={`${styles.tab} ${tab === "results" ? styles.tabActive : ""}`}
+          onClick={() => setTab("results")}
+        >
+          Результаты
+        </button>
+        <button
+          className={`${styles.tab} ${tab === "schedule" ? styles.tabActive : ""}`}
+          onClick={() => setTab("schedule")}
+        >
+          Расписание
+        </button>
+      </div>
+
+      {/* Content */}
       <section className={styles.section}>
         {loading && (
           <div className={styles.loaderWrap}>
@@ -621,20 +601,302 @@ export function F1Schedule() {
           </div>
         )}
 
-        {!loading && !error && (
-          <div className={styles.grid}>
-            {races.map((race) => (
-              <RaceCard
-                key={race.round}
-                race={race}
-                onClick={() => handleCardClick(race)}
-              />
-            ))}
-          </div>
+        {!loading && !error && tab === "results" && (
+          <>
+            <h2 className={styles.sectionTitle}>2026 Race Results</h2>
+            <ResultsTable rows={completedRows} onClick={handleClick} />
+            <MobileList rows={completedRows} onClick={handleClick} />
+          </>
+        )}
+
+        {!loading && !error && tab === "schedule" && (
+          <>
+            <h2 className={styles.sectionTitle}>2026 Schedule</h2>
+            <ScheduleTable rows={upcomingRows} onClick={handleClick} />
+            <MobileScheduleList rows={upcomingRows} onClick={handleClick} />
+          </>
         )}
       </section>
 
       <RaceDetailModal race={activeRace} opened={opened} onClose={close} />
-    </>
+    </div>
+  );
+}
+
+/* ═══ Desktop: Results Table ═══ */
+
+function ResultsTable({
+  rows,
+  onClick,
+}: {
+  rows: TableRow[];
+  onClick: (r: RaceDetail) => void;
+}) {
+  if (rows.length === 0) {
+    return (
+      <p style={{ color: "rgba(255,255,255,0.4)" }}>
+        Пока нет завершённых гонок.
+      </p>
+    );
+  }
+  return (
+    <div className={styles.tableWrap}>
+      <table className={styles.table}>
+        <thead className={styles.thead}>
+          <tr>
+            <th>Grand Prix</th>
+            <th>Date</th>
+            <th>Winner</th>
+            <th>Team</th>
+            <th style={{ textAlign: "center" }}>Laps</th>
+            <th style={{ textAlign: "right" }}>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr
+              key={row.race.round}
+              className={styles.row}
+              onClick={() => onClick(row.race)}
+            >
+              <td>
+                <span className={styles.gpCell}>
+                  <span className={styles.gpFlag}>{row.race.flag}</span>
+                  {row.race.name}
+                  {row.race.isSprint && (
+                    <span className={styles.sprintTag}>Sprint</span>
+                  )}
+                </span>
+              </td>
+              <td className={styles.dateCell}>{row.dateShort}</td>
+              <td>
+                <span className={styles.winnerCell}>
+                  <span
+                    className={styles.driverDot}
+                    style={{ background: row.teamColor }}
+                  >
+                    {row.winnerInitial}
+                  </span>
+                  {row.winnerName}
+                </span>
+              </td>
+              <td>
+                <span className={styles.teamCell}>
+                  <span
+                    className={styles.teamDot}
+                    style={{ background: row.teamColor }}
+                  />
+                  {row.teamName}
+                </span>
+              </td>
+              <td className={styles.lapsCell}>{row.race.laps}</td>
+              <td className={styles.timeCell}>{row.time}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ═══ Desktop: Schedule Table ═══ */
+
+function ScheduleTable({
+  rows,
+  onClick,
+}: {
+  rows: TableRow[];
+  onClick: (r: RaceDetail) => void;
+}) {
+  if (rows.length === 0) {
+    return (
+      <p style={{ color: "rgba(255,255,255,0.4)" }}>Все гонки завершены!</p>
+    );
+  }
+  return (
+    <div className={styles.tableWrap}>
+      <table className={styles.table}>
+        <thead className={styles.thead}>
+          <tr>
+            <th>Round</th>
+            <th>Grand Prix</th>
+            <th>Circuit</th>
+            <th>Date</th>
+            <th style={{ textAlign: "center" }}>Laps</th>
+            <th style={{ textAlign: "right" }}>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr
+              key={row.race.round}
+              className={styles.row}
+              onClick={() => onClick(row.race)}
+            >
+              <td style={{ color: "rgba(255,255,255,0.35)", fontWeight: 700 }}>
+                {String(row.race.round).padStart(2, "0")}
+              </td>
+              <td>
+                <span className={styles.gpCell}>
+                  <span className={styles.gpFlag}>{row.race.flag}</span>
+                  {row.race.name}
+                  {row.race.isSprint && (
+                    <span className={styles.sprintTag}>Sprint</span>
+                  )}
+                </span>
+              </td>
+              <td style={{ color: "rgba(255,255,255,0.5)" }}>
+                {row.race.circuit}
+              </td>
+              <td className={styles.dateCell}>{row.dateShort}</td>
+              <td className={styles.lapsCell}>{row.race.laps || "—"}</td>
+              <td style={{ textAlign: "right" }}>
+                <span
+                  className={`${styles.statusBadge} ${
+                    row.race.status === "next"
+                      ? styles.statusNext
+                      : row.race.status === "canceled"
+                        ? styles.statusCanceled
+                        : styles.statusUpcoming
+                  }`}
+                >
+                  {row.race.status === "next"
+                    ? "Next"
+                    : row.race.status === "canceled"
+                      ? "Cancelled"
+                      : "Upcoming"}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ═══ Mobile: Results Cards ═══ */
+
+function MobileList({
+  rows,
+  onClick,
+}: {
+  rows: TableRow[];
+  onClick: (r: RaceDetail) => void;
+}) {
+  if (rows.length === 0) {
+    return (
+      <p
+        className={styles.mobileList}
+        style={{ display: "flex", color: "rgba(255,255,255,0.4)", padding: 20 }}
+      >
+        Пока нет завершённых гонок.
+      </p>
+    );
+  }
+  return (
+    <div className={styles.mobileList}>
+      {rows.map((row) => (
+        <div
+          key={row.race.round}
+          className={styles.mobileCard}
+          onClick={() => onClick(row.race)}
+        >
+          <div className={styles.mobileCardHeader}>
+            <div className={styles.mobileGp}>
+              <span className={styles.mobileGpFlag}>{row.race.flag}</span>
+              <span className={styles.mobileGpName}>
+                {row.race.name}
+                {row.race.isSprint && (
+                  <span className={styles.sprintTag}>Sprint</span>
+                )}
+              </span>
+            </div>
+            <span className={styles.mobileRound}>R{row.race.round}</span>
+          </div>
+          <div className={styles.mobileDate}>{row.dateShort}</div>
+          <div className={styles.mobileDivider} />
+          <div className={styles.mobileResult}>
+            <span
+              className={styles.mobileWinnerDot}
+              style={{ background: row.teamColor }}
+            >
+              {row.winnerInitial}
+            </span>
+            <div className={styles.mobileWinnerInfo}>
+              <div className={styles.mobileWinnerName}>{row.winnerName}</div>
+              <div className={styles.mobileWinnerTeam}>
+                <span
+                  className={styles.mobileTeamDot}
+                  style={{ background: row.teamColor }}
+                />
+                {row.teamName}
+              </div>
+            </div>
+            <span className={styles.mobileTime}>{row.time}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ═══ Mobile: Schedule Cards ═══ */
+
+function MobileScheduleList({
+  rows,
+  onClick,
+}: {
+  rows: TableRow[];
+  onClick: (r: RaceDetail) => void;
+}) {
+  if (rows.length === 0) return null;
+  return (
+    <div className={styles.mobileList}>
+      {rows.map((row) => (
+        <div
+          key={row.race.round}
+          className={styles.mobileCard}
+          onClick={() => onClick(row.race)}
+        >
+          <div className={styles.mobileCardHeader}>
+            <div className={styles.mobileGp}>
+              <span className={styles.mobileGpFlag}>{row.race.flag}</span>
+              <span className={styles.mobileGpName}>
+                {row.race.name}
+                {row.race.isSprint && (
+                  <span className={styles.sprintTag}>Sprint</span>
+                )}
+              </span>
+            </div>
+            <span className={styles.mobileRound}>R{row.race.round}</span>
+          </div>
+          <div className={styles.mobileDate}>
+            {row.dateShort} · {row.race.circuit}
+          </div>
+          <div className={styles.mobileDivider} />
+          <div className={styles.mobileStatusRow}>
+            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
+              {row.race.laps ? `${row.race.laps} кругов` : "—"}
+            </span>
+            <span
+              className={`${styles.statusBadge} ${
+                row.race.status === "next"
+                  ? styles.statusNext
+                  : row.race.status === "canceled"
+                    ? styles.statusCanceled
+                    : styles.statusUpcoming
+              }`}
+            >
+              {row.race.status === "next"
+                ? "Следующий"
+                : row.race.status === "canceled"
+                  ? "Отменён"
+                  : "Предстоит"}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

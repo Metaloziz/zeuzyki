@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
 
 function InstagramIcon() {
@@ -24,9 +25,9 @@ export function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <a href="/" className={styles.brand} aria-label="Zeuzyki — главная">
+        <Link to="/" className={styles.brand} aria-label="Zeuzyki — главная">
           Zeuzyki
-        </a>
+        </Link>
         <div className={styles.right}>
           <nav className={styles.nav} aria-label="Основная навигация">
             <a href="#splavs" className={styles.navLink}>
@@ -38,9 +39,9 @@ export function Header() {
             <a href="#contacts" className={styles.navLink}>
               Контакты
             </a>
-            <a href="/f1" className={styles.navLink}>
+            <Link to="/f1" className={styles.navLink}>
               F1 2026
-            </a>
+            </Link>
           </nav>
           <a
             href="https://www.instagram.com/zeuzyki/"

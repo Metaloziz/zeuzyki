@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Modal, Title } from "@mantine/core";
 import type { RaceDetail } from "../../pages/F1Schedule";
 import styles from "./RaceDetailModal.module.css";
@@ -25,29 +24,6 @@ const statusClass: Record<string, string> = {
 
 const medals = ["🥇", "🥈", "🥉"];
 
-function TrackImage({ src, alt }: { src: string; alt: string }) {
-  const [failed, setFailed] = useState(false);
-
-  if (failed || !src) {
-    return (
-      <div className={styles.trackFallback}>
-        <span className={styles.trackFallbackIcon}>🏎️</span>
-        <span>Схема трассы недоступна</span>
-      </div>
-    );
-  }
-
-  return (
-    <img
-      className={styles.trackImage}
-      src={src}
-      alt={alt}
-      loading="lazy"
-      onError={() => setFailed(true)}
-    />
-  );
-}
-
 export function RaceDetailModal({
   race,
   opened,
@@ -72,29 +48,22 @@ export function RaceDetailModal({
       overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
     >
       <div className={styles.modalBody}>
-        {/* Track layout */}
-        <div className={styles.trackImageWrap}>
-          <TrackImage
-            src={race.trackImage}
-            alt={`Схема трассы — ${race.circuit}`}
-          />
-          <span className={styles.trackLabel}>{race.circuit}</span>
-        </div>
-
         {/* Header */}
         <div className={styles.header}>
           <span className={styles.headerFlag}>{race.flag}</span>
           <div className={styles.headerInfo}>
             <h2 className={styles.raceName}>{race.name}</h2>
             <p className={styles.circuitName}>{race.circuit}</p>
-            <span
-              className={`${styles.statusBadge} ${statusClass[race.status]}`}
-            >
-              {statusLabel[race.status]}
-            </span>
-            {race.isSprint && (
-              <span className={styles.sprintBadge}>⚡ Спринт</span>
-            )}
+            <div className={styles.badgeRow}>
+              <span
+                className={`${styles.statusBadge} ${statusClass[race.status]}`}
+              >
+                {statusLabel[race.status]}
+              </span>
+              {race.isSprint && (
+                <span className={styles.sprintBadge}>⚡ Спринт</span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -109,7 +78,7 @@ export function RaceDetailModal({
           </div>
         )}
 
-        {/* Stats */}
+        {/* Stats + details */}
         {!isCanceled && (
           <>
             <div className={styles.statsGrid}>
@@ -119,9 +88,7 @@ export function RaceDetailModal({
               </div>
               <div className={styles.statCell}>
                 <span className={styles.statLabel}>Круг</span>
-                <span className={styles.statValue}>
-                  {race.trackLength} км
-                </span>
+                <span className={styles.statValue}>{race.trackLength} км</span>
               </div>
               <div className={styles.statCell}>
                 <span className={styles.statLabel}>Кругов</span>
@@ -129,9 +96,7 @@ export function RaceDetailModal({
               </div>
               <div className={styles.statCell}>
                 <span className={styles.statLabel}>Дистанция</span>
-                <span className={styles.statValue}>
-                  {race.raceDistance} км
-                </span>
+                <span className={styles.statValue}>{race.raceDistance} км</span>
               </div>
               <div className={styles.statCell}>
                 <span className={styles.statLabel}>Первый ГП</span>
