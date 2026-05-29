@@ -46,6 +46,12 @@
     gap: 28px;
 }
 
+.socials {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .social {
     display: inline-flex;
     align-items: center;
@@ -57,6 +63,12 @@
     transition:
         color 0.2s ease,
         background 0.2s ease;
+}
+
+.socialIcon {
+    width: 24px;
+    height: 24px;
+    display: block;
 }
 
 .social:hover {
