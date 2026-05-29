@@ -6,39 +6,204 @@
         "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.sectionAlt {
-    background: #fbfbfd;
-}
-
 .sectionTitle {
     text-align: center;
     font-size: 28px;
     font-weight: 700;
     color: #1d1d1f;
-    margin: 0 0 40px;
+    margin: 0 0 28px;
     letter-spacing: -0.02em;
     line-height: 1.15;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 40px;
 }
 
-.grid {
+.infoBox {
+    max-width: 1000px;
+    margin: 22px auto 34px;
+    background: #f5f5f7;
+    border-radius: 16px;
+    padding: 18px 18px;
+    color: #3a3a3c;
+    line-height: 1.55;
+    font-size: 16px;
+}
+
+.infoBox p {
+    margin: 0 0 8px;
+}
+
+.infoBox p:last-child {
+    margin-bottom: 0;
+}
+
+.featuredGrid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
-    max-width: 1200px;
+    gap: 18px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
-.textBlock {
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-    color: #3a3a3c;
+.featuredCard {
+    background: var(--surface-gray);
+    border-radius: 20px;
+    padding: 12px 12px 20px;
+    min-height: 270px;
+    display: flex;
+    flex-direction: column;
+}
+
+.featuredImageWrap {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    overflow: hidden;
+}
+
+.featuredImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.imageFallback {
+    background: linear-gradient(135deg, var(--brand-cyan) 0%, #006d80 100%);
+}
+
+.featuredDate {
+    margin: 0 0 10px;
     font-size: 18px;
-    line-height: 1.6;
+    color: var(--brand-cyan-dark);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.featuredTitle {
+    margin: 0 0 10px;
+    font-size: 24px;
+    line-height: 1.2;
+    color: var(--text-primary);
+    letter-spacing: -0.015em;
+}
+
+.featuredMeta {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: auto;
+}
+
+.bookButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 10px 22px;
+    border-radius: 980px;
+    line-height: 1.2;
+    border: none;
+    background: var(--brand-cyan);
+    color: #fff;
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
+}
+
+.bookButton:hover {
+    background: var(--brand-cyan-dark);
+}
+
+.bookButton:active {
+    transform: scale(0.97);
+}
+
+.listBlock {
+    max-width: 1000px;
+    margin: 28px auto 0;
+}
+
+.listTitle {
+    margin: 0 0 14px;
+    color: var(--text-primary);
+    font-size: 24px;
+    letter-spacing: -0.015em;
+}
+
+.list {
+    display: grid;
+    gap: 12px;
+}
+
+.listItem {
+    background: #fff;
+    border: 1px solid #e8e8ed;
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.listItemMain {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.listThumbWrap {
+    width: 100px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.listThumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.listItemDate {
+    margin: 0 0 6px;
+    font-size: 16px;
+    color: var(--brand-cyan-dark);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.listItemTitle {
+    margin: 0 0 6px;
+    color: var(--text-primary);
+    font-size: 18px;
+    line-height: 1.25;
+}
+
+.listItemMeta {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.featuredBookButton {
+    margin-top: 18px;
+}
+
+.listBookButton {
+    margin-top: 0;
 }
 
 .sectionEmpty {
@@ -59,32 +224,59 @@
     margin-top: 8px;
 }
 
-/* TABLET — 2 колонки */
+@media (max-width: 520px) {
+    .listItem {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .listItemMain {
+        width: 100%;
+    }
+
+    .listThumbWrap {
+        width: 84px;
+        height: 64px;
+    }
+}
+
 @media (min-width: 640px) {
     .section {
         padding: 80px 40px 100px;
     }
+
     .sectionTitle {
         font-size: 36px;
-        margin-bottom: 56px;
+        margin-bottom: 34px;
     }
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
+
+    .featuredGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .featuredCard {
+        aspect-ratio: 1 / 1;
+        min-height: 0;
+    }
+
+    .listItem {
+        padding: 18px 20px;
     }
 }
 
-/* DESKTOP — 3 колонки */
 @media (min-width: 1024px) {
     .section {
         padding: 96px 64px 120px;
     }
+
     .sectionTitle {
         font-size: 44px;
-        margin-bottom: 72px;
+        margin-bottom: 42px;
     }
-    .grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 30px;
+
+    .infoBox {
+        padding: 20px 22px;
+        margin-top: 26px;
+        margin-bottom: 40px;
     }
 }
