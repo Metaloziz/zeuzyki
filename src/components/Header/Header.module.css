@@ -76,6 +76,78 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
+.mobileMenuButton {
+    display: none;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 18px;
+    line-height: 1;
+    transition:
+        background 0.22s ease,
+        transform 0.22s ease;
+}
+
+.mobileMenuButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.mobileMenuButton:active {
+    transform: scale(0.94);
+}
+
+.mobileMenu {
+    position: absolute;
+    top: 44px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 12px 14px;
+    background: rgba(42, 36, 36, 0.96);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+    animation: mobileMenuIn 0.28s ease;
+    transform-origin: top center;
+}
+
+.mobileNavLink {
+    color: rgba(255, 255, 255, 0.95);
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 1.2;
+    padding: 10px 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.mobileNavLink:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(2px);
+}
+
+.mobileNavLink:active {
+    transform: scale(0.98);
+}
+
+@keyframes mobileMenuIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-8px) scaleY(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+}
+
 .navLink {
     font-size: 12px;
     font-weight: 400;
@@ -90,9 +162,39 @@
     color: #fff;
 }
 
-/* mobile: hide nav links, leave brand + Instagram icon */
+@media (min-width: 541px) {
+    .mobileMenu {
+        display: none;
+    }
+}
+
+/* mobile: hide desktop nav, show burger */
 @media (max-width: 540px) {
+    .inner {
+        padding: 0 12px;
+    }
+
     .nav {
         display: none;
+    }
+
+    .mobileMenuButton {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .socials {
+        gap: 4px;
+    }
+
+    .social {
+        width: 28px;
+        height: 28px;
+    }
+
+    .socialIcon {
+        width: 20px;
+        height: 20px;
     }
 }

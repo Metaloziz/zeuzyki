@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
 
@@ -12,8 +13,31 @@ const instagramIcon = new URL(
 ).href;
 
 export function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (headerRef.current?.contains(target)) return;
+      closeMobileMenu();
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isMobileMenuOpen]);
+
   return (
-    <header className={styles.header}>
+    <header ref={headerRef} className={styles.header}>
       <div className={styles.inner}>
         <Link to="/" className={styles.brand} aria-label="Zeuzyki — главная">
           Zeuzyki
@@ -33,6 +57,18 @@ export function Header() {
               Про нас
             </Link>
           </nav>
+          <button
+            type="button"
+            className={styles.mobileMenuButton}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-main-nav"
+            aria-label={
+              isMobileMenuOpen ? "Закрыть меню" : "Открыть меню навигации"
+            }
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+          >
+            {isMobileMenuOpen ? "✕" : "☰"}
+          </button>
           <div className={styles.socials}>
             <a
               href="https://t.me/zeuzyki_admin"
@@ -67,6 +103,42 @@ export function Header() {
           </div>
         </div>
       </div>
+      {isMobileMenuOpen && (
+        <nav
+          id="mobile-main-nav"
+          className={styles.mobileMenu}
+          aria-label="Мобильная навигация"
+        >
+          <Link
+            to="/#schedule"
+            className={styles.mobileNavLink}
+            onClick={closeMobileMenu}
+          >
+            Расписание сплавов
+          </Link>
+          <Link
+            to="/corporate"
+            className={styles.mobileNavLink}
+            onClick={closeMobileMenu}
+          >
+            Корпоративные сплавы
+          </Link>
+          <Link
+            to="/faq"
+            className={styles.mobileNavLink}
+            onClick={closeMobileMenu}
+          >
+            Популярные вопросы
+          </Link>
+          <Link
+            to="/about"
+            className={styles.mobileNavLink}
+            onClick={closeMobileMenu}
+          >
+            Про нас
+          </Link>
+        </nav>
+      )}
     </header>
   );
 }
