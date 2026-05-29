@@ -39,9 +39,6 @@ export function Header() {
             <a href="#contacts" className={styles.navLink}>
               Контакты
             </a>
-            <Link to="/f1" className={styles.navLink}>
-              F1 2026
-            </Link>
           </nav>
           <a
             href="https://www.instagram.com/zeuzyki/"

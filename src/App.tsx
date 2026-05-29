@@ -3,7 +3,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { Header } from "./components/Header/Header";
 import { Home } from "./pages/Home";
 import { SplavDetails } from "./pages/SplavDetails";
-import { F1Schedule } from "./pages/F1Schedule";
 
 /** Scrolls to top on every route change — important for stacked-banners → details page. */
 function ScrollToTop() {
@@ -22,7 +21,6 @@ export function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/splav/:id" element={<SplavDetails />} />
-        <Route path="/f1" element={<F1Schedule />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </>
