@@ -1,0 +1,101 @@
+.page {
+    min-height: calc(100vh - 44px);
+    background: #fbfbfd;
+    padding: 48px 22px 80px;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin: 0 0 32px;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #e8e8ed;
+    border-radius: 16px;
+    padding: 24px 20px;
+    margin-bottom: 16px;
+}
+
+.card:last-child {
+    margin-bottom: 0;
+}
+
+.question {
+    margin: 0 0 12px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1d1d1f;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+}
+
+.answer {
+    margin: 0 0 12px;
+    color: #424245;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+.answer:last-child {
+    margin-bottom: 0;
+}
+
+.list,
+.bullets {
+    margin: 0 0 12px;
+    padding-left: 22px;
+    color: #424245;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+.list li,
+.bullets li {
+    margin-bottom: 8px;
+}
+
+.list li:last-child,
+.bullets li:last-child {
+    margin-bottom: 0;
+}
+
+@media (min-width: 640px) {
+    .page {
+        padding: 64px 40px 100px;
+    }
+
+    .title {
+        font-size: 36px;
+        margin-bottom: 44px;
+    }
+
+    .card {
+        padding: 28px 26px;
+        margin-bottom: 20px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .page {
+        padding: 80px 64px 120px;
+    }
+
+    .title {
+        font-size: 44px;
+        margin-bottom: 56px;
+    }
+}

@@ -1,0 +1,229 @@
+.page {
+    min-height: calc(100vh - 44px);
+    background: #fbfbfd;
+    padding: 48px 22px 80px;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin: 0 0 40px;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 56px;
+    align-items: center;
+}
+
+.heroText {
+    color: #3a3a3c;
+    font-size: 17px;
+    line-height: 1.65;
+}
+
+.heroIntro {
+    font-size: 19px;
+    margin: 0 0 20px;
+    color: #1d1d1f;
+}
+
+.heroDescription {
+    margin: 0 0 16px;
+}
+
+.heroDescription:last-child {
+    margin-bottom: 0;
+}
+
+.heroImage {
+    display: flex;
+    justify-content: center;
+}
+
+.imagePlaceholder {
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #4caf50;
+}
+
+.imagePlaceholder span {
+    font-size: 14px;
+    color: #558b2f;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 56px;
+}
+
+.feature {
+    background: #fff;
+    border: 1px solid #e8e8ed;
+    border-radius: 16px;
+    padding: 28px 24px;
+}
+
+.featureIcon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2e7d32;
+    margin-bottom: 16px;
+}
+
+.featureTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin: 0 0 10px;
+}
+
+.featureDescription {
+    margin: 0;
+    color: #6e6e73;
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.routes {
+    text-align: center;
+    padding: 48px 32px;
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #e8e8ed;
+    margin-bottom: 40px;
+}
+
+.routesTitle {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin: 0 0 20px;
+}
+
+.routeBadge {
+    border-color: #4caf50 !important;
+    color: #2e7d32 !important;
+    background: #e8f5e9 !important;
+}
+
+.routesNote {
+    margin: 16px 0 0;
+    color: #86868b;
+    font-size: 14px;
+}
+
+.contact {
+    text-align: center;
+    background: linear-gradient(135deg, #2c5f2e 0%, #3d7a3e 100%);
+    border-radius: 20px;
+    padding: 48px 32px;
+    color: #fff;
+}
+
+.contactTitle {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 16px;
+    color: #fff;
+}
+
+.contactPhone {
+    display: inline-block;
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    transition: opacity 0.2s ease;
+}
+
+.contactPhone:hover {
+    opacity: 0.85;
+}
+
+.contactNote {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.9;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* TABLET */
+@media (min-width: 640px) {
+    .page {
+        padding: 64px 40px 100px;
+    }
+
+    .title {
+        font-size: 36px;
+    }
+
+    .hero {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .features {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .contactPhone {
+        font-size: 44px;
+    }
+}
+
+/* DESKTOP */
+@media (min-width: 1024px) {
+    .page {
+        padding: 80px 64px 120px;
+    }
+
+    .title {
+        font-size: 44px;
+        margin-bottom: 56px;
+    }
+
+    .features {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .hero {
+        gap: 64px;
+    }
+
+    .contactPhone {
+        font-size: 52px;
+    }
+}

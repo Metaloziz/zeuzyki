@@ -25,20 +25,28 @@ yarn typecheck   # проверка типов без сборки
 
 ```
 src/
-├── App.tsx                  routes
-├── main.tsx                 entry, BrowserRouter + MantineProvider
-├── theme.ts                 Mantine theme
-├── global.css               reset
+├── App.tsx                     routes
+├── main.tsx                    entry, BrowserRouter + MantineProvider
+├── theme.ts                    Mantine theme
+├── global.css                  reset
 ├── components/
-│   ├── Header/              sticky apple-style nav
-│   ├── Banner/              hero-секция (одна на сплав)
-│   └── BookingModal/        форма "Записаться"
+│   ├── Header/                 sticky apple-style nav
+│   ├── BookingModal/           форма "Записаться"
+│   ├── AboutSection/           информация о компании
+│   ├── CorporateSection/       корпоративные сплавы
+│   └── SplavCard/              карточка сплава
 ├── pages/
-│   ├── Home.tsx             список баннеров
-│   └── SplavDetails.tsx     страница деталей сплава
-├── mocks/splavy.ts          моковые данные
-├── types/splav.ts           Splav, ProgramDay, Difficulty
-└── lib/format.ts            форматтер дат
+│   ├── Home.tsx                главная (витрина)
+│   ├── About.tsx               страница "Про нас"
+│   ├── Corporate.tsx           страница корпоративных сплавов
+│   └── SplavDetails.tsx        страница деталей сплава
+├── mocks/splavy.ts             данные из Google Form
+├── types/splav.ts              Splav, ProgramDay, Difficulty
+├── lib/
+│   ├── format.ts               форматтер дат
+│   └── googleForm.ts           константы Google Forms
+└── generated/
+    └── form-schema.ts          автогенерированная схема формы
 ```
 
 ## Деплой на GitHub Pages
@@ -65,7 +73,9 @@ GitHub Pages не умеет SPA-fallback сам. Решено просто: `sc
 
 См. план развития в чате с агентом (`.agents/`):
 
+- [x] Страница "Про нас" (/about)
+- [x] Страница корпоративных сплавов (/corporate)
 - [ ] Интеграция формы с Google Apps Script Web App (запись в Google Sheet)
 - [ ] Чтение сплавов из Google Sheet вместо моков
 - [ ] Фото-галерея для сплавов
-- [ ] Антиспам (honeypot + invisible captcha)
+- [ ] Популярные вопросы (FAQ секция)

@@ -1,84 +1,90 @@
 .section {
-  background: #fff;
-  padding: 60px 22px 80px;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue',
-    Helvetica, Arial, sans-serif;
+    background: #fff;
+    padding: 60px 22px 80px;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.sectionAlt {
+    background: #fbfbfd;
 }
 
 .sectionTitle {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 700;
-  color: #1d1d1f;
-  margin: 0 0 40px;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 40px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin: 0 0 40px;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.textBlock {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    color: #3a3a3c;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.sectionEmpty {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.emptyTitle {
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.emptyText {
+    color: #6e6e73;
+    margin-top: 8px;
 }
 
 /* TABLET — 2 колонки */
 @media (min-width: 640px) {
-  .section {
-    padding: 80px 40px 100px;
-  }
-  .sectionTitle {
-    font-size: 36px;
-    margin-bottom: 56px;
-  }
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
+    .section {
+        padding: 80px 40px 100px;
+    }
+    .sectionTitle {
+        font-size: 36px;
+        margin-bottom: 56px;
+    }
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
 }
 
 /* DESKTOP — 3 колонки */
 @media (min-width: 1024px) {
-  .section {
-    padding: 96px 64px 120px;
-  }
-  .sectionTitle {
-    font-size: 44px;
-    margin-bottom: 72px;
-  }
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-  }
-}
-
-/* === EMPTY STATE === */
-.empty {
-  min-height: calc(100vh - 44px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  text-align: center;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
-  color: #1d1d1f;
-  background: #fbfbfd;
-}
-
-.emptyTitle {
-  font-size: 32px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.emptyText {
-  color: #6e6e73;
-  margin-top: 8px;
+    .section {
+        padding: 96px 64px 120px;
+    }
+    .sectionTitle {
+        font-size: 44px;
+        margin-bottom: 72px;
+    }
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
 }

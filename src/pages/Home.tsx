@@ -17,34 +17,30 @@ export function Home() {
     open();
   };
 
-  if (splavy.length === 0) {
-    return (
-      <main className={styles.empty}>
-        <div>
-          <h2 className={styles.emptyTitle}>Сезон закрыт</h2>
-          <p className={styles.emptyText}>
-            Новые даты появятся, как только их добавят в форму записи.
-          </p>
-        </div>
-      </main>
-    );
-  }
-
   return (
     <>
       <main>
-        <section className={styles.section}>
-          <h1 className={styles.sectionTitle}>Выбери свой вариант маршрута</h1>
-          <div className={styles.grid}>
-            {splavy.map((splav, idx) => (
-              <SplavCard
-                key={splav.id}
-                splav={splav}
-                index={idx}
-                onBook={() => handleBook(splav)}
-              />
-            ))}
-          </div>
+        <section id="schedule" className={styles.section}>
+          <h1 className={styles.sectionTitle}>Расписание сплавов</h1>
+          {splavy.length === 0 ? (
+            <div className={styles.sectionEmpty}>
+              <h2 className={styles.emptyTitle}>Сезон закрыт</h2>
+              <p className={styles.emptyText}>
+                Новые даты появятся, как только их добавят в форму записи.
+              </p>
+            </div>
+          ) : (
+            <div className={styles.grid}>
+              {splavy.map((splav, idx) => (
+                <SplavCard
+                  key={splav.id}
+                  splav={splav}
+                  index={idx}
+                  onBook={() => handleBook(splav)}
+                />
+              ))}
+            </div>
+          )}
         </section>
       </main>
       {activeSplav && (

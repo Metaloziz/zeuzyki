@@ -1,0 +1,26 @@
+{
+  "terminal": {
+    "autoApprove": true,
+    "timeout": 60000
+  },
+  "dangerousCommands": [
+    "rm -rf /",
+    "rm -rf /home",
+    "rm -rf /root",
+    "format",
+    "del /f /s /q",
+    ":(){ :|:& };:"
+  ],
+  "allowedCommands": [
+    "yarn",
+    "npm",
+    "node",
+    "git",
+    "vite",
+    "tsc",
+    "cargo",
+    "python",
+    "pip",
+    "docker"
+  ]
+}

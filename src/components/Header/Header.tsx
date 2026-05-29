@@ -30,15 +30,18 @@ export function Header() {
         </Link>
         <div className={styles.right}>
           <nav className={styles.nav} aria-label="Основная навигация">
-            <a href="#splavs" className={styles.navLink}>
-              Сплавы
-            </a>
-            <a href="#about" className={styles.navLink}>
-              О нас
-            </a>
-            <a href="#contacts" className={styles.navLink}>
-              Контакты
-            </a>
+            <Link to="/#schedule" className={styles.navLink}>
+              Расписание сплавов
+            </Link>
+            <Link to="/corporate" className={styles.navLink}>
+              Корпоративные сплавы
+            </Link>
+            <Link to="/faq" className={styles.navLink}>
+              Популярные вопросы
+            </Link>
+            <Link to="/about" className={styles.navLink}>
+              Про нас
+            </Link>
           </nav>
           <a
             href="https://www.instagram.com/zeuzyki/"

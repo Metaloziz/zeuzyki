@@ -14,13 +14,39 @@ const difficultyLabel: Record<Difficulty, string> = {
   сложный: "Для профи",
 };
 
+const riverImageByName: Record<string, string> = {
+  вилия: new URL("../../../assets/Вилия.jpg", import.meta.url).href,
+  илия: new URL("../../../assets/Илия.jpg", import.meta.url).href,
+  нарочь: new URL("../../../assets/Нарочь.jpg", import.meta.url).href,
+  узлянка: new URL("../../../assets/Узлянка.jpg", import.meta.url).href,
+};
+
+function normalizeRiverName(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/^р\.\s*/, "");
+}
+
 export function SplavCard({ splav, index, onBook }: SplavCardProps) {
-  // Циклический индекс градиента — пока нет фото
   const variantClass = styles[`gradient${(index % 4) + 1}`];
+  const riverImage = riverImageByName[normalizeRiverName(splav.river)];
 
   return (
     <article className={styles.card}>
-      <div className={`${styles.image} ${variantClass}`} aria-hidden="true" />
+      <div
+        className={`${styles.image} ${riverImage ? styles.imageWithPhoto : variantClass}`}
+        aria-hidden="true"
+      >
+        {riverImage && (
+          <img
+            src={riverImage}
+            alt={`Река ${splav.river}`}
+            className={styles.imagePhoto}
+            loading="lazy"
+          />
+        )}
+      </div>
       <div className={styles.content}>
         <p className={styles.eyebrow}>{difficultyLabel[splav.difficulty]}</p>
         <h3 className={styles.title}>{splav.title}</h3>
