@@ -4,8 +4,7 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  # Rebuild daily at 03:00 UTC (06:00 Minsk) — pulls fresh dates from the
-  # Google Form even if no code changes.
+  # Rebuild daily at 03:00 UTC (06:00 Minsk).
   schedule:
     - cron: "0 3 * * *"
 
@@ -42,6 +41,9 @@ jobs:
         env:
           # Repo deployed at https://<user>.github.io/zeuzyki/. Override if custom domain.
           VITE_BASE: /zeuzyki/
+          # Configure in GitHub -> Settings -> Secrets and variables -> Actions
+          VITE_GAS_API_URL: ${{ secrets.VITE_GAS_API_URL }}
+          VITE_GAS_API_KEY: ${{ secrets.VITE_GAS_API_KEY }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

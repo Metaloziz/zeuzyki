@@ -40,14 +40,29 @@ src/
 │   ├── About.tsx               страница "Про нас"
 │   ├── Corporate.tsx           страница корпоративных сплавов
 │   └── SplavDetails.tsx        страница деталей сплава
-├── mocks/splavy.ts             данные из Google Form
+├── mocks/splavy.ts             fallback-моки расписания
 ├── types/splav.ts              Splav, ProgramDay, Difficulty
 ├── lib/
 │   ├── format.ts               форматтер дат
-│   └── googleForm.ts           константы Google Forms
+│   └── sheetsApi.ts            Google Apps Script API (GET/POST)
 └── generated/
-    └── form-schema.ts          автогенерированная схема формы
+    └── form-schema.ts          legacy (можно удалить позже)
 ```
+
+## Переменные окружения
+
+Создай `.env.local` (локально) или задай переменные в CI:
+
+```sh
+VITE_GAS_API_URL=https://script.google.com/macros/s/<DEPLOYMENT_ID>/exec
+VITE_GAS_API_KEY=<YOUR_SECRET_API_KEY>
+```
+
+Для примера есть файл `.env.example`.
+
+Для GitHub Pages добавь те же значения в Secrets:
+- `VITE_GAS_API_URL`
+- `VITE_GAS_API_KEY`
 
 ## Деплой на GitHub Pages
 
@@ -75,7 +90,7 @@ GitHub Pages не умеет SPA-fallback сам. Решено просто: `sc
 
 - [x] Страница "Про нас" (/about)
 - [x] Страница корпоративных сплавов (/corporate)
-- [ ] Интеграция формы с Google Apps Script Web App (запись в Google Sheet)
-- [ ] Чтение сплавов из Google Sheet вместо моков
+- [x] Интеграция формы с Google Apps Script Web App (запись в Google Sheet)
+- [x] Чтение сплавов из Google Sheet вместо моков
 - [ ] Фото-галерея для сплавов
 - [ ] Популярные вопросы (FAQ секция)

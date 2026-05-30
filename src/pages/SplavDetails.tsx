@@ -1,22 +1,91 @@
-import { useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
-import { useDisclosure } from '@mantine/hooks';
-import { BookingModal } from '../components/BookingModal/BookingModal';
-import { formatDateRangeFull } from '../lib/format';
-import { getSplavById } from '../mocks/splavy';
-import styles from './SplavDetails.module.css';
+import { useEffect, useState } from "react";
+import { Link, Navigate, useParams } from "react-router-dom";
+import { Alert, Loader, Stack, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { BookingModal } from "../components/BookingModal/BookingModal";
+import { formatDateRangeFull } from "../lib/format";
+import { fetchSchedule } from "../lib/sheetsApi";
+import type { Splav } from "../types/splav";
+import styles from "./SplavDetails.module.css";
 
 export function SplavDetails() {
   const { id } = useParams<{ id: string }>();
-  const splav = id ? getSplavById(Number(id)) : undefined;
+  const [splav, setSplav] = useState<Splav | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [stickyVisible, setStickyVisible] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      if (!id) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      setLoadError(null);
+
+      try {
+        const items = await fetchSchedule();
+        const found = items.find((item) => item.id === id) ?? null;
+        if (!cancelled) {
+          setSplav(found);
+        }
+      } catch (e) {
+        if (!cancelled) {
+          setLoadError(
+            e instanceof Error
+              ? e.message
+              : "Не удалось загрузить данные сплава",
+          );
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    void run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.container}>
+          <Stack align="center" gap="xs">
+            <Loader size="sm" />
+            <Text size="sm" c="dimmed">
+              Загружаем сплав…
+            </Text>
+          </Stack>
+        </div>
+      </main>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.container}>
+          <Alert color="red" variant="light" title="Ошибка загрузки">
+            {loadError}
+          </Alert>
+        </div>
+      </main>
+    );
+  }
 
   if (!splav) {
     return <Navigate to="/" replace />;
   }
 
-  const paragraphs = splav.longDescription.split('\n\n');
+  const paragraphs = splav.longDescription.split("\n\n");
 
   return (
     <>
@@ -30,7 +99,8 @@ export function SplavDetails() {
             </Link>
 
             <p className={styles.eyebrow}>
-              {formatDateRangeFull(splav.startDate, splav.endDate)} · {splav.durationDays} дня
+              {formatDateRangeFull(splav.startDate, splav.endDate)} ·{" "}
+              {splav.durationDays} дня
             </p>
             <h1 className={styles.title}>{splav.title}</h1>
             <p className={styles.subtitle}>{splav.shortDescription}</p>
@@ -43,7 +113,8 @@ export function SplavDetails() {
               <div className={styles.metaItem}>
                 <span className={styles.metaLabel}>Свободно</span>
                 <span className={styles.metaValue}>
-                  {splav.seatsLeft} <span className={styles.metaTotal}>/ {splav.seatsTotal}</span>
+                  {splav.seatsLeft}{" "}
+                  <span className={styles.metaTotal}>/ {splav.seatsTotal}</span>
                 </span>
               </div>
               <div className={styles.metaItem}>
@@ -92,7 +163,9 @@ export function SplavDetails() {
                   <div className={styles.programDayBadge}>День {day.day}</div>
                   <div className={styles.programDayContent}>
                     <h3 className={styles.programDayTitle}>{day.title}</h3>
-                    <p className={styles.programDayDescription}>{day.description}</p>
+                    <p className={styles.programDayDescription}>
+                      {day.description}
+                    </p>
                   </div>
                 </li>
               ))}
@@ -122,7 +195,8 @@ export function SplavDetails() {
           <div className={styles.container}>
             <h2 className={styles.finalCtaTitle}>Готовы в путь?</h2>
             <p className={styles.finalCtaText}>
-              Места уходят быстро. Сейчас свободно {splav.seatsLeft} из {splav.seatsTotal}.
+              Места уходят быстро. Сейчас свободно {splav.seatsLeft} из{" "}
+              {splav.seatsTotal}.
             </p>
             <button
               type="button"
@@ -143,7 +217,9 @@ export function SplavDetails() {
         <div className={styles.sticky}>
           <div className={styles.stickyInfo}>
             <span className={styles.stickyPrice}>{splav.price} BYN</span>
-            <span className={styles.stickySeats}>осталось {splav.seatsLeft} мест</span>
+            <span className={styles.stickySeats}>
+              осталось {splav.seatsLeft} мест
+            </span>
           </div>
           <button type="button" className={styles.stickyButton} onClick={open}>
             Записаться

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Alert, Loader, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { BookingModal } from "../components/BookingModal/BookingModal";
-import { splavy } from "../mocks/splavy";
+import { fetchSchedule } from "../lib/sheetsApi";
 import type { Splav } from "../types/splav";
 import styles from "./Home.module.css";
 
@@ -29,29 +30,75 @@ function normalizeRiverName(name: string): string {
 }
 
 function getSplavCardTitle(splav: Splav): string {
-  return `Сплав по р. ${splav.river}`;
+  const title = splav.title?.trim();
+  if (!title) return `Сплав по р. ${splav.river}`;
+
+  const hasRiverInTitle = title
+    .toLowerCase()
+    .includes(splav.river.toLowerCase());
+  return hasRiverInTitle ? title : `${title} · р. ${splav.river}`;
 }
 
 export function Home() {
   const [opened, { open, close }] = useDisclosure(false);
-  const [activeSplav, setActiveSplav] = useState<Splav | null>(
-    splavy[0] ?? null,
-  );
+  const [splavy, setSplavy] = useState<Splav[]>([]);
+  const [activeSplav, setActiveSplav] = useState<Splav | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      setLoading(true);
+      setLoadError(null);
+      try {
+        const items = await fetchSchedule();
+        if (!cancelled) {
+          setSplavy(items);
+          setActiveSplav(items[0] ?? null);
+        }
+      } catch (e) {
+        if (!cancelled) {
+          setLoadError(
+            e instanceof Error
+              ? e.message
+              : "Не удалось загрузить расписание. Попробуйте позже.",
+          );
+          setSplavy([]);
+          setActiveSplav(null);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    void run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleBook = (splav: Splav) => {
     setActiveSplav(splav);
     open();
   };
 
-  const sortedSplavy = [...splavy].sort(
-    (a, b) => toDateTime(a).getTime() - toDateTime(b).getTime(),
-  );
-  const now = new Date();
-  const upcoming = sortedSplavy.filter((s) => toDateTime(s) >= now);
-  const nearestSource = upcoming.length > 0 ? upcoming : sortedSplavy;
-  const featuredSplavy = nearestSource.slice(0, 2);
-  const featuredIds = new Set(featuredSplavy.map((s) => s.id));
-  const listSplavy = sortedSplavy.filter((s) => !featuredIds.has(s.id));
+  const { featuredSplavy, listSplavy } = useMemo(() => {
+    const sortedSplavy = [...splavy].sort(
+      (a, b) => toDateTime(a).getTime() - toDateTime(b).getTime(),
+    );
+
+    const now = new Date();
+    const upcoming = sortedSplavy.filter((s) => toDateTime(s) >= now);
+    const nearestSource = upcoming.length > 0 ? upcoming : sortedSplavy;
+    const featured = nearestSource.slice(0, 2);
+    const featuredIds = new Set(featured.map((s) => s.id));
+    const list = sortedSplavy.filter((s) => !featuredIds.has(s.id));
+
+    return { featuredSplavy: featured, listSplavy: list };
+  }, [splavy]);
 
   return (
     <>
@@ -59,11 +106,24 @@ export function Home() {
         <section id="schedule" className={styles.section}>
           <h1 className={styles.sectionTitle}>Расписание сплавов</h1>
 
-          {splavy.length === 0 ? (
+          {loading ? (
+            <div className={styles.sectionEmpty}>
+              <Stack align="center" gap="xs">
+                <Loader size="sm" />
+                <Text size="sm" c="dimmed">
+                  Загружаем расписание…
+                </Text>
+              </Stack>
+            </div>
+          ) : loadError ? (
+            <Alert color="red" variant="light" title="Ошибка загрузки">
+              {loadError}
+            </Alert>
+          ) : splavy.length === 0 ? (
             <div className={styles.sectionEmpty}>
               <h2 className={styles.emptyTitle}>Сезон закрыт</h2>
               <p className={styles.emptyText}>
-                Новые даты появятся, как только их добавят в форму записи.
+                Новые даты появятся, как только их добавят в расписание.
               </p>
             </div>
           ) : (

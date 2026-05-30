@@ -7,8 +7,8 @@ export interface ProgramDay {
 }
 
 export interface Splav {
-  /** Уникальный id (соответствует строке в Google Sheet) */
-  id: number;
+  /** Уникальный id (соответствует `Schedule.id` в Google Sheet) */
+  id: string;
   /** Название сплава */
   title: string;
   /** Река */
@@ -39,10 +39,4 @@ export interface Splav {
   includes: string[];
   /** Программа по дням */
   program: ProgramDay[];
-  /**
-   * Точная строка значения для поля «Дата похода» в Google Form
-   * (entry.287946786). Должна совпадать побайтно с одним из вариантов
-   * в форме, иначе Google проигнорирует значение.
-   */
-  formDateValue: string;
 }
