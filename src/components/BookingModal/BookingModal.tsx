@@ -9,7 +9,6 @@ import {
   Checkbox,
   Group,
   Modal,
-  NumberInput,
   Stack,
   Switch,
   Text,
@@ -178,192 +177,277 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
           </Button>
         </Stack>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+          className={styles.formRoot}
+        >
           <Stack gap="md">
             <Text size="sm" c="dimmed">
               {splav.title} · р. {splav.river}
             </Text>
 
-            <TextInput
-              label="Имя и фамилия"
-              placeholder="Иван Иванов"
-              autoComplete="name"
-              error={errors.name?.message}
-              {...register("name")}
-            />
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHead}>
+                <span className={`${styles.sectionIcon} ${styles.iconBlue}`}>
+                  👤
+                </span>
+                <span className={styles.sectionTitle}>Контакты</span>
+              </div>
 
-            <Controller
-              control={control}
-              name="phone"
-              render={({ field }) => (
+              <Stack gap="sm">
                 <TextInput
-                  label="Телефон (с Viber/Telegram)"
-                  placeholder="+375 (29) 123-45-67"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  error={errors.phone?.message}
-                  value={field.value}
-                  onChange={(e) =>
-                    field.onChange(formatPhone(e.currentTarget.value))
-                  }
-                  onBlur={field.onBlur}
+                  label="Имя и фамилия"
+                  placeholder="Иван Иванов"
+                  autoComplete="name"
+                  error={errors.name?.message}
+                  {...register("name")}
                 />
-              )}
-            />
 
-            <Controller
-              control={control}
-              name="peopleCount"
-              render={({ field }) => (
-                <Stack gap={6}>
-                  <NumberInput
-                    label="Количество участников"
-                    min={1}
-                    max={20}
-                    clampBehavior="strict"
-                    allowNegative={false}
-                    allowDecimal={false}
-                    error={errors.peopleCount?.message}
-                    value={field.value}
-                    onChange={(value) =>
-                      field.onChange(typeof value === "number" ? value : NaN)
-                    }
-                    onBlur={field.onBlur}
-                  />
-                  {field.value === 1 && (
-                    <Text size="xs" c="dimmed">
-                      Если вы записываетесь один, можно указать желаемый формат
-                      байдарки (2- или 3-местная). Подберём экипаж и согласуем
-                      посадку с вами заранее.
-                    </Text>
-                  )}
-                </Stack>
-              )}
-            />
-
-            <Stack gap="xs">
-              <Controller
-                control={control}
-                name="hasKids"
-                render={({ field }) => (
-                  <Group justify="space-between" align="center" wrap="nowrap">
-                    <Stack gap={0}>
-                      <Text fw={600}>Будут ли дети?</Text>
-                      <Text size="xs" c="dimmed">
-                        Дети до 14 лет идут по детскому тарифу, с 14 лет —
-                        взрослый тариф.
-                      </Text>
-                    </Stack>
-                    <Switch
-                      checked={field.value}
-                      onChange={(event) => {
-                        const checked = event.currentTarget.checked;
-                        field.onChange(checked);
-                        if (checked && watch("kidsCount") === 0) {
-                          setValue("kidsCount", 1, { shouldValidate: true });
-                        }
-                        if (!checked) {
-                          setValue("kidsCount", 0, { shouldValidate: true });
-                          setValue("kidsAges", "");
-                        }
-                      }}
+                <Controller
+                  control={control}
+                  name="phone"
+                  render={({ field }) => (
+                    <TextInput
+                      label="Телефон (с Viber/Telegram)"
+                      placeholder="+375 (29) 123-45-67"
+                      inputMode="tel"
+                      autoComplete="tel"
+                      error={errors.phone?.message}
+                      value={field.value}
+                      onChange={(e) =>
+                        field.onChange(formatPhone(e.currentTarget.value))
+                      }
+                      onBlur={field.onBlur}
                     />
-                  </Group>
-                )}
-              />
+                  )}
+                />
+              </Stack>
+            </div>
 
-              {hasKids && (
-                <Stack gap="xs">
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHead}>
+                <span className={`${styles.sectionIcon} ${styles.iconGreen}`}>
+                  👥
+                </span>
+                <span className={styles.sectionTitle}>Участники</span>
+              </div>
+
+              <Stack gap="sm">
+                <Controller
+                  control={control}
+                  name="peopleCount"
+                  render={({ field }) => (
+                    <Stack gap={6}>
+                      <Text fw={500}>Количество участников</Text>
+                      <Group justify="space-between" align="center">
+                        <ActionIcon
+                          variant="filled"
+                          color="green"
+                          radius="xl"
+                          size={46}
+                          onClick={() =>
+                            field.onChange(Math.max(1, Number(field.value) - 1))
+                          }
+                          aria-label="Уменьшить количество участников"
+                        >
+                          −
+                        </ActionIcon>
+
+                        <Text fw={700} fz={24} w={48} ta="center">
+                          {field.value}
+                        </Text>
+
+                        <ActionIcon
+                          variant="filled"
+                          color="green"
+                          radius="xl"
+                          size={46}
+                          onClick={() =>
+                            field.onChange(
+                              Math.min(20, Number(field.value) + 1),
+                            )
+                          }
+                          aria-label="Увеличить количество участников"
+                        >
+                          +
+                        </ActionIcon>
+                      </Group>
+
+                      {errors.peopleCount?.message && (
+                        <Text size="xs" c="red">
+                          {errors.peopleCount.message}
+                        </Text>
+                      )}
+
+                      {field.value === 1 && (
+                        <Text size="xs" className={styles.hint}>
+                          Если вы записываетесь один, можно указать желаемый
+                          формат байдарки (2- или 3-местная). Подберём экипаж и
+                          согласуем посадку с вами заранее.
+                        </Text>
+                      )}
+                    </Stack>
+                  )}
+                />
+
+                <div className={styles.kidsCounter}>
                   <Controller
                     control={control}
-                    name="kidsCount"
+                    name="hasKids"
                     render={({ field }) => (
-                      <Stack gap={4}>
-                        <Group justify="space-between" align="center">
-                          <Stack gap={0}>
-                            <Text fw={500}>Количество детей</Text>
-                            <Text size="xs" c="dimmed">
-                              до 14 лет
-                            </Text>
-                          </Stack>
-                          <Group gap="xs">
-                            <ActionIcon
-                              variant="light"
-                              radius="xl"
-                              size="lg"
-                              onClick={() =>
-                                field.onChange(
-                                  Math.max(1, Number(field.value) - 1),
-                                )
-                              }
+                      <Group
+                        justify="space-between"
+                        align="center"
+                        wrap="nowrap"
+                      >
+                        <Stack gap={0}>
+                          <Group gap={6}>
+                            <span
+                              className={`${styles.sectionIcon} ${styles.iconAmber}`}
                             >
-                              −
-                            </ActionIcon>
-                            <Text fw={600} w={18} ta="center">
-                              {field.value}
-                            </Text>
-                            <ActionIcon
-                              variant="light"
-                              radius="xl"
-                              size="lg"
-                              onClick={() =>
-                                field.onChange(
-                                  Math.min(10, Number(field.value) + 1),
-                                )
-                              }
-                            >
-                              +
-                            </ActionIcon>
+                              🧒
+                            </span>
+                            <Text fw={600}>Будут ли дети?</Text>
                           </Group>
-                        </Group>
-                        {errors.kidsCount?.message && (
-                          <Text size="xs" c="red">
-                            {errors.kidsCount.message}
+                          <Text size="xs" className={styles.hint}>
+                            До 14 лет — детский тариф, от 14 лет — взрослый.
                           </Text>
-                        )}
-                      </Stack>
+                        </Stack>
+                        <Switch
+                          checked={field.value}
+                          onChange={(event) => {
+                            const checked = event.currentTarget.checked;
+                            field.onChange(checked);
+                            if (checked && watch("kidsCount") === 0) {
+                              setValue("kidsCount", 1, {
+                                shouldValidate: true,
+                              });
+                            }
+                            if (!checked) {
+                              setValue("kidsCount", 0, {
+                                shouldValidate: true,
+                              });
+                              setValue("kidsAges", "");
+                            }
+                          }}
+                        />
+                      </Group>
                     )}
                   />
 
-                  <TextInput
-                    label="Возраст детей"
-                    placeholder="Например: 6 и 10 лет"
-                    error={errors.kidsAges?.message}
-                    {...register("kidsAges")}
+                  {hasKids && (
+                    <Stack gap="xs" mt="sm">
+                      <Controller
+                        control={control}
+                        name="kidsCount"
+                        render={({ field }) => (
+                          <Stack gap={4}>
+                            <Group justify="space-between" align="center">
+                              <Stack gap={0}>
+                                <Text fw={500}>Количество детей</Text>
+                                <Text size="xs" c="dimmed">
+                                  до 14 лет
+                                </Text>
+                              </Stack>
+                              <Group gap="xs">
+                                <ActionIcon
+                                  variant="light"
+                                  color="orange"
+                                  radius="xl"
+                                  size="lg"
+                                  onClick={() =>
+                                    field.onChange(
+                                      Math.max(1, Number(field.value) - 1),
+                                    )
+                                  }
+                                >
+                                  −
+                                </ActionIcon>
+                                <Text fw={600} w={18} ta="center">
+                                  {field.value}
+                                </Text>
+                                <ActionIcon
+                                  variant="light"
+                                  color="orange"
+                                  radius="xl"
+                                  size="lg"
+                                  onClick={() =>
+                                    field.onChange(
+                                      Math.min(10, Number(field.value) + 1),
+                                    )
+                                  }
+                                >
+                                  +
+                                </ActionIcon>
+                              </Group>
+                            </Group>
+                            {errors.kidsCount?.message && (
+                              <Text size="xs" c="red">
+                                {errors.kidsCount.message}
+                              </Text>
+                            )}
+                          </Stack>
+                        )}
+                      />
+
+                      <TextInput
+                        label="Возраст детей"
+                        placeholder="Например: 6 и 10 лет"
+                        error={errors.kidsAges?.message}
+                        {...register("kidsAges")}
+                      />
+                    </Stack>
+                  )}
+                </div>
+              </Stack>
+            </div>
+
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHead}>
+                <span className={`${styles.sectionIcon} ${styles.iconViolet}`}>
+                  💬
+                </span>
+                <span className={styles.sectionTitle}>Комментарий</span>
+              </div>
+              <Textarea
+                label="Пожелания"
+                description="Укажите детали по маршруту, экипировке, детям или трансферу"
+                placeholder="Например: нужен трансфер из Молодечно"
+                minRows={3}
+                autosize
+                error={errors.comment?.message}
+                {...register("comment")}
+              />
+            </div>
+
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHead}>
+                <span className={`${styles.sectionIcon} ${styles.iconRose}`}>
+                  🔒
+                </span>
+                <span className={styles.sectionTitle}>Согласие</span>
+              </div>
+              <Controller
+                control={control}
+                name="consent"
+                render={({ field }) => (
+                  <Checkbox
+                    checked={!!field.value}
+                    onChange={(e) => field.onChange(e.currentTarget.checked)}
+                    onBlur={field.onBlur}
+                    error={errors.consent?.message}
+                    label={
+                      <Text size="sm">
+                        Согласен на обработку персональных данных в соответствии
+                        с Законом Республики Беларусь № 99-З «О защите
+                        персональных данных»
+                      </Text>
+                    }
                   />
-                </Stack>
-              )}
-            </Stack>
-
-            <Textarea
-              label="Комментарий"
-              description="Укажите пожелания по маршруту, экипировке, детям или трансферу"
-              placeholder="Например: нужен трансфер из Молодечно"
-              minRows={3}
-              autosize
-              error={errors.comment?.message}
-              {...register("comment")}
-            />
-
-            <Controller
-              control={control}
-              name="consent"
-              render={({ field }) => (
-                <Checkbox
-                  checked={!!field.value}
-                  onChange={(e) => field.onChange(e.currentTarget.checked)}
-                  onBlur={field.onBlur}
-                  error={errors.consent?.message}
-                  label={
-                    <Text size="sm">
-                      Согласен на обработку персональных данных в соответствии с
-                      Законом Республики Беларусь № 99-З «О защите персональных
-                      данных»
-                    </Text>
-                  }
-                />
-              )}
-            />
+                )}
+              />
+            </div>
 
             {error && (
               <Alert color="red" variant="light">

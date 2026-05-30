@@ -1,3 +1,70 @@
 .title {
-  margin: 0;
+    margin: 0;
+}
+
+.formRoot {
+    margin-top: 2px;
+}
+
+.sectionCard {
+    background: #f8fafc;
+    border: 1px solid #e7edf5;
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.sectionHead {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.sectionIcon {
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.iconBlue {
+    background: #dbeafe;
+}
+
+.iconGreen {
+    background: #dcfce7;
+}
+
+.iconAmber {
+    background: #fef3c7;
+}
+
+.iconViolet {
+    background: #ede9fe;
+}
+
+.iconRose {
+    background: #ffe4e6;
+}
+
+.sectionTitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.hint {
+    color: #64748b;
+    line-height: 1.35;
+}
+
+.kidsCounter {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 10px;
 }
