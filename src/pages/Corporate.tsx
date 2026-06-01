@@ -134,32 +134,33 @@ const CORPORATE_OPTIONS = [
   },
 ];
 
+const corporateHeroImage = new URL("../../assets/corporat.jpg", import.meta.url)
+  .href;
+
 const CORPORATE_GALLERY = [
   {
-    src: "IMG_5375.jpg",
+    src: new URL("../../assets/IMG_5375.jpg", import.meta.url).href,
     alt: "Команда на корпоративном сплаве",
     layout: "wide",
   },
   {
-    src: "IMG_5377.jpg",
+    src: new URL("../../assets/IMG_5377.jpg", import.meta.url).href,
     alt: "Участники корпоративного сплава на реке",
     layout: "default",
   },
   {
-    src: "IMG_5378.jpg",
+    src: new URL("../../assets/IMG_5378.jpg", import.meta.url).href,
     alt: "Корпоративный выезд на байдарках",
     layout: "tall",
   },
   {
-    src: "IMG_4842.jpg",
+    src: new URL("../../assets/IMG_4842.jpg", import.meta.url).href,
     alt: "Отдых команды после сплава",
     layout: "default",
   },
 ] as const;
 
 export function Corporate() {
-  const base = import.meta.env.BASE_URL;
-
   return (
     <main className={styles.page}>
       <div className={styles.container}>
@@ -184,7 +185,7 @@ export function Corporate() {
           </div>
           <div className={styles.heroImage}>
             <img
-              src={`${base}assets/corporat.jpg`}
+              src={corporateHeroImage}
               alt="Корпоративный сплав на байдарках"
               className={styles.heroImg}
             />
@@ -207,7 +208,7 @@ export function Corporate() {
                 }`}
               >
                 <img
-                  src={`${base}assets/${photo.src}`}
+                  src={photo.src}
                   alt={photo.alt}
                   className={styles.galleryImg}
                   loading="lazy"
