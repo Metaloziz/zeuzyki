@@ -30,13 +30,19 @@ export interface BookingPayload {
   comment?: string;
 }
 
-const API_URL = (
-  import.meta.env.VITE_GAS_API_URL ??
-  "https://script.google.com/macros/s/AKfycbxdjqgFqoAwbrmvK4O7KBpBxXyR-yDvn1ML4mJNSfzvNp_FvDklP5w3HhsFnqv67hgz/exec"
-).trim();
-const API_KEY = (
-  import.meta.env.VITE_GAS_API_KEY ?? "zeuzyki_2026_super_secret_9f3KxP71"
-).trim();
+function withFallback(value: string | undefined, fallback: string): string {
+  const normalized = (value ?? "").trim();
+  return normalized.length > 0 ? normalized : fallback;
+}
+
+const API_URL = withFallback(
+  import.meta.env.VITE_GAS_API_URL,
+  "https://script.google.com/macros/s/AKfycbxdjqgFqoAwbrmvK4O7KBpBxXyR-yDvn1ML4mJNSfzvNp_FvDklP5w3HhsFnqv67hgz/exec",
+);
+const API_KEY = withFallback(
+  import.meta.env.VITE_GAS_API_KEY,
+  "zeuzyki_2026_super_secret_9f3KxP71",
+);
 
 const TRIP_TEMPLATE = {
   durationDays: 1,
