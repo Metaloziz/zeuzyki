@@ -30,8 +30,13 @@ export interface BookingPayload {
   comment?: string;
 }
 
-const API_URL = (import.meta.env.VITE_GAS_API_URL ?? "").trim();
-const API_KEY = (import.meta.env.VITE_GAS_API_KEY ?? "").trim();
+const API_URL = (
+  import.meta.env.VITE_GAS_API_URL ??
+  "https://script.google.com/macros/s/AKfycbxdjqgFqoAwbrmvK4O7KBpBxXyR-yDvn1ML4mJNSfzvNp_FvDklP5w3HhsFnqv67hgz/exec"
+).trim();
+const API_KEY = (
+  import.meta.env.VITE_GAS_API_KEY ?? "zeuzyki_2026_super_secret_9f3KxP71"
+).trim();
 
 const TRIP_TEMPLATE = {
   durationDays: 1,
