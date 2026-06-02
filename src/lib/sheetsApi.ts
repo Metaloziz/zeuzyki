@@ -35,9 +35,8 @@ export interface BookingPayload {
 const FALLBACK_GAS_API_URL =
   "https://script.google.com/macros/s/AKfycbzdz5a8XLmHZkGWOdyy_vQ3TmRGrWdecy9ka3YWdgXyOMkSoojsgzPV_2QBRixTbLv5/exec";
 
-const API_URL = (
-  import.meta.env.VITE_GAS_API_URL ?? FALLBACK_GAS_API_URL
-).trim();
+const API_URL =
+  (import.meta.env.VITE_GAS_API_URL ?? "").trim() || FALLBACK_GAS_API_URL;
 const API_KEY = (import.meta.env.VITE_GAS_API_KEY ?? "").trim();
 
 const TRIP_TEMPLATE = {
