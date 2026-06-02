@@ -44,16 +44,45 @@ export function Home() {
   const [splavy, setSplavy] = useState<Splav[]>([]);
   const [activeSplav, setActiveSplav] = useState<Splav | null>(null);
   const [loading, setLoading] = useState(true);
+  const [freshnessStatus, setFreshnessStatus] = useState<
+    "idle" | "checking" | "success"
+  >("idle");
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
     const run = async () => {
+      let refreshFailed = false;
+
       setLoading(true);
+      setFreshnessStatus("idle");
       setLoadError(null);
       try {
-        const items = await fetchSchedule();
+        const items = await fetchSchedule({
+          onRefreshStart: () => {
+            refreshFailed = false;
+            if (!cancelled) setFreshnessStatus("checking");
+          },
+          onUpdate: (freshItems) => {
+            if (!cancelled) {
+              setSplavy(freshItems);
+              setActiveSplav((current) =>
+                current
+                  ? (freshItems.find((item) => item.id === current.id) ??
+                    current)
+                  : (freshItems[0] ?? null),
+              );
+            }
+          },
+          onRefreshError: () => {
+            refreshFailed = true;
+            if (!cancelled) setFreshnessStatus("idle");
+          },
+          onRefreshComplete: () => {
+            if (!cancelled && !refreshFailed) setFreshnessStatus("success");
+          },
+        });
         if (!cancelled) {
           setSplavy(items);
           setActiveSplav(items[0] ?? null);
@@ -168,6 +197,30 @@ export function Home() {
                   );
                 })}
               </div>
+
+              {freshnessStatus !== "idle" && (
+                <div
+                  className={styles.refreshNotice}
+                  role="status"
+                  aria-live="polite"
+                >
+                  {freshnessStatus === "checking" ? (
+                    <Loader size="xs" />
+                  ) : (
+                    <span
+                      className={styles.refreshSuccessIcon}
+                      aria-hidden="true"
+                    >
+                      ✓
+                    </span>
+                  )}
+                  <span>
+                    {freshnessStatus === "checking"
+                      ? "Проверка актуальности"
+                      : "Данные актуальны"}
+                  </span>
+                </div>
+              )}
 
               <div className={styles.infoBox}>
                 <p>

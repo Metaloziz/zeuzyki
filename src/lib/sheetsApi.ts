@@ -40,12 +40,18 @@ const API_URL =
 const API_KEY = (import.meta.env.VITE_GAS_API_KEY ?? "").trim();
 
 const SCHEDULE_CACHE_VERSION = 1;
-const SCHEDULE_CACHE_TTL_MS = 2 * 60 * 60 * 1000;
 const SCHEDULE_CACHE_KEY = `zeuzyki:schedule:v${SCHEDULE_CACHE_VERSION}:${API_URL}:${API_KEY}`;
 
 interface ScheduleCache {
   savedAt: number;
   items: Splav[];
+}
+
+interface FetchScheduleOptions {
+  onRefreshStart?: () => void;
+  onRefreshComplete?: () => void;
+  onRefreshError?: (error: unknown) => void;
+  onUpdate?: (items: Splav[]) => void;
 }
 
 const TRIP_TEMPLATE = {
@@ -97,7 +103,7 @@ function toSplav(item: ScheduleItem): Splav {
 }
 
 function getCachedSchedule(): Splav[] | null {
-  if (import.meta.env.DEV || typeof window === "undefined") return null;
+  if (typeof window === "undefined") return null;
 
   try {
     const raw = window.localStorage.getItem(SCHEDULE_CACHE_KEY);
@@ -105,12 +111,6 @@ function getCachedSchedule(): Splav[] | null {
 
     const cache = JSON.parse(raw) as Partial<ScheduleCache>;
     if (!cache.savedAt || !Array.isArray(cache.items)) {
-      window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
-      return null;
-    }
-
-    const isFresh = Date.now() - cache.savedAt < SCHEDULE_CACHE_TTL_MS;
-    if (!isFresh) {
       window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
       return null;
     }
@@ -123,7 +123,7 @@ function getCachedSchedule(): Splav[] | null {
 }
 
 function setCachedSchedule(items: Splav[]) {
-  if (import.meta.env.DEV || typeof window === "undefined") return;
+  if (typeof window === "undefined") return;
 
   try {
     const cache: ScheduleCache = {
@@ -136,12 +136,11 @@ function setCachedSchedule(items: Splav[]) {
   }
 }
 
-export async function fetchSchedule(): Promise<Splav[]> {
-  assertConfigured();
+function areSchedulesEqual(a: Splav[], b: Splav[]) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
 
-  const cached = getCachedSchedule();
-  if (cached) return cached;
-
+async function fetchScheduleFromApi(): Promise<Splav[]> {
   const url = new URL(API_URL);
   url.searchParams.set("action", "schedule");
   url.searchParams.set("key", API_KEY);
@@ -159,6 +158,38 @@ export async function fetchSchedule(): Promise<Splav[]> {
   const items = (json.items ?? []).filter((i) => i.isActive).map(toSplav);
   setCachedSchedule(items);
   return items;
+}
+
+async function refreshCachedSchedule(
+  cached: Splav[],
+  options: FetchScheduleOptions,
+) {
+  options.onRefreshStart?.();
+
+  try {
+    const fresh = await fetchScheduleFromApi();
+    if (!areSchedulesEqual(cached, fresh)) {
+      options.onUpdate?.(fresh);
+    }
+  } catch (error) {
+    options.onRefreshError?.(error);
+  } finally {
+    options.onRefreshComplete?.();
+  }
+}
+
+export async function fetchSchedule(
+  options: FetchScheduleOptions = {},
+): Promise<Splav[]> {
+  assertConfigured();
+
+  const cached = getCachedSchedule();
+  if (cached) {
+    void refreshCachedSchedule(cached, options);
+    return cached;
+  }
+
+  return fetchScheduleFromApi();
 }
 
 export async function submitBooking(payload: BookingPayload): Promise<void> {

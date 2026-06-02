@@ -60,6 +60,19 @@
     margin-right: 2px;
 }
 
+.refreshNotice {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid color-mix(in srgb, var(--text-on-dark) 22%, transparent);
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--surface) 10%, transparent);
+    color: var(--text-on-dark-muted);
+    padding: 8px 14px;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
 .eyebrow {
     margin: 0;
     font-size: 14px;

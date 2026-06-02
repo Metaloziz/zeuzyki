@@ -12,6 +12,7 @@ export function SplavDetails() {
   const { id } = useParams<{ id: string }>();
   const [splav, setSplav] = useState<Splav | null>(null);
   const [loading, setLoading] = useState(true);
+  const [checkingFreshness, setCheckingFreshness] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [stickyVisible, setStickyVisible] = useState(true);
@@ -29,7 +30,19 @@ export function SplavDetails() {
       setLoadError(null);
 
       try {
-        const items = await fetchSchedule();
+        const items = await fetchSchedule({
+          onRefreshStart: () => {
+            if (!cancelled) setCheckingFreshness(true);
+          },
+          onUpdate: (freshItems) => {
+            if (!cancelled) {
+              setSplav(freshItems.find((item) => item.id === id) ?? null);
+            }
+          },
+          onRefreshComplete: () => {
+            if (!cancelled) setCheckingFreshness(false);
+          },
+        });
         const found = items.find((item) => item.id === id) ?? null;
         if (!cancelled) {
           setSplav(found);
@@ -97,6 +110,17 @@ export function SplavDetails() {
             <Link to="/" className={styles.back}>
               <span aria-hidden="true">‹</span> Все сплавы
             </Link>
+
+            {checkingFreshness && (
+              <div
+                className={styles.refreshNotice}
+                role="status"
+                aria-live="polite"
+              >
+                <Loader size="xs" color="cyan" />
+                <span>Проверка актуальности</span>
+              </div>
+            )}
 
             <p className={styles.eyebrow}>
               {formatDateRangeFull(splav.startDate, splav.endDate)} ·{" "}

@@ -17,6 +17,37 @@
     margin-right: auto;
 }
 
+.refreshNotice {
+    width: max-content;
+    max-width: 100%;
+    margin: 22px auto -6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: var(--card-border);
+    border-radius: var(--radius-pill);
+    background: var(--surface-tint);
+    color: var(--text-secondary);
+    padding: 8px 14px;
+    font-size: 14px;
+    line-height: 1.2;
+    box-shadow: var(--card-shadow);
+}
+
+.refreshSuccessIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--brand-cyan);
+    color: var(--surface);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+
 .infoBox {
     max-width: 1000px;
     margin: 22px auto 34px;
