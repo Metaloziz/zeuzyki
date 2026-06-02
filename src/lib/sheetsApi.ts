@@ -1,3 +1,4 @@
+import type { River } from "../types/river";
 import type { Splav } from "../types/splav";
 
 interface ScheduleItem {
@@ -12,6 +13,12 @@ interface ScheduleItem {
 interface ScheduleResponse {
   ok: boolean;
   items?: ScheduleItem[];
+  error?: string;
+}
+
+interface RiversResponse {
+  ok: boolean;
+  items?: River[];
   error?: string;
 }
 
@@ -99,6 +106,18 @@ function toSplav(item: ScheduleItem): Splav {
     startDate: item.date,
     endDate: item.date,
     startTime: item.time,
+  };
+}
+
+function toRiver(item: River): River {
+  return {
+    id: String(item.id),
+    river: item.river?.trim() ?? "",
+    distance: item.distance?.trim() ?? "",
+    time: item.time?.trim() ?? "",
+    price: item.price?.trim() ?? "",
+    kidsPrice: item.kidsPrice?.trim() ?? "",
+    description: item.description?.trim() ?? "",
   };
 }
 
@@ -190,6 +209,26 @@ export async function fetchSchedule(
   }
 
   return fetchScheduleFromApi();
+}
+
+export async function fetchRivers(): Promise<River[]> {
+  assertConfigured();
+
+  const url = new URL(API_URL);
+  url.searchParams.set("action", "rivers");
+  url.searchParams.set("key", API_KEY);
+
+  const res = await fetch(url.toString(), { method: "GET" });
+  if (!res.ok) {
+    throw new Error(`Ошибка загрузки видов сплавов: HTTP ${res.status}`);
+  }
+
+  const json = (await res.json()) as RiversResponse;
+  if (!json.ok) {
+    throw new Error(`Ошибка API видов сплавов: ${json.error ?? "unknown"}`);
+  }
+
+  return (json.items ?? []).map(toRiver).filter((item) => item.river);
 }
 
 export async function submitBooking(payload: BookingPayload): Promise<void> {
