@@ -7,9 +7,9 @@
 }
 
 .sectionCard {
-    background: #f8fafc;
-    border: 1px solid #e7edf5;
-    border-radius: 14px;
+    background: var(--surface-tint);
+    border: var(--card-border);
+    border-radius: var(--radius-md);
     padding: 14px;
 }
 
@@ -23,7 +23,7 @@
 .sectionIcon {
     width: 24px;
     height: 24px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -32,39 +32,39 @@
 }
 
 .iconBlue {
-    background: #dbeafe;
+    background: var(--brand-cyan-soft);
 }
 
 .iconGreen {
-    background: #dcfce7;
+    background: var(--brand-green-soft);
 }
 
 .iconAmber {
-    background: #fef3c7;
+    background: #fff7d6;
 }
 
 .iconViolet {
-    background: #ede9fe;
+    background: #f0edff;
 }
 
 .iconRose {
-    background: #ffe4e6;
+    background: var(--error-soft);
 }
 
 .sectionTitle {
     font-size: 14px;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--text-primary);
 }
 
 .hint {
-    color: #64748b;
+    color: var(--text-muted);
     line-height: 1.35;
 }
 
 .kidsCounter {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
+    background: var(--surface);
+    border: var(--card-border);
+    border-radius: var(--radius-sm);
     padding: 10px;
 }

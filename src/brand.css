@@ -1,36 +1,132 @@
 /**
- * Брендовая палитра Zeuzyki.
- * Единое место для цветов — менять здесь, остальной код подхватит автоматически.
+ * Zeuzyki design tokens.
+ * Единая точка для визуального языка сайта: палитра, типографика,
+ * отступы, радиусы, тени, общие градиенты.
  */
 :root {
-  /* === BRAND === */
-  --brand-cyan: #00b8d4;
-  --brand-cyan-dark: #0097a7;
-  --brand-cyan-light: #4dd0e1;
-  --brand-cyan-soft: #e0f7fa;
+    /* === BRAND === */
+    --brand-cyan: #00b8d4;
+    --brand-cyan-dark: #0097a7;
+    --brand-cyan-deep: #006d80;
+    --brand-cyan-light: #4dd0e1;
+    --brand-cyan-soft: #e0f7fa;
 
-  --brand-green: #8bc34a;
-  --brand-green-dark: #689f38;
-  --brand-green-light: #aed581;
-  --brand-green-soft: #f1f8e9;
+    --brand-green: #8bc34a;
+    --brand-green-dark: #689f38;
+    --brand-green-deep: #2c5f2e;
+    --brand-green-light: #aed581;
+    --brand-green-soft: #f1f8e9;
 
-  --brand-dark: #2a2424;
-  --brand-dark-soft: #3a3433;
+    --brand-dark: #2a2424;
+    --brand-dark-soft: #3a3433;
 
-  /* === TEXT === */
-  --text-primary: #1d1d1f;
-  --text-secondary: #424245;
-  --text-muted: #6e6e73;
-  --text-on-dark: #f5f5f7;
-  --text-on-dark-muted: #a1a1a6;
+    /* === TEXT === */
+    --text-primary: #1d1d1f;
+    --text-secondary: #424245;
+    --text-muted: #6e6e73;
+    --text-soft: #86868b;
+    --text-on-dark: #f5f5f7;
+    --text-on-dark-muted: #a1a1a6;
 
-  /* === SURFACE === */
-  --surface: #ffffff;
-  --surface-soft: #fbfbfd;
-  --surface-gray: #f5f5f7;
-  --border: #d2d2d7;
+    /* === SURFACE === */
+    --surface: #ffffff;
+    --surface-soft: #fbfbfd;
+    --surface-gray: #f5f5f7;
+    --surface-tint: #f3fbfc;
+    --surface-card: rgba(255, 255, 255, 0.86);
+    --border: #d2d2d7;
+    --border-soft: #e8e8ed;
 
-  /* === STATE === */
-  --error: #d92d20;
-  --error-soft: #fef3f2;
+    /* === STATE === */
+    --error: #d92d20;
+    --error-soft: #fef3f2;
+
+    /* === LAYOUT === */
+    --header-height: 44px;
+    --page-max: 1100px;
+    --content-max: 900px;
+    --article-max: 720px;
+    --page-pad-x: 22px;
+    --page-pad-y: 48px;
+    --page-pad-bottom: 80px;
+
+    /* === TYPOGRAPHY === */
+    --font-sans:
+        -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --tracking-tight: -0.02em;
+    --tracking-title: -0.025em;
+
+    /* === RADIUS === */
+    --radius-xs: 8px;
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-pill: 980px;
+
+    /* === SHADOW === */
+    --shadow-sm: 0 4px 14px rgba(29, 29, 31, 0.06);
+    --shadow-md: 0 10px 28px rgba(29, 29, 31, 0.09);
+    --shadow-lg: 0 18px 48px rgba(29, 29, 31, 0.14);
+
+    /* === MOTION === */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: 160ms var(--ease-out);
+    --transition: 220ms var(--ease-out);
+
+    /* === SEMANTIC PATTERNS === */
+    --page-bg:
+        radial-gradient(
+            circle at 8% 0%,
+            rgba(0, 184, 212, 0.12),
+            transparent 34%
+        ),
+        radial-gradient(
+            circle at 92% 14%,
+            rgba(139, 195, 74, 0.12),
+            transparent 30%
+        ),
+        var(--surface-soft);
+    --card-bg: var(--surface-card);
+    --card-border: 1px solid rgba(210, 210, 215, 0.72);
+    --card-shadow: var(--shadow-sm);
+    --card-shadow-hover: var(--shadow-md);
+    --brand-gradient: linear-gradient(
+        135deg,
+        var(--brand-cyan) 0%,
+        var(--brand-green) 100%
+    );
+    --hero-gradient:
+        radial-gradient(
+            ellipse 70% 60% at 20% 100%,
+            rgba(0, 184, 212, 0.5) 0%,
+            transparent 60%
+        ),
+        radial-gradient(
+            ellipse 60% 50% at 90% 10%,
+            rgba(139, 195, 74, 0.32) 0%,
+            transparent 60%
+        );
+    --cta-gradient: linear-gradient(
+        135deg,
+        var(--brand-green-deep) 0%,
+        var(--brand-green-dark) 100%
+    );
+}
+
+@media (min-width: 640px) {
+    :root {
+        --page-pad-x: 40px;
+        --page-pad-y: 64px;
+        --page-pad-bottom: 100px;
+    }
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --page-pad-x: 64px;
+        --page-pad-y: 80px;
+        --page-pad-bottom: 120px;
+    }
 }

@@ -1,31 +1,29 @@
 .page {
-    min-height: calc(100vh - 44px);
-    background: #fbfbfd;
-    padding: 48px 22px 80px;
-    font-family:
-        -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-        "Helvetica Neue", Helvetica, Arial, sans-serif;
+    min-height: calc(100vh - var(--header-height));
+    background: var(--page-bg);
+    padding: var(--page-pad-y) var(--page-pad-x) var(--page-pad-bottom);
 }
 
 .container {
-    max-width: 900px;
+    max-width: var(--content-max);
     margin: 0 auto;
 }
 
 .title {
     text-align: center;
     font-size: 28px;
-    font-weight: 700;
-    color: #1d1d1f;
+    font-weight: 750;
+    color: var(--text-primary);
     margin: 0 0 32px;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.1;
 }
 
 .card {
-    background: #fff;
-    border: 1px solid #e8e8ed;
-    border-radius: 16px;
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--card-shadow);
     padding: 24px 20px;
     margin-bottom: 16px;
 }
@@ -37,15 +35,15 @@
 .question {
     margin: 0 0 12px;
     font-size: 22px;
-    font-weight: 700;
-    color: #1d1d1f;
+    font-weight: 750;
+    color: var(--text-primary);
     line-height: 1.25;
     letter-spacing: -0.015em;
 }
 
 .answer {
     margin: 0 0 12px;
-    color: #424245;
+    color: var(--text-secondary);
     font-size: 16px;
     line-height: 1.65;
 }
@@ -58,7 +56,7 @@
 .bullets {
     margin: 0 0 12px;
     padding-left: 22px;
-    color: #424245;
+    color: var(--text-secondary);
     font-size: 16px;
     line-height: 1.65;
 }
@@ -74,10 +72,6 @@
 }
 
 @media (min-width: 640px) {
-    .page {
-        padding: 64px 40px 100px;
-    }
-
     .title {
         font-size: 36px;
         margin-bottom: 44px;
@@ -90,10 +84,6 @@
 }
 
 @media (min-width: 1024px) {
-    .page {
-        padding: 80px 64px 120px;
-    }
-
     .title {
         font-size: 44px;
         margin-bottom: 56px;

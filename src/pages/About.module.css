@@ -1,25 +1,22 @@
 .page {
-    min-height: calc(100vh - 44px);
-    background: #fbfbfd;
-    padding: 48px 22px 80px;
-    font-family:
-        -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-        "Helvetica Neue", Helvetica, Arial, sans-serif;
+    min-height: calc(100vh - var(--header-height));
+    background: var(--page-bg);
+    padding: var(--page-pad-y) var(--page-pad-x) var(--page-pad-bottom);
 }
 
 .container {
-    max-width: 1100px;
+    max-width: var(--page-max);
     margin: 0 auto;
 }
 
 .title {
     text-align: center;
     font-size: 28px;
-    font-weight: 700;
-    color: #1d1d1f;
+    font-weight: 750;
+    color: var(--text-primary);
     margin: 0 0 40px;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.1;
 }
 
 .hero {
@@ -31,7 +28,7 @@
 }
 
 .heroText {
-    color: #3a3a3c;
+    color: var(--text-secondary);
     font-size: 17px;
     line-height: 1.65;
 }
@@ -39,7 +36,7 @@
 .heroIntro {
     font-size: 19px;
     margin: 0 0 20px;
-    color: #1d1d1f;
+    color: var(--text-primary);
 }
 
 .heroDescription {
@@ -59,19 +56,25 @@
     width: 100%;
     max-width: 400px;
     aspect-ratio: 4 / 3;
-    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-    border-radius: 20px;
+    background: linear-gradient(
+        135deg,
+        var(--brand-green-soft) 0%,
+        var(--brand-cyan-soft) 100%
+    );
+    border: var(--card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    color: #4caf50;
+    color: var(--brand-green-dark);
 }
 
 .imagePlaceholder span {
     font-size: 14px;
-    color: #558b2f;
+    color: var(--brand-green-dark);
 }
 
 .features {
@@ -82,34 +85,39 @@
 }
 
 .feature {
-    background: #fff;
-    border: 1px solid #e8e8ed;
-    border-radius: 16px;
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--card-shadow);
     padding: 28px 24px;
 }
 
 .featureIcon {
     width: 52px;
     height: 52px;
-    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-    border-radius: 12px;
+    background: linear-gradient(
+        135deg,
+        var(--brand-green-soft) 0%,
+        var(--brand-cyan-soft) 100%
+    );
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2e7d32;
+    color: var(--brand-green-dark);
     margin-bottom: 16px;
 }
 
 .featureTitle {
     font-size: 18px;
-    font-weight: 600;
-    color: #1d1d1f;
+    font-weight: 700;
+    color: var(--text-primary);
     margin: 0 0 10px;
 }
 
 .featureDescription {
     margin: 0;
-    color: #6e6e73;
+    color: var(--text-muted);
     font-size: 15px;
     line-height: 1.55;
 }
@@ -117,55 +125,57 @@
 .routes {
     text-align: center;
     padding: 48px 32px;
-    background: #fff;
-    border-radius: 20px;
-    border: 1px solid #e8e8ed;
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
     margin-bottom: 40px;
 }
 
 .routesTitle {
     font-size: 22px;
-    font-weight: 600;
-    color: #1d1d1f;
+    font-weight: 700;
+    color: var(--text-primary);
     margin: 0 0 20px;
 }
 
 .routeBadge {
-    border-color: #4caf50 !important;
-    color: #2e7d32 !important;
-    background: #e8f5e9 !important;
+    border-color: var(--brand-green-dark) !important;
+    color: var(--brand-green-dark) !important;
+    background: var(--brand-green-soft) !important;
 }
 
 .routesNote {
     margin: 16px 0 0;
-    color: #86868b;
+    color: var(--text-soft);
     font-size: 14px;
 }
 
 .contact {
     text-align: center;
-    background: linear-gradient(135deg, #2c5f2e 0%, #3d7a3e 100%);
-    border-radius: 20px;
+    background: var(--cta-gradient);
+    border-radius: var(--radius-lg);
     padding: 48px 32px;
-    color: #fff;
+    color: var(--text-on-dark);
+    box-shadow: var(--shadow-md);
 }
 
 .contactTitle {
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 700;
     margin: 0 0 16px;
-    color: #fff;
+    color: var(--text-on-dark);
 }
 
 .contactPhone {
     display: inline-block;
     font-size: 36px;
-    font-weight: 700;
-    color: #fff;
+    font-weight: 750;
+    color: var(--text-on-dark);
     text-decoration: none;
     letter-spacing: -0.01em;
     margin-bottom: 16px;
-    transition: opacity 0.2s ease;
+    transition: opacity var(--transition);
 }
 
 .contactPhone:hover {
@@ -181,12 +191,7 @@
     margin-right: auto;
 }
 
-/* TABLET */
 @media (min-width: 640px) {
-    .page {
-        padding: 64px 40px 100px;
-    }
-
     .title {
         font-size: 36px;
     }
@@ -204,12 +209,7 @@
     }
 }
 
-/* DESKTOP */
 @media (min-width: 1024px) {
-    .page {
-        padding: 80px 64px 120px;
-    }
-
     .title {
         font-size: 44px;
         margin-bottom: 56px;

@@ -8,7 +8,7 @@ const brandCyan: MantineColorsTuple = [
   "#4dd0e1",
   "#26c6da",
   "#00bcd4",
-  "#00b8d4", // <- brand
+  "#00b8d4",
   "#0097a7",
   "#00838f",
   "#006064",
@@ -21,7 +21,7 @@ const brandFresh: MantineColorsTuple = [
   "#c5e1a5",
   "#aed581",
   "#9ccc65",
-  "#8bc34a", // <- brand
+  "#8bc34a",
   "#7cb342",
   "#689f38",
   "#558b2f",
@@ -36,9 +36,33 @@ export const theme = createTheme({
     fresh: brandFresh,
   },
   fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-  defaultRadius: "md",
+    '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
   headings: {
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
     fontWeight: "700",
+  },
+  defaultRadius: "md",
+  components: {
+    Button: {
+      defaultProps: {
+        radius: "xl",
+      },
+    },
+    TextInput: {
+      defaultProps: {
+        radius: "md",
+      },
+    },
+    Textarea: {
+      defaultProps: {
+        radius: "md",
+      },
+    },
+    Modal: {
+      defaultProps: {
+        radius: "lg",
+      },
+    },
   },
 });

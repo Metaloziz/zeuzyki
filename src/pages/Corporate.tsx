@@ -1,3 +1,8 @@
+import belarusbankLogo from "../assets/company-logos/belarusbank.jpg";
+import belgosstrakhLogo from "../assets/company-logos/belgosstrakh.svg";
+import gazpromLogo from "../assets/company-logos/gazprom.svg";
+import mtsLogo from "../assets/company-logos/mts.svg";
+import omaLogo from "../assets/company-logos/oma.png";
 import styles from "./Corporate.module.css";
 
 const FEATURES = [
@@ -160,6 +165,14 @@ const CORPORATE_GALLERY = [
   },
 ] as const;
 
+const TRUSTED_COMPANIES = [
+  { name: "ОМА", logo: omaLogo, variant: "blue" },
+  { name: "Беларусбанк", logo: belarusbankLogo, variant: "light" },
+  { name: "Белгосстрах", logo: belgosstrakhLogo, variant: "light" },
+  { name: "МТС", logo: mtsLogo, variant: "light" },
+  { name: "Газпром", logo: gazpromLogo, variant: "light" },
+] as const;
+
 export function Corporate() {
   return (
     <main className={styles.page}>
@@ -252,9 +265,28 @@ export function Corporate() {
 
         <div className={styles.clients}>
           <h2 className={styles.clientsTitle}>Нам доверяют</h2>
-          <p className={styles.clientsList}>
-            ОМА, Беларусбанк, Квалитет, Белгострах, МТС и другие компании
-          </p>
+          <div
+            className={styles.clientsGrid}
+            aria-label="Компании, которые нам доверяют"
+          >
+            {TRUSTED_COMPANIES.map((company) => (
+              <div
+                key={company.name}
+                className={`${styles.clientLogoCard} ${company.variant === "blue" ? styles.clientLogoCardBlue : ""}`}
+              >
+                <img
+                  src={company.logo}
+                  alt={company.name}
+                  className={styles.clientLogo}
+                  loading="lazy"
+                />
+              </div>
+            ))}
+            <div className={styles.clientTextCard} aria-label="Квалитет">
+              Квалитет
+            </div>
+          </div>
+          <p className={styles.clientsNote}>и другие компании</p>
         </div>
 
         <div className={styles.contact}>
