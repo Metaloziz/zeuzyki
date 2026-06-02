@@ -2,8 +2,8 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 // On GitHub Pages the app lives under /<repo-name>/.
-// Override with VITE_BASE='/' for custom-domain or local-root deploys.
-const base = process.env.VITE_BASE ?? "/zeuzyki/";
+// Local dev uses root; workflow sets VITE_BASE=/zeuzyki/ for deploy.
+const base = process.env.VITE_BASE ?? "/";
 
 export default defineConfig({
   base,
