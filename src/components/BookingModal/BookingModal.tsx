@@ -314,7 +314,7 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
                             <Text fw={600}>Будут ли дети?</Text>
                           </Group>
                           <Text size="xs" className={styles.hint}>
-                            До 14 лет — детский тариф, от 14 лет — взрослый.
+                            До 12 лет — детский тариф, от 12 лет — взрослый.
                           </Text>
                         </Stack>
                         <Switch
@@ -414,9 +414,7 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
                 <span className={styles.sectionTitle}>Комментарий</span>
               </div>
               <Textarea
-                label="Пожелания"
-                description="Укажите детали по маршруту, экипировке, детям или трансферу"
-                placeholder="Например: нужен трансфер из Молодечно"
+                description="Укажите вопрос или важную информацию, которую организаторам стоит учесть"
                 minRows={3}
                 autosize
                 error={errors.comment?.message}

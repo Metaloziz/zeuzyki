@@ -33,7 +33,7 @@ export interface BookingPayload {
 }
 
 const FALLBACK_GAS_API_URL =
-  "https://script.google.com/macros/s/AKfycbzdz5a8XLmHZkGWOdyy_vQ3TmRGrWdecy9ka3YWdgXyOMkSoojsgzPV_2QBRixTbLv5/exec";
+  "https://script.google.com/macros/s/AKfycbymrMFPoVuAx7ejjIjFynnULxZvYnR16C-EQqLKPi-G9koUAvG1h2rn-HjcNwz5E6Z-/exec";
 
 const API_URL =
   (import.meta.env.VITE_GAS_API_URL ?? "").trim() || FALLBACK_GAS_API_URL;

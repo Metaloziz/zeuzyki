@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { getRiverImage } from "../../lib/riverImages";
 import type { Difficulty, Splav } from "../../types/splav";
 import styles from "./SplavCard.module.css";
 
@@ -14,23 +15,9 @@ const difficultyLabel: Record<Difficulty, string> = {
   сложный: "Для профи",
 };
 
-const riverImageByName: Record<string, string> = {
-  вилия: new URL("../../../assets/Вилия.jpg", import.meta.url).href,
-  илия: new URL("../../../assets/Илия.jpg", import.meta.url).href,
-  нарочь: new URL("../../../assets/Нарочь.jpg", import.meta.url).href,
-  узлянка: new URL("../../../assets/Узлянка.jpg", import.meta.url).href,
-};
-
-function normalizeRiverName(name: string): string {
-  return name
-    .trim()
-    .toLowerCase()
-    .replace(/^р\.\s*/, "");
-}
-
 export function SplavCard({ splav, index, onBook }: SplavCardProps) {
   const variantClass = styles[`gradient${(index % 4) + 1}`];
-  const riverImage = riverImageByName[normalizeRiverName(splav.river)];
+  const riverImage = getRiverImage(splav.river);
 
   return (
     <article className={styles.card}>

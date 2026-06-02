@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Alert, Loader, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { BookingModal } from "../components/BookingModal/BookingModal";
+import { getRiverImage } from "../lib/riverImages";
 import { fetchSchedule } from "../lib/sheetsApi";
 import type { Splav } from "../types/splav";
 import styles from "./Home.module.css";
@@ -14,20 +15,6 @@ const humanDate = new Intl.DateTimeFormat("ru-RU", {
   day: "numeric",
   month: "long",
 });
-
-const riverImageByName: Record<string, string> = {
-  вилия: new URL("../../assets/Вилия.jpg", import.meta.url).href,
-  илия: new URL("../../assets/Илия.jpg", import.meta.url).href,
-  нарочанка: new URL("../../assets/Нарочанка.jpg", import.meta.url).href,
-  узлянка: new URL("../../assets/Узлянка.jpg", import.meta.url).href,
-};
-
-function normalizeRiverName(name: string): string {
-  return name
-    .trim()
-    .toLowerCase()
-    .replace(/^р\.\s*/, "");
-}
 
 function getSplavCardTitle(splav: Splav): string {
   const title = splav.title?.trim();
@@ -159,8 +146,7 @@ export function Home() {
             <>
               <div className={styles.featuredGrid}>
                 {featuredSplavy.map((splav) => {
-                  const riverImage =
-                    riverImageByName[normalizeRiverName(splav.river)];
+                  const riverImage = getRiverImage(splav.river);
 
                   return (
                     <article key={splav.id} className={styles.featuredCard}>
@@ -238,8 +224,7 @@ export function Home() {
                   <h2 className={styles.listTitle}>Остальные сплавы</h2>
                   <div className={styles.list}>
                     {listSplavy.map((splav) => {
-                      const riverImage =
-                        riverImageByName[normalizeRiverName(splav.river)];
+                      const riverImage = getRiverImage(splav.river);
 
                       return (
                         <article key={splav.id} className={styles.listItem}>
