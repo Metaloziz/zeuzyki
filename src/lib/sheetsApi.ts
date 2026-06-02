@@ -39,6 +39,15 @@ const API_URL =
   (import.meta.env.VITE_GAS_API_URL ?? "").trim() || FALLBACK_GAS_API_URL;
 const API_KEY = (import.meta.env.VITE_GAS_API_KEY ?? "").trim();
 
+const SCHEDULE_CACHE_VERSION = 1;
+const SCHEDULE_CACHE_TTL_MS = 2 * 60 * 60 * 1000;
+const SCHEDULE_CACHE_KEY = `zeuzyki:schedule:v${SCHEDULE_CACHE_VERSION}:${API_URL}:${API_KEY}`;
+
+interface ScheduleCache {
+  savedAt: number;
+  items: Splav[];
+}
+
 const TRIP_TEMPLATE = {
   durationDays: 1,
   price: 80,
@@ -87,8 +96,51 @@ function toSplav(item: ScheduleItem): Splav {
   };
 }
 
+function getCachedSchedule(): Splav[] | null {
+  if (import.meta.env.DEV || typeof window === "undefined") return null;
+
+  try {
+    const raw = window.localStorage.getItem(SCHEDULE_CACHE_KEY);
+    if (!raw) return null;
+
+    const cache = JSON.parse(raw) as Partial<ScheduleCache>;
+    if (!cache.savedAt || !Array.isArray(cache.items)) {
+      window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
+      return null;
+    }
+
+    const isFresh = Date.now() - cache.savedAt < SCHEDULE_CACHE_TTL_MS;
+    if (!isFresh) {
+      window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
+      return null;
+    }
+
+    return cache.items;
+  } catch {
+    window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
+    return null;
+  }
+}
+
+function setCachedSchedule(items: Splav[]) {
+  if (import.meta.env.DEV || typeof window === "undefined") return;
+
+  try {
+    const cache: ScheduleCache = {
+      savedAt: Date.now(),
+      items,
+    };
+    window.localStorage.setItem(SCHEDULE_CACHE_KEY, JSON.stringify(cache));
+  } catch {
+    // localStorage can be unavailable or full; schedule loading must still work.
+  }
+}
+
 export async function fetchSchedule(): Promise<Splav[]> {
   assertConfigured();
+
+  const cached = getCachedSchedule();
+  if (cached) return cached;
 
   const url = new URL(API_URL);
   url.searchParams.set("action", "schedule");
@@ -104,7 +156,9 @@ export async function fetchSchedule(): Promise<Splav[]> {
     throw new Error(`Ошибка API расписания: ${json.error ?? "unknown"}`);
   }
 
-  return (json.items ?? []).filter((i) => i.isActive).map(toSplav);
+  const items = (json.items ?? []).filter((i) => i.isActive).map(toSplav);
+  setCachedSchedule(items);
+  return items;
 }
 
 export async function submitBooking(payload: BookingPayload): Promise<void> {
