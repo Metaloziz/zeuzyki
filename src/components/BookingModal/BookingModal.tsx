@@ -29,6 +29,12 @@ interface BookingModalProps {
 // +375 (XX) XXX-XX-XX — 9 цифр после +375
 const phoneRegex = /^\+375\s?\(?\d{2}\)?\s?\d{3}-?\d{2}-?\d{2}$/;
 
+function normalizePhone(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  const tail = digits.startsWith("375") ? digits.slice(3) : digits;
+  return `+375${tail.slice(0, 9)}`;
+}
+
 const schema = z
   .object({
     name: z
@@ -89,14 +95,14 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
 
   const defaultValues = useMemo(
     () => ({
-      name: "",
-      phone: "+375 ",
-      peopleCount: 1,
-      hasKids: false,
-      kidsCount: 0,
-      kidsAges: "",
-      comment: "",
-      consent: false as unknown as true,
+      name: import.meta.env.DEV ? "Тест Тестов" : "",
+      phone: import.meta.env.DEV ? "+375 (29) 111-22-33" : "+375 ",
+      peopleCount: import.meta.env.DEV ? 2 : 1,
+      hasKids: import.meta.env.DEV,
+      kidsCount: import.meta.env.DEV ? 1 : 0,
+      kidsAges: import.meta.env.DEV ? "7" : "",
+      comment: import.meta.env.DEV ? "Тестовая заявка" : "",
+      consent: import.meta.env.DEV ? true : (false as unknown as true),
     }),
     [],
   );
@@ -129,18 +135,15 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
   const onSubmit = async (data: FormValues) => {
     setError(null);
     try {
-      const kidsLine = data.hasKids
-        ? `Дети до 14: ${data.kidsCount}${data.kidsAges ? ` (возраст: ${data.kidsAges})` : ""}`
-        : "";
-      const finalComment = [kidsLine, data.comment].filter(Boolean).join("\n");
-
       await submitBooking({
         name: data.name,
-        phone: data.phone,
+        phone: normalizePhone(data.phone),
         peopleCount: data.peopleCount,
-        tripId: splav.id,
+        kidsCount: data.hasKids ? data.kidsCount : 0,
+        kidsAges: data.hasKids ? data.kidsAges || "" : "",
+        tripTitle: splav.title,
         tripDate: splav.startDate,
-        comment: finalComment,
+        comment: data.comment,
       });
       setSubmitted(true);
     } catch (e) {

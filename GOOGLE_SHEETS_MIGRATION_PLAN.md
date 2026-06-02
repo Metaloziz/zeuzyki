@@ -33,12 +33,13 @@
 
 ### Лист `Bookings`
 Колонки:
-- `createdAt`
+- `tripTitle`
+- `tripDate`
 - `name`
 - `phone`
 - `peopleCount`
-- `tripId`
-- `tripDate`
+- `kidsCount`
+- `kidsAges`
 - `comment`
 - `source` (например `site`)
 

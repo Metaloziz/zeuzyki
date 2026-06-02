@@ -25,7 +25,9 @@ export interface BookingPayload {
   name: string;
   phone: string;
   peopleCount: number;
-  tripId: string;
+  kidsCount?: number;
+  kidsAges?: string;
+  tripTitle: string;
   tripDate: string;
   comment?: string;
 }
@@ -114,7 +116,9 @@ export async function submitBooking(payload: BookingPayload): Promise<void> {
       name: payload.name,
       phone: payload.phone,
       peopleCount: payload.peopleCount,
-      tripId: payload.tripId,
+      kidsCount: payload.kidsCount ?? 0,
+      kidsAges: payload.kidsAges ?? "",
+      tripTitle: payload.tripTitle,
       tripDate: payload.tripDate,
       comment: payload.comment ?? "",
       source: "site",
