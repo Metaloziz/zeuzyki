@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Alert, Loader, Stack, Text } from "@mantine/core";
+import { Alert, Skeleton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { BookingModal } from "../components/BookingModal/BookingModal";
 import { getRiverImage } from "../lib/riverImages";
@@ -27,6 +27,10 @@ function getSplavCardTitle(splav: Splav): string {
   return hasRiverInTitle ? title : `${title} · р. ${splav.river}`;
 }
 
+const RIVER_SKELETONS = Array.from({ length: 3 }, (_, index) => index);
+const RIVER_DETAIL_SKELETONS = Array.from({ length: 4 }, (_, index) => index);
+const SCHEDULE_SKELETONS = Array.from({ length: 5 }, (_, index) => index);
+
 export function Home() {
   const [opened, { open, close }] = useDisclosure(false);
   const [splavy, setSplavy] = useState<Splav[]>([]);
@@ -37,9 +41,9 @@ export function Home() {
   );
   const [loading, setLoading] = useState(true);
   const [riversLoading, setRiversLoading] = useState(true);
-  const [freshnessStatus, setFreshnessStatus] = useState<
-    "idle" | "checking" | "success"
-  >("idle");
+  const [, setFreshnessStatus] = useState<"idle" | "checking" | "success">(
+    "idle",
+  );
   const freshnessStateRef = useRef({ pending: 0, failed: false });
   const [loadError, setLoadError] = useState<string | null>(null);
   const [riversError, setRiversError] = useState<string | null>(null);
@@ -220,39 +224,35 @@ export function Home() {
               <h2 id="river-types-title" className={styles.subsectionTitle}>
                 Наши маршруты
               </h2>
-              {freshnessStatus !== "idle" && (
-                <div
-                  className={styles.refreshNotice}
-                  role="status"
-                  aria-live="polite"
-                >
-                  {freshnessStatus === "checking" ? (
-                    <Loader size="xs" />
-                  ) : (
-                    <span
-                      className={styles.refreshSuccessIcon}
-                      aria-hidden="true"
-                    >
-                      ✓
-                    </span>
-                  )}
-                  <span>
-                    {freshnessStatus === "checking"
-                      ? "Проверка актуальности"
-                      : "Данные актуальны"}
-                  </span>
-                </div>
-              )}
             </div>
 
             {riversLoading ? (
-              <div className={styles.sectionEmpty}>
-                <Stack align="center" gap="xs">
-                  <Loader size="sm" />
-                  <Text size="sm" c="dimmed">
-                    Загружаем актуальные данные…
-                  </Text>
-                </Stack>
+              <div className={styles.featuredGrid} aria-hidden="true">
+                {RIVER_SKELETONS.map((item) => (
+                  <article
+                    key={item}
+                    className={`${styles.featuredCard} ${styles.riverCard}`}
+                  >
+                    <Skeleton className={styles.featuredImageWrap} />
+                    <Skeleton height={24} width="58%" radius="xl" mb={12} />
+                    <Skeleton height={13} radius="xl" mb={8} />
+                    <Skeleton height={13} width="84%" radius="xl" mb={14} />
+                    <div className={styles.riverDetails}>
+                      {RIVER_DETAIL_SKELETONS.map((detail) => (
+                        <div key={detail}>
+                          <Skeleton
+                            height={10}
+                            width="54%"
+                            radius="xl"
+                            mb={6}
+                          />
+                          <Skeleton height={13} width="76%" radius="xl" />
+                        </div>
+                      ))}
+                    </div>
+                    <Skeleton height={40} width={140} radius="xl" mt={14} />
+                  </article>
+                ))}
               </div>
             ) : riversError ? (
               <Alert color="red" variant="light" title="Ошибка загрузки">
@@ -326,13 +326,28 @@ export function Home() {
           </section>
 
           {loading ? (
-            <div className={styles.sectionEmpty}>
-              <Stack align="center" gap="xs">
-                <Loader size="sm" />
-                <Text size="sm" c="dimmed">
-                  Загружаем расписание…
-                </Text>
-              </Stack>
+            <div className={styles.listBlock} aria-hidden="true">
+              <Skeleton height={30} width={170} radius="xl" mb={14} />
+              <div className={styles.list}>
+                {SCHEDULE_SKELETONS.map((item) => (
+                  <article key={item} className={styles.listItem}>
+                    <div className={styles.listItemMain}>
+                      <Skeleton className={styles.listThumbWrap} />
+                      <div className={styles.scheduleSkeletonText}>
+                        <Skeleton height={15} width={96} radius="xl" mb={8} />
+                        <Skeleton
+                          height={20}
+                          width="min(320px, 70vw)"
+                          radius="xl"
+                          mb={8}
+                        />
+                        <Skeleton height={14} width={112} radius="xl" />
+                      </div>
+                    </div>
+                    <Skeleton height={40} width={126} radius="xl" />
+                  </article>
+                ))}
+              </div>
             </div>
           ) : loadError ? (
             <Alert color="red" variant="light" title="Ошибка загрузки">

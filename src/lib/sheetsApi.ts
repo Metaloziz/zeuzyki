@@ -137,6 +137,22 @@ function toRiver(item: River): River {
   };
 }
 
+function getTodayDateKey(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function isActualScheduleItem(item: Splav): boolean {
+  return (item.endDate || item.startDate) >= getTodayDateKey();
+}
+
+function pruneScheduleItems(items: Splav[]): Splav[] {
+  return items.filter(isActualScheduleItem);
+}
+
 function getCachedSchedule(): Splav[] | null {
   if (typeof window === "undefined") return null;
 
@@ -150,7 +166,16 @@ function getCachedSchedule(): Splav[] | null {
       return null;
     }
 
-    return cache.items;
+    const actualItems = pruneScheduleItems(cache.items);
+    if (actualItems.length !== cache.items.length) {
+      if (actualItems.length > 0) {
+        setCachedSchedule(actualItems);
+      } else {
+        window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
+      }
+    }
+
+    return actualItems.length > 0 ? actualItems : null;
   } catch {
     window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
     return null;
@@ -161,9 +186,15 @@ function setCachedSchedule(items: Splav[]) {
   if (typeof window === "undefined") return;
 
   try {
+    const actualItems = pruneScheduleItems(items);
+    if (actualItems.length === 0) {
+      window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
+      return;
+    }
+
     const cache: ScheduleCache = {
       savedAt: Date.now(),
-      items,
+      items: actualItems,
     };
     window.localStorage.setItem(SCHEDULE_CACHE_KEY, JSON.stringify(cache));
   } catch {
@@ -228,7 +259,9 @@ async function fetchScheduleFromApi(): Promise<Splav[]> {
     throw new Error(`Ошибка API расписания: ${json.error ?? "unknown"}`);
   }
 
-  const items = (json.items ?? []).filter((i) => i.isActive).map(toSplav);
+  const items = pruneScheduleItems(
+    (json.items ?? []).filter((i) => i.isActive).map(toSplav),
+  );
   setCachedSchedule(items);
   return items;
 }

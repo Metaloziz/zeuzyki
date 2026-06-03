@@ -287,6 +287,10 @@
     min-width: 0;
 }
 
+.scheduleSkeletonText {
+    min-width: 0;
+}
+
 .listThumbWrap {
     width: 100px;
     height: 72px;
