@@ -10,8 +10,8 @@ const routePhotoSets = [
     new URL("../../assets/route-photos/river-06.jpg", import.meta.url).href,
   ],
   [
+    new URL("../../assets/route-photos/river-12.jpg", import.meta.url).href,
     new URL("../../assets/route-photos/river-11.jpg", import.meta.url).href,
-    new URL("../../assets/route-photos/river-08.jpg", import.meta.url).href,
     new URL("../../assets/route-photos/river-09.jpg", import.meta.url).href,
   ],
 ];
