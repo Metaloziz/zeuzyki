@@ -243,6 +243,29 @@
 .list {
     display: grid;
     gap: 12px;
+    max-height: calc(8 * 108px + 7 * 12px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 4px;
+    scrollbar-gutter: stable;
+}
+
+.list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: var(--radius-pill);
+}
+
+.list::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    border-radius: var(--radius-pill);
+}
+
+.list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }
 
 .listItem {
@@ -328,6 +351,10 @@
 }
 
 @media (max-width: 520px) {
+    .list {
+        max-height: calc(8 * 176px + 7 * 12px);
+    }
+
     .subsectionHead {
         flex-wrap: wrap;
         justify-content: center;
