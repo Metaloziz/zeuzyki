@@ -2,8 +2,16 @@
     margin-top: 72px;
     color: rgba(255, 255, 255, 0.86);
     background:
-        radial-gradient(circle at 18% 0%, rgba(53, 197, 186, 0.18), transparent 34%),
-        linear-gradient(180deg, color-mix(in srgb, var(--brand-dark) 92%, #0b2f2a), var(--brand-dark));
+        radial-gradient(
+            circle at 18% 0%,
+            color-mix(in srgb, var(--brand-cyan) 20%, transparent),
+            transparent 34%
+        ),
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--brand-dark) 92%, #0b2f2a),
+            var(--brand-dark)
+        );
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -12,7 +20,10 @@
     margin: 0 auto;
     padding: 44px 22px 34px;
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(160px, 0.7fr) minmax(180px, 0.8fr);
+    grid-template-columns: minmax(0, 1.4fr) minmax(160px, 0.7fr) minmax(
+            180px,
+            0.8fr
+        );
     gap: 40px;
 }
 

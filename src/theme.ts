@@ -1,31 +1,31 @@
 import { createTheme, type MantineColorsTuple } from "@mantine/core";
 
-// Brand cyan #00b8d4 — основной фирменный цвет
+// Brand cyan #00CEF4 — основной фирменный цвет
 const brandCyan: MantineColorsTuple = [
-  "#e0f7fa",
-  "#b2ebf2",
-  "#80deea",
-  "#4dd0e1",
-  "#26c6da",
-  "#00bcd4",
-  "#00b8d4",
-  "#0097a7",
-  "#00838f",
-  "#006064",
+  "#e5fbff",
+  "#b8f4ff",
+  "#86ecff",
+  "#5de6ff",
+  "#2fdfff",
+  "#00d6ff",
+  "#00cef4",
+  "#00a7c7",
+  "#007f99",
+  "#005c70",
 ];
 
-// Brand green #8bc34a — фирменный акцент
+// Brand green #8BCA2E — фирменный акцент
 const brandFresh: MantineColorsTuple = [
-  "#f1f8e9",
-  "#dcedc8",
-  "#c5e1a5",
-  "#aed581",
-  "#9ccc65",
-  "#8bc34a",
-  "#7cb342",
-  "#689f38",
-  "#558b2f",
-  "#33691e",
+  "#f2fae8",
+  "#e0f4c8",
+  "#cbea9f",
+  "#b5e46a",
+  "#a0d94c",
+  "#8bca2e",
+  "#7ab326",
+  "#6fa321",
+  "#4f7b18",
+  "#375f12",
 ];
 
 export const theme = createTheme({

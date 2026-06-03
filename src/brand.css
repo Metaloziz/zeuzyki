@@ -5,17 +5,17 @@
  */
 :root {
     /* === BRAND === */
-    --brand-cyan: #00b8d4;
-    --brand-cyan-dark: #0097a7;
-    --brand-cyan-deep: #006d80;
-    --brand-cyan-light: #4dd0e1;
-    --brand-cyan-soft: #e0f7fa;
+    --brand-cyan: #00cef4;
+    --brand-cyan-dark: #00a7c7;
+    --brand-cyan-deep: #007f99;
+    --brand-cyan-light: #5de6ff;
+    --brand-cyan-soft: #e5fbff;
 
-    --brand-green: #8bc34a;
-    --brand-green-dark: #689f38;
-    --brand-green-deep: #2c5f2e;
-    --brand-green-light: #aed581;
-    --brand-green-soft: #f1f8e9;
+    --brand-green: #8bca2e;
+    --brand-green-dark: #6fa321;
+    --brand-green-deep: #375f12;
+    --brand-green-light: #b5e46a;
+    --brand-green-soft: #f2fae8;
 
     --brand-dark: #2a2424;
     --brand-dark-soft: #3a3433;
@@ -79,12 +79,12 @@
     --page-bg:
         radial-gradient(
             circle at 8% 0%,
-            rgba(0, 184, 212, 0.12),
+            color-mix(in srgb, var(--brand-cyan) 14%, transparent),
             transparent 34%
         ),
         radial-gradient(
             circle at 92% 14%,
-            rgba(139, 195, 74, 0.12),
+            color-mix(in srgb, var(--brand-green) 14%, transparent),
             transparent 30%
         ),
         var(--surface-soft);
@@ -100,12 +100,12 @@
     --hero-gradient:
         radial-gradient(
             ellipse 70% 60% at 20% 100%,
-            rgba(0, 184, 212, 0.5) 0%,
+            color-mix(in srgb, var(--brand-cyan) 50%, transparent) 0%,
             transparent 60%
         ),
         radial-gradient(
             ellipse 60% 50% at 90% 10%,
-            rgba(139, 195, 74, 0.32) 0%,
+            color-mix(in srgb, var(--brand-green) 32%, transparent) 0%,
             transparent 60%
         );
     --cta-gradient: linear-gradient(
