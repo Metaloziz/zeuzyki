@@ -3,7 +3,6 @@ import { Alert, Skeleton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { BookingModal } from "../components/BookingModal/BookingModal";
-import { getRiverImage } from "../lib/riverImages";
 import { getRoutePhoto, getRoutePhotos } from "../lib/routePhotos";
 import { fetchRivers, fetchSchedule } from "../lib/sheetsApi";
 import type { River } from "../types/river";
