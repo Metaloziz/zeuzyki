@@ -286,7 +286,7 @@
 }
 
 .riverDescription {
-    margin: 10px 0 0;
+    margin: 0 0 10px;
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.45;
