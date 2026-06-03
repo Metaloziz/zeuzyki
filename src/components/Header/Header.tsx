@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useMantineColorScheme } from "@mantine/core";
+import { IconMoonStars, IconSunHigh } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import { LogoMark } from "./LogoMark";
 import styles from "./Header.module.css";
@@ -71,7 +72,11 @@ export function Header() {
             title={isDark ? "Светлая тема" : "Тёмная тема"}
             onClick={() => setColorScheme(isDark ? "light" : "dark")}
           >
-            <span aria-hidden="true">{isDark ? "☀" : "☾"}</span>
+            {isDark ? (
+              <IconSunHigh size={20} stroke={2.2} aria-hidden="true" />
+            ) : (
+              <IconMoonStars size={20} stroke={2.2} aria-hidden="true" />
+            )}
           </button>
           <button
             type="button"
