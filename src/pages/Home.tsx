@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
 import { Alert, Skeleton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { BookingModal } from "../components/BookingModal/BookingModal";
-import { getRiverImage } from "../lib/riverImages";
+import { getRoutePhoto, getRoutePhotos } from "../lib/routePhotos";
 import { fetchRivers, fetchSchedule } from "../lib/sheetsApi";
 import type { River } from "../types/river";
 import type { Splav } from "../types/splav";
@@ -30,6 +31,90 @@ function getSplavCardTitle(splav: Splav): string {
 const RIVER_SKELETONS = Array.from({ length: 3 }, (_, index) => index);
 const RIVER_DETAIL_SKELETONS = Array.from({ length: 4 }, (_, index) => index);
 const SCHEDULE_SKELETONS = Array.from({ length: 5 }, (_, index) => index);
+const MIN_SWIPE_DISTANCE = 44;
+
+function RiverPhotoCarousel({ riverName }: { riverName: string }) {
+  const photos = getRoutePhotos(riverName);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [dragStartX, setDragStartX] = useState<number | null>(null);
+
+  const showSlide = (index: number) => {
+    setActiveIndex((index + photos.length) % photos.length);
+  };
+
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    setDragStartX(event.clientX);
+  };
+
+  const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    if (dragStartX === null) return;
+
+    const distance = event.clientX - dragStartX;
+    setDragStartX(null);
+
+    if (Math.abs(distance) < MIN_SWIPE_DISTANCE) return;
+    showSlide(activeIndex + (distance < 0 ? 1 : -1));
+  };
+
+  return (
+    <div
+      className={styles.photoCarousel}
+      aria-label={`Фотографии маршрута ${riverName}`}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={() => setDragStartX(null)}
+    >
+      <div
+        className={styles.photoCarouselTrack}
+        style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+      >
+        {photos.map((photo, index) => (
+          <div
+            key={photo}
+            className={styles.photoSlide}
+            aria-hidden={activeIndex !== index}
+          >
+            <img
+              src={photo}
+              alt={`Пейзаж маршрута ${riverName}, фото ${index + 1}`}
+              className={styles.photoSlideImage}
+              loading={index === 0 ? "eager" : "lazy"}
+              draggable={false}
+            />
+          </div>
+        ))}
+      </div>
+
+      <button
+        type="button"
+        className={`${styles.photoCarouselButton} ${styles.photoCarouselButtonPrev}`}
+        onClick={() => showSlide(activeIndex - 1)}
+        aria-label="Предыдущее фото"
+      >
+        <IconChevronLeft size={20} stroke={2.4} aria-hidden="true" />
+      </button>
+      <button
+        type="button"
+        className={`${styles.photoCarouselButton} ${styles.photoCarouselButtonNext}`}
+        onClick={() => showSlide(activeIndex + 1)}
+        aria-label="Следующее фото"
+      >
+        <IconChevronRight size={20} stroke={2.4} aria-hidden="true" />
+      </button>
+
+      <div className={styles.photoCarouselDots} aria-hidden="true">
+        {photos.map((photo, index) => (
+          <span
+            key={photo}
+            className={`${styles.photoCarouselDot} ${
+              activeIndex === index ? styles.photoCarouselDotActive : ""
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function Home() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -260,61 +345,45 @@ export function Home() {
               </Alert>
             ) : rivers.length > 0 ? (
               <div className={styles.featuredGrid}>
-                {rivers.map((river) => {
-                  const riverImage = getRiverImage(river.river);
-
-                  return (
-                    <article
-                      key={river.id}
-                      className={`${styles.featuredCard} ${styles.riverCard}`}
-                    >
-                      <div
-                        className={`${styles.featuredImageWrap} ${!riverImage ? styles.imageFallback : ""}`}
-                        aria-hidden="true"
-                      >
-                        {riverImage && (
-                          <img
-                            src={riverImage}
-                            alt={`Река ${river.river}`}
-                            className={styles.featuredImage}
-                            loading="lazy"
-                          />
-                        )}
+                {rivers.map((river) => (
+                  <article
+                    key={river.id}
+                    className={`${styles.featuredCard} ${styles.riverCard}`}
+                  >
+                    <RiverPhotoCarousel riverName={river.river} />
+                    <h3 className={styles.featuredTitle}>{river.river}</h3>
+                    {river.description && (
+                      <p className={styles.riverDescription}>
+                        {river.description}
+                      </p>
+                    )}
+                    <dl className={styles.riverDetails}>
+                      <div>
+                        <dt>Дистанция</dt>
+                        <dd>{river.distance}</dd>
                       </div>
-                      <h3 className={styles.featuredTitle}>{river.river}</h3>
-                      {river.description && (
-                        <p className={styles.riverDescription}>
-                          {river.description}
-                        </p>
-                      )}
-                      <dl className={styles.riverDetails}>
-                        <div>
-                          <dt>Дистанция</dt>
-                          <dd>{river.distance}</dd>
-                        </div>
-                        <div>
-                          <dt>Время</dt>
-                          <dd>{river.time}</dd>
-                        </div>
-                        <div>
-                          <dt>Цена</dt>
-                          <dd>{river.price}</dd>
-                        </div>
-                        <div>
-                          <dt>Дети до 12 лет</dt>
-                          <dd>{river.kidsPrice}</dd>
-                        </div>
-                      </dl>
-                      <button
-                        type="button"
-                        className={`${styles.bookButton} ${styles.featuredBookButton}`}
-                        onClick={() => handleRiverBook(river)}
-                      >
-                        Забронировать
-                      </button>
-                    </article>
-                  );
-                })}
+                      <div>
+                        <dt>Время</dt>
+                        <dd>{river.time}</dd>
+                      </div>
+                      <div>
+                        <dt>Цена</dt>
+                        <dd>{river.price}</dd>
+                      </div>
+                      <div>
+                        <dt>Дети до 12 лет</dt>
+                        <dd>{river.kidsPrice}</dd>
+                      </div>
+                    </dl>
+                    <button
+                      type="button"
+                      className={`${styles.bookButton} ${styles.featuredBookButton}`}
+                      onClick={() => handleRiverBook(river)}
+                    >
+                      Забронировать
+                    </button>
+                  </article>
+                ))}
               </div>
             ) : (
               <div className={styles.sectionEmpty}>
@@ -377,24 +446,19 @@ export function Home() {
                 <div className={styles.listBlock}>
                   <h2 className={styles.listTitle}>Расписание</h2>
                   <div className={styles.list}>
-                    {scheduleSplavy.map((splav) => {
-                      const riverImage = getRiverImage(splav.river);
+                    {scheduleSplavy.map((splav, index) => {
+                      const riverImage = getRoutePhoto(splav.river, index);
 
                       return (
                         <article key={splav.id} className={styles.listItem}>
                           <div className={styles.listItemMain}>
-                            <div
-                              className={`${styles.listThumbWrap} ${!riverImage ? styles.imageFallback : ""}`}
-                              aria-hidden="true"
-                            >
-                              {riverImage && (
-                                <img
-                                  src={riverImage}
-                                  alt={`Река ${splav.river}`}
-                                  className={styles.listThumb}
-                                  loading="lazy"
-                                />
-                              )}
+                            <div className={styles.listThumbWrap}>
+                              <img
+                                src={riverImage}
+                                alt={`Пейзаж маршрута ${splav.river}`}
+                                className={styles.listThumb}
+                                loading="lazy"
+                              />
                             </div>
                             <div>
                               <p className={styles.listItemDate}>
