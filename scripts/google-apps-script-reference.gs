@@ -1,5 +1,6 @@
 const CONFIG = {
   SCHEDULE_SHEET: 'Schedule',
+  RIVERS_SHEET: 'Rivers',
   BOOKINGS_SHEET: 'Bookings',
   API_KEY_PROPERTY: 'API_KEY', // Script Properties key
   RATE_LIMIT_WINDOW_SEC: 60,   // окно rate limit
@@ -16,6 +17,11 @@ function doGet(e) {
 
     if (action === 'schedule') {
       const items = getSchedule_();
+      return json_({ ok: true, items: items });
+    }
+
+    if (action === 'rivers') {
+      const items = getRivers_();
       return json_({ ok: true, items: items });
     }
 
@@ -54,32 +60,77 @@ function doPost(e) {
 /** ----------------- Core ----------------- */
 
 function getSchedule_() {
+  return getScheduleItems_().filter(function (item) {
+    return item.isActive;
+  });
+}
+
+function getScheduleItems_() {
   const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG.SCHEDULE_SHEET);
   if (!sh) throw new Error('Sheet not found: ' + CONFIG.SCHEDULE_SHEET);
 
   const values = sh.getDataRange().getValues();
   if (values.length < 2) return [];
 
-  const headers = values[0].map(String);
+  const headers = normalizeHeaders_(values[0]);
   const rows = values.slice(1);
 
-  const idx = indexMap_(headers, ['id', 'date', 'time', 'river', 'title', 'isActive']);
+  const idx = indexMap_(headers, ['id', 'date', 'time', 'river', 'title', 'isActive', 'riverId']);
 
-  const out = [];
-  rows.forEach(function (r) {
-    const item = {
+  return rows.map(function (r) {
+    return {
       id: valueAt_(r, idx.id),
       date: normalizeDate_(valueAt_(r, idx.date)),
       time: normalizeTime_(valueAt_(r, idx.time)),
-      river: valueAt_(r, idx.river),
-      title: valueAt_(r, idx.title),
+      river: String(valueAt_(r, idx.river)).trim(),
+      riverId: String(valueAt_(r, idx.riverId)).trim(),
+      title: String(valueAt_(r, idx.title)).trim(),
       isActive: toBool_(valueAt_(r, idx.isActive))
     };
-
-    if (item.isActive) out.push(item);
+  }).filter(function (item) {
+    return String(item.id).trim() !== '';
   });
+}
 
-  return out;
+function findScheduleItemById_(scheduleId) {
+  const id = String(scheduleId || '').trim();
+  if (!id) return null;
+
+  const items = getScheduleItems_();
+  for (let i = 0; i < items.length; i += 1) {
+    if (String(items[i].id).trim() === id) return items[i];
+  }
+
+  return null;
+}
+
+function getRivers_() {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG.RIVERS_SHEET);
+  if (!sh) throw new Error('Sheet not found: ' + CONFIG.RIVERS_SHEET);
+
+  const values = sh.getDataRange().getValues();
+  if (values.length < 2) return [];
+
+  const headers = normalizeHeaders_(values[0]);
+  const rows = values.slice(1);
+
+  const idx = indexMap_(headers, ['id', 'river', 'distance', 'time', 'price', 'kidsPrice', 'description']);
+
+  return rows
+    .map(function (r) {
+      return {
+        id: String(valueAt_(r, idx.id)),
+        river: String(valueAt_(r, idx.river)),
+        distance: String(valueAt_(r, idx.distance)),
+        time: String(valueAt_(r, idx.time)),
+        price: String(valueAt_(r, idx.price)),
+        kidsPrice: String(valueAt_(r, idx.kidsPrice)),
+        description: String(valueAt_(r, idx.description))
+      };
+    })
+    .filter(function (item) {
+      return item.id && item.river;
+    });
 }
 
 function appendBooking_(payload) {
@@ -87,8 +138,13 @@ function appendBooking_(payload) {
   if (!sh) throw new Error('Sheet not found: ' + CONFIG.BOOKINGS_SHEET);
 
   const requiredHeaders = [
+    'createdAt',
+    'scheduleId',
+    'riverId',
+    'riverName',
     'tripTitle',
     'tripDate',
+    'tripTime',
     'name',
     'phone',
     'peopleCount',
@@ -105,20 +161,40 @@ function appendBooking_(payload) {
     lastColumn = requiredHeaders.length;
   }
 
-  let headers = sh.getRange(1, 1, 1, lastColumn).getValues()[0].map(String);
+  let headers = sh.getRange(1, 1, 1, lastColumn).getValues()[0].map(function (header) {
+    return String(header).trim();
+  });
 
   const hasAnyHeader = headers.some(function (header) {
-    return header.trim() !== '';
+    return header !== '';
   });
 
   if (!hasAnyHeader) {
     sh.getRange(1, 1, 1, requiredHeaders.length).setValues([requiredHeaders]);
     headers = requiredHeaders;
+    lastColumn = requiredHeaders.length;
+  } else {
+    const missingHeaders = requiredHeaders.filter(function (header) {
+      return headers.indexOf(header) < 0;
+    });
+
+    if (missingHeaders.length > 0) {
+      sh.getRange(1, lastColumn + 1, 1, missingHeaders.length).setValues([missingHeaders]);
+      headers = headers.concat(missingHeaders);
+      lastColumn += missingHeaders.length;
+    }
   }
 
+  const scheduleItem = findScheduleItemById_(payload.scheduleId);
+
   const values = {
-    tripTitle: payload.tripTitle || payload.tripId || '',
-    tripDate: parseTripDate_(payload.tripDate),
+    createdAt: new Date(),
+    scheduleId: scheduleItem ? String(scheduleItem.id) : payload.scheduleId || '',
+    riverId: scheduleItem ? String(scheduleItem.riverId) : payload.riverId || '',
+    riverName: scheduleItem ? scheduleItem.river : payload.riverName || '',
+    tripTitle: scheduleItem ? scheduleItem.title : payload.tripTitle || payload.tripId || '',
+    tripDate: parseTripDate_(scheduleItem ? scheduleItem.date : payload.tripDate),
+    tripTime: scheduleItem ? scheduleItem.time : payload.tripTime || '',
     name: payload.name,
     phone: payload.phone,
     peopleCount: Number(payload.peopleCount),
@@ -173,6 +249,10 @@ function rateLimit_(phone) {
 
 function validateBooking_(p) {
   const fields = {};
+  const scheduleId = String(p.scheduleId || '').trim();
+  const riverId = String(p.riverId || '').trim();
+  const tripDate = String(p.tripDate || '').trim();
+  const tripTime = String(p.tripTime || '').trim();
 
   if (!p.name || String(p.name).trim().length < 2) {
     fields.name = 'name_min_2';
@@ -201,8 +281,40 @@ function validateBooking_(p) {
     fields.tripTitle = 'tripTitle_required';
   }
 
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(p.tripDate || ''))) {
+  if (!scheduleId) {
+    fields.scheduleId = 'scheduleId_required';
+  }
+
+  if (!riverId) {
+    fields.riverId = 'riverId_required';
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(tripDate)) {
     fields.tripDate = 'tripDate_format_YYYY_MM_DD';
+  }
+
+  if (scheduleId) {
+    const scheduleItem = findScheduleItemById_(scheduleId);
+
+    if (!scheduleItem) {
+      fields.scheduleId = 'schedule_not_found';
+    } else {
+      if (!scheduleItem.isActive) {
+        fields.scheduleId = 'schedule_inactive';
+      }
+
+      if (riverId && String(scheduleItem.riverId) !== riverId) {
+        fields.riverId = 'river_mismatch';
+      }
+
+      if (/^\d{4}-\d{2}-\d{2}$/.test(tripDate) && scheduleItem.date !== tripDate) {
+        fields.tripDate = 'tripDate_mismatch';
+      }
+
+      if (tripTime && scheduleItem.time && scheduleItem.time !== tripTime) {
+        fields.tripTime = 'tripTime_mismatch';
+      }
+    }
   }
 
   return { ok: Object.keys(fields).length === 0, fields: fields };
@@ -238,6 +350,12 @@ function json_(obj) {
   return ContentService
     .createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+function normalizeHeaders_(headers) {
+  return headers.map(function (header) {
+    return String(header).trim();
+  });
 }
 
 function indexMap_(headers, required) {

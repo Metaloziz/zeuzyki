@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,6 +9,7 @@ import {
   Checkbox,
   Group,
   Modal,
+  Select,
   Stack,
   Switch,
   Text,
@@ -16,12 +17,16 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import type { River } from "../../types/river";
 import type { Splav } from "../../types/splav";
+import { formatDateRangeFull } from "../../lib/format";
 import { submitBooking } from "../../lib/sheetsApi";
 import styles from "./BookingModal.module.css";
 
 interface BookingModalProps {
-  splav: Splav;
+  river: River;
+  dates: Splav[];
+  preselectedDateId?: string | null;
   opened: boolean;
   onClose: () => void;
 }
@@ -37,6 +42,7 @@ function normalizePhone(raw: string): string {
 
 const schema = z
   .object({
+    scheduleId: z.string().min(1, "Выберите дату сплава"),
     name: z
       .string()
       .trim()
@@ -89,12 +95,31 @@ function formatPhone(raw: string): string {
   return out;
 }
 
-export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
+export function BookingModal({
+  river,
+  dates,
+  preselectedDateId,
+  opened,
+  onClose,
+}: BookingModalProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [submittedDateLabel, setSubmittedDateLabel] = useState<string | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
+
+  const dateOptions = useMemo(
+    () =>
+      dates.map((splav) => ({
+        value: splav.id,
+        label: `${formatDateRangeFull(splav.startDate, splav.endDate)} · старт ${splav.startTime}`,
+      })),
+    [dates],
+  );
 
   const defaultValues = useMemo(
     () => ({
+      scheduleId: preselectedDateId ?? "",
       name: import.meta.env.DEV ? "Тест Тестов" : "",
       phone: import.meta.env.DEV ? "+375 (29) 111-22-33" : "+375 ",
       peopleCount: import.meta.env.DEV ? 2 : 1,
@@ -104,7 +129,7 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
       comment: import.meta.env.DEV ? "Тестовая заявка" : "",
       consent: import.meta.env.DEV ? true : (false as unknown as true),
     }),
-    [],
+    [preselectedDateId],
   );
 
   const {
@@ -121,12 +146,22 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
     mode: "onTouched",
   });
 
+  useEffect(() => {
+    if (opened) {
+      setSubmitted(false);
+      setSubmittedDateLabel(null);
+      setError(null);
+      reset(defaultValues);
+    }
+  }, [defaultValues, opened, reset]);
+
   const hasKids = watch("hasKids");
 
   const handleClose = () => {
     onClose();
     setTimeout(() => {
       setSubmitted(false);
+      setSubmittedDateLabel(null);
       setError(null);
       reset(defaultValues);
     }, 200);
@@ -134,6 +169,19 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
 
   const onSubmit = async (data: FormValues) => {
     setError(null);
+
+    const selectedDate = dates.find((item) => item.id === data.scheduleId);
+    if (!selectedDate) {
+      setError(
+        "Выбранная дата недоступна. Обновите страницу и попробуйте ещё раз.",
+      );
+      return;
+    }
+
+    const selectedDateLabel =
+      dateOptions.find((option) => option.value === selectedDate.id)?.label ??
+      formatDateRangeFull(selectedDate.startDate, selectedDate.endDate);
+
     try {
       await submitBooking({
         name: data.name,
@@ -141,10 +189,15 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
         peopleCount: data.peopleCount,
         kidsCount: data.hasKids ? data.kidsCount : 0,
         kidsAges: data.hasKids ? data.kidsAges || "" : "",
-        tripTitle: splav.title,
-        tripDate: splav.startDate,
+        tripTitle: selectedDate.title || `Сплав по р. ${river.river}`,
+        tripDate: selectedDate.startDate,
+        tripTime: selectedDate.startTime,
+        scheduleId: selectedDate.id,
+        riverId: river.id,
+        riverName: river.river,
         comment: data.comment,
       });
+      setSubmittedDateLabel(selectedDateLabel);
       setSubmitted(true);
     } catch (e) {
       setError(
@@ -172,8 +225,9 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
       {submitted ? (
         <Stack gap="md">
           <Text>
-            Спасибо! Заявка на <b>«{splav.title}»</b> отправлена. Мы свяжемся с
-            вами в ближайшее время по указанному номеру.
+            Спасибо! Заявка на <b>сплав по р. {river.river}</b>
+            {submittedDateLabel ? ` на ${submittedDateLabel}` : ""} отправлена.
+            Мы свяжемся с вами в ближайшее время по указанному номеру.
           </Text>
           <Button onClick={handleClose} fullWidth>
             Закрыть
@@ -187,8 +241,45 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
         >
           <Stack gap="md">
             <Text size="sm" c="dimmed">
-              {splav.title} · р. {splav.river}
+              р. {river.river}
+              {river.distance ? ` · ${river.distance}` : ""}
+              {river.time ? ` · ${river.time}` : ""}
+              {river.price ? ` · ${river.price}` : ""}
             </Text>
+
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHead}>
+                <span className={`${styles.sectionIcon} ${styles.iconBlue}`}>
+                  📅
+                </span>
+                <span className={styles.sectionTitle}>Дата сплава</span>
+              </div>
+
+              {dateOptions.length > 0 ? (
+                <Controller
+                  control={control}
+                  name="scheduleId"
+                  render={({ field }) => (
+                    <Select
+                      label="Выберите дату"
+                      placeholder="Дата и время старта"
+                      data={dateOptions}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value ?? "")}
+                      onBlur={field.onBlur}
+                      error={errors.scheduleId?.message}
+                      searchable={dateOptions.length > 6}
+                      nothingFoundMessage="Даты не найдены"
+                    />
+                  )}
+                />
+              ) : (
+                <Alert color="yellow" variant="light">
+                  Пока нет активных дат для этого сплава. Напишите нам —
+                  подберём дату.
+                </Alert>
+              )}
+            </div>
 
             <div className={styles.sectionCard}>
               <div className={styles.sectionHead}>
@@ -456,7 +547,13 @@ export function BookingModal({ splav, opened, onClose }: BookingModalProps) {
               </Alert>
             )}
 
-            <Button type="submit" size="md" loading={isSubmitting} fullWidth>
+            <Button
+              type="submit"
+              size="md"
+              loading={isSubmitting}
+              disabled={dateOptions.length === 0}
+              fullWidth
+            >
               Отправить заявку
             </Button>
           </Stack>

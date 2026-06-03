@@ -13,6 +13,8 @@ export interface Splav {
   title: string;
   /** Река */
   river: string;
+  /** ID типа сплава из листа `Rivers` */
+  riverId: string;
   /** Дата начала, ISO yyyy-mm-dd */
   startDate: string;
   /** Дата окончания, ISO yyyy-mm-dd */

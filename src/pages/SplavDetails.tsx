@@ -5,12 +5,14 @@ import { useDisclosure } from "@mantine/hooks";
 import { BookingModal } from "../components/BookingModal/BookingModal";
 import { formatDateRangeFull } from "../lib/format";
 import { fetchSchedule } from "../lib/sheetsApi";
+import type { River } from "../types/river";
 import type { Splav } from "../types/splav";
 import styles from "./SplavDetails.module.css";
 
 export function SplavDetails() {
   const { id } = useParams<{ id: string }>();
   const [splav, setSplav] = useState<Splav | null>(null);
+  const [splavy, setSplavy] = useState<Splav[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkingFreshness, setCheckingFreshness] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -36,6 +38,7 @@ export function SplavDetails() {
           },
           onUpdate: (freshItems) => {
             if (!cancelled) {
+              setSplavy(freshItems);
               setSplav(freshItems.find((item) => item.id === id) ?? null);
             }
           },
@@ -45,6 +48,7 @@ export function SplavDetails() {
         });
         const found = items.find((item) => item.id === id) ?? null;
         if (!cancelled) {
+          setSplavy(items);
           setSplav(found);
         }
       } catch (e) {
@@ -99,6 +103,18 @@ export function SplavDetails() {
   }
 
   const paragraphs = splav.longDescription.split("\n\n");
+  const bookingRiver: River = {
+    id: splav.riverId,
+    river: splav.river,
+    distance: "",
+    time: "",
+    price: `${splav.price} BYN`,
+    kidsPrice: "",
+    description: "",
+  };
+  const bookingDates = splavy.filter((item) =>
+    splav.riverId ? item.riverId === splav.riverId : item.river === splav.river,
+  );
 
   return (
     <>
@@ -252,7 +268,9 @@ export function SplavDetails() {
       )}
 
       <BookingModal
-        splav={splav}
+        river={bookingRiver}
+        dates={bookingDates}
+        preselectedDateId={splav.id}
         opened={opened}
         onClose={() => {
           close();

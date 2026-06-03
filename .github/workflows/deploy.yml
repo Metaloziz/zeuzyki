@@ -43,7 +43,6 @@ jobs:
           # Repo deployed at https://<user>.github.io/zeuzyki/. Override if custom domain.
           VITE_BASE: /zeuzyki/
           # Configure in GitHub -> Settings -> Secrets and variables -> Actions
-          VITE_GAS_API_URL: ${{ secrets.VITE_GAS_API_URL || vars.VITE_GAS_API_URL }}
           VITE_GAS_API_KEY: ${{ secrets.VITE_GAS_API_KEY || vars.VITE_GAS_API_KEY }}
 
       - name: Upload artifact

@@ -31,7 +31,10 @@ export function Home() {
   const [opened, { open, close }] = useDisclosure(false);
   const [splavy, setSplavy] = useState<Splav[]>([]);
   const [rivers, setRivers] = useState<River[]>([]);
-  const [activeSplav, setActiveSplav] = useState<Splav | null>(null);
+  const [activeRiver, setActiveRiver] = useState<River | null>(null);
+  const [preselectedDateId, setPreselectedDateId] = useState<string | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [riversLoading, setRiversLoading] = useState(true);
   const [freshnessStatus, setFreshnessStatus] = useState<
@@ -89,11 +92,10 @@ export function Home() {
           onUpdate: (freshItems) => {
             if (!cancelled) {
               setSplavy(freshItems);
-              setActiveSplav((current) =>
-                current
-                  ? (freshItems.find((item) => item.id === current.id) ??
-                    current)
-                  : (freshItems[0] ?? null),
+              setPreselectedDateId((current) =>
+                current && freshItems.some((item) => item.id === current)
+                  ? current
+                  : null,
               );
             }
           },
@@ -107,7 +109,6 @@ export function Home() {
         });
         if (!cancelled) {
           setSplavy(items);
-          setActiveSplav(items[0] ?? null);
         }
       } catch (e) {
         if (!cancelled) {
@@ -117,7 +118,8 @@ export function Home() {
               : "Не удалось загрузить расписание. Попробуйте позже.",
           );
           setSplavy([]);
-          setActiveSplav(null);
+          setActiveRiver(null);
+          setPreselectedDateId(null);
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -132,13 +134,37 @@ export function Home() {
   }, []);
 
   const handleBook = (splav: Splav) => {
-    setActiveSplav(splav);
+    const river = rivers.find((item) =>
+      splav.riverId ? item.id === splav.riverId : item.river === splav.river,
+    );
+
+    if (!river) {
+      window.alert("Не удалось найти тип сплава для выбранной даты.");
+      return;
+    }
+
+    setActiveRiver(river);
+    setPreselectedDateId(splav.id);
     open();
   };
 
-  const handleRiverBookPlaceholder = () => {
-    window.alert("Бронирование этого вида сплава скоро появится.");
+  const handleRiverBook = (river: River) => {
+    setActiveRiver(river);
+    setPreselectedDateId(null);
+    open();
   };
+
+  const activeRiverDates = useMemo(() => {
+    if (!activeRiver) return [];
+
+    return splavy
+      .filter((splav) =>
+        splav.riverId
+          ? splav.riverId === activeRiver.id
+          : splav.river === activeRiver.river,
+      )
+      .sort((a, b) => toDateTime(a).getTime() - toDateTime(b).getTime());
+  }, [activeRiver, splavy]);
 
   const { featuredSplavy, listSplavy } = useMemo(() => {
     const sortedSplavy = [...splavy].sort(
@@ -232,7 +258,7 @@ export function Home() {
                       <button
                         type="button"
                         className={`${styles.bookButton} ${styles.featuredBookButton}`}
-                        onClick={handleRiverBookPlaceholder}
+                        onClick={() => handleRiverBook(river)}
                       >
                         Забронировать
                       </button>
@@ -400,8 +426,14 @@ export function Home() {
           )}
         </section>
       </main>
-      {activeSplav && (
-        <BookingModal splav={activeSplav} opened={opened} onClose={close} />
+      {activeRiver && (
+        <BookingModal
+          river={activeRiver}
+          dates={activeRiverDates}
+          preselectedDateId={preselectedDateId}
+          opened={opened}
+          onClose={close}
+        />
       )}
     </>
   );

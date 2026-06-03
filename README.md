@@ -51,17 +51,15 @@ src/
 
 ## Переменные окружения
 
-Создай `.env.local` (локально) или задай переменные в CI:
+Создай `.env.local` (локально) или задай переменную в CI:
 
 ```sh
-VITE_GAS_API_URL=https://script.google.com/macros/s/<DEPLOYMENT_ID>/exec
 VITE_GAS_API_KEY=<YOUR_SECRET_API_KEY>
 ```
 
-Для примера есть файл `.env.example`.
+URL Google Apps Script задан в `src/lib/sheetsApi.ts` как публичный endpoint.
 
-Для GitHub Pages добавь те же значения в Secrets:
-- `VITE_GAS_API_URL`
+Для GitHub Pages добавь в Secrets:
 - `VITE_GAS_API_KEY`
 
 ## Деплой на GitHub Pages

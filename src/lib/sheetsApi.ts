@@ -6,6 +6,7 @@ interface ScheduleItem {
   date: string;
   time: string;
   river: string;
+  riverId?: string | number;
   title: string;
   isActive: boolean;
 }
@@ -36,14 +37,17 @@ export interface BookingPayload {
   kidsAges?: string;
   tripTitle: string;
   tripDate: string;
+  tripTime?: string;
+  scheduleId?: string;
+  riverId?: string;
+  riverName?: string;
   comment?: string;
 }
 
-const FALLBACK_GAS_API_URL =
-  "https://script.google.com/macros/s/AKfycbymrMFPoVuAx7ejjIjFynnULxZvYnR16C-EQqLKPi-G9koUAvG1h2rn-HjcNwz5E6Z-/exec";
+const GAS_API_URL =
+  "https://script.google.com/macros/s/AKfycbxccist5FQVr6JcHbmKlCIsvIgFmidHLM1qDq3I6QdNVVN4N611qpFlRLERANoVtoCC/exec";
 
-const API_URL =
-  (import.meta.env.VITE_GAS_API_URL ?? "").trim() || FALLBACK_GAS_API_URL;
+const API_URL = GAS_API_URL;
 const API_KEY = (import.meta.env.VITE_GAS_API_KEY ?? "").trim();
 
 const SCHEDULE_CACHE_VERSION = 1;
@@ -89,9 +93,6 @@ const TRIP_TEMPLATE = {
 };
 
 function assertConfigured() {
-  if (!API_URL) {
-    throw new Error("Не задан VITE_GAS_API_URL");
-  }
   if (!API_KEY) {
     throw new Error("Не задан VITE_GAS_API_KEY");
   }
@@ -103,6 +104,7 @@ function toSplav(item: ScheduleItem): Splav {
     id: String(item.id),
     title: item.title?.trim() || `Сплав по р. ${item.river}`,
     river: item.river,
+    riverId: String(item.riverId ?? ""),
     startDate: item.date,
     endDate: item.date,
     startTime: item.time,
@@ -248,6 +250,10 @@ export async function submitBooking(payload: BookingPayload): Promise<void> {
       kidsAges: payload.kidsAges ?? "",
       tripTitle: payload.tripTitle,
       tripDate: payload.tripDate,
+      tripTime: payload.tripTime ?? "",
+      scheduleId: payload.scheduleId ?? "",
+      riverId: payload.riverId ?? "",
+      riverName: payload.riverName ?? "",
       comment: payload.comment ?? "",
       source: "site",
       website: "",
