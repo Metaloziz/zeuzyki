@@ -221,7 +221,7 @@ export function BookingModal({
   return (
     <Modal
       opened={opened}
-      onClose={handleClose}
+      onClose={isSubmitting ? () => undefined : handleClose}
       title={
         <Title order={3} className={styles.title}>
           {submitted ? "Заявка отправлена" : "Записаться на сплав"}
@@ -230,6 +230,9 @@ export function BookingModal({
       centered
       size="md"
       radius="md"
+      closeOnClickOutside={!isSubmitting}
+      closeOnEscape={!isSubmitting}
+      withCloseButton={!isSubmitting}
       overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
     >
       {submitted ? (
@@ -271,13 +274,14 @@ export function BookingModal({
                   name="scheduleId"
                   render={({ field }) => (
                     <Select
-                      label="Выберите дату"
-                      placeholder="Дата и время старта"
+                      placeholder="Выберите дату и время старта"
+                      aria-label="Выберите дату и время старта"
                       data={dateOptions}
                       value={field.value}
                       onChange={(value) => field.onChange(value ?? "")}
                       onBlur={field.onBlur}
                       error={errors.scheduleId?.message}
+                      disabled={isSubmitting}
                       searchable={dateOptions.length > 6}
                       nothingFoundMessage="Даты не найдены"
                     />
@@ -301,10 +305,11 @@ export function BookingModal({
 
               <Stack gap="sm">
                 <TextInput
-                  label="Имя и фамилия"
-                  placeholder="Иван Иванов"
+                  placeholder="Имя и фамилия, например Иван Иванов"
+                  aria-label="Имя и фамилия"
                   autoComplete="name"
                   error={errors.name?.message}
+                  disabled={isSubmitting}
                   {...register("name")}
                 />
 
@@ -313,11 +318,12 @@ export function BookingModal({
                   name="phone"
                   render={({ field }) => (
                     <TextInput
-                      label="Телефон (с Viber/Telegram)"
-                      placeholder="+375 (29) 123-45-67"
+                      placeholder="Телефон с Viber/Telegram: +375 (29) 123-45-67"
+                      aria-label="Телефон с Viber или Telegram"
                       inputMode="tel"
                       autoComplete="tel"
                       error={errors.phone?.message}
+                      disabled={isSubmitting}
                       value={field.value}
                       onChange={(e) =>
                         field.onChange(formatPhone(e.currentTarget.value))
@@ -353,6 +359,7 @@ export function BookingModal({
                           onClick={() =>
                             field.onChange(Math.max(1, Number(field.value) - 1))
                           }
+                          disabled={isSubmitting}
                           aria-label="Уменьшить количество участников"
                         >
                           <IconMinus size={20} stroke={2.4} />
@@ -372,6 +379,7 @@ export function BookingModal({
                               Math.min(20, Number(field.value) + 1),
                             )
                           }
+                          disabled={isSubmitting}
                           aria-label="Увеличить количество участников"
                         >
                           <IconPlus size={20} stroke={2.4} />
@@ -420,6 +428,7 @@ export function BookingModal({
                         </Stack>
                         <Switch
                           checked={field.value}
+                          disabled={isSubmitting}
                           onChange={(event) => {
                             const checked = event.currentTarget.checked;
                             field.onChange(checked);
@@ -465,6 +474,7 @@ export function BookingModal({
                                       Math.max(1, Number(field.value) - 1),
                                     )
                                   }
+                                  disabled={isSubmitting}
                                   aria-label="Уменьшить количество детей"
                                 >
                                   <IconMinus size={18} stroke={2.4} />
@@ -482,6 +492,7 @@ export function BookingModal({
                                       Math.min(10, Number(field.value) + 1),
                                     )
                                   }
+                                  disabled={isSubmitting}
                                   aria-label="Увеличить количество детей"
                                 >
                                   <IconPlus size={18} stroke={2.4} />
@@ -498,9 +509,10 @@ export function BookingModal({
                       />
 
                       <TextInput
-                        label="Возраст детей"
-                        placeholder="Например: 6 и 10 лет"
+                        placeholder="Возраст детей, например: 6 и 10 лет"
+                        aria-label="Возраст детей"
                         error={errors.kidsAges?.message}
+                        disabled={isSubmitting}
                         {...register("kidsAges")}
                       />
                     </Stack>
@@ -517,10 +529,12 @@ export function BookingModal({
                 <span className={styles.sectionTitle}>Комментарий</span>
               </div>
               <Textarea
-                description="Укажите вопрос или важную информацию, которую организаторам стоит учесть"
+                placeholder="Вопрос или важная информация для организаторов"
+                aria-label="Комментарий для организаторов"
                 minRows={3}
                 autosize
                 error={errors.comment?.message}
+                disabled={isSubmitting}
                 {...register("comment")}
               />
             </div>
@@ -540,6 +554,7 @@ export function BookingModal({
                     checked={!!field.value}
                     onChange={(e) => field.onChange(e.currentTarget.checked)}
                     onBlur={field.onBlur}
+                    disabled={isSubmitting}
                     error={errors.consent?.message}
                     label={
                       <Text size="sm">

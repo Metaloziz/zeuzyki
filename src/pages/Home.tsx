@@ -352,11 +352,7 @@ export function Home() {
                   >
                     <RiverPhotoCarousel riverName={river.river} />
                     <h3 className={styles.featuredTitle}>{river.river}</h3>
-                    {river.description && (
-                      <p className={styles.riverDescription}>
-                        {river.description}
-                      </p>
-                    )}
+
                     <dl className={styles.riverDetails}>
                       <div>
                         <dt>Дистанция</dt>
@@ -375,6 +371,11 @@ export function Home() {
                         <dd>{river.kidsPrice}</dd>
                       </div>
                     </dl>
+                    {river.description && (
+                      <p className={styles.riverDescription}>
+                        {river.description}
+                      </p>
+                    )}
                     <button
                       type="button"
                       className={`${styles.bookButton} ${styles.featuredBookButton}`}

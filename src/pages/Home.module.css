@@ -286,7 +286,7 @@
 }
 
 .riverDescription {
-    margin: 0 0 10px;
+    margin: 10px 0 0;
     color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.45;
@@ -480,7 +480,10 @@
 
 @media (max-width: 520px) {
     .list {
-        max-height: calc(8 * 176px + 7 * 12px);
+        max-height: none;
+        overflow-y: visible;
+        padding-right: 0;
+        scrollbar-gutter: auto;
     }
 
     .subsectionHead {
