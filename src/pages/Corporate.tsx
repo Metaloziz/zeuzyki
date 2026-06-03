@@ -264,7 +264,7 @@ export function Corporate() {
         </div>
 
         <div className={styles.clients}>
-          <h2 className={styles.clientsTitle}>Нам доверяют</h2>
+          <h2 className={styles.clientsTitle}>C нами отдыхали</h2>
           <div
             className={styles.clientsGrid}
             aria-label="Компании, которые нам доверяют"
@@ -287,17 +287,6 @@ export function Corporate() {
             </div>
           </div>
           <p className={styles.clientsNote}>и другие компании</p>
-        </div>
-
-        <div className={styles.contact}>
-          <h2 className={styles.contactTitle}>Готовы организовать выезд?</h2>
-          <p className={styles.contactNote}>
-            Свяжитесь с нами — обсудим формат, даты и составим предложение для
-            вашей команды.
-          </p>
-          <a href="tel:+375333608720" className={styles.contactPhone}>
-            +375 33 360 87 20
-          </a>
         </div>
       </div>
     </main>

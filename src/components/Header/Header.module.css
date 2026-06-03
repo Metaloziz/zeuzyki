@@ -4,11 +4,18 @@
     left: 0;
     right: 0;
     z-index: 100;
-    height: var(--header-height);
-    background: color-mix(in srgb, var(--brand-dark) 78%, transparent);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    height: calc(var(--header-height) + 12px);
+    background:
+        radial-gradient(
+            circle at 18% 0%,
+            rgba(53, 197, 186, 0.2),
+            transparent 34%
+        ),
+        color-mix(in srgb, var(--brand-dark) 88%, transparent);
+    backdrop-filter: saturate(180%) blur(22px);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
 }
 
 .inner {
@@ -19,16 +26,28 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
+    gap: 28px;
 }
 
 .brand {
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: rgba(255, 255, 255, 0.92);
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 23px;
+    font-weight: 750;
+    letter-spacing: -0.035em;
+    color: rgba(255, 255, 255, 0.96);
     text-decoration: none;
     line-height: 1;
+}
+
+.logoMark {
+    width: 42px;
+    height: 42px;
+    display: block;
+    flex: 0 0 auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 18px rgba(53, 197, 186, 0.28));
 }
 
 .brand:hover {
@@ -38,31 +57,36 @@
 .right {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 26px;
 }
 
 .nav {
     display: flex;
+    align-items: center;
     gap: 28px;
 }
 
 .socials {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .social {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
     color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     transition:
         color 0.2s ease,
-        background 0.2s ease;
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .socialIcon {
@@ -73,26 +97,30 @@
 
 .social:hover {
     color: #fff;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.16);
+    transform: translateY(-1px);
 }
 
 .mobileMenuButton {
     display: none;
-    width: 32px;
-    height: 32px;
-    border: 0;
-    border-radius: var(--radius-xs);
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
     background: rgba(255, 255, 255, 0.12);
     color: #fff;
     font-size: 18px;
     line-height: 1;
     transition:
         background 0.22s ease,
+        border-color 0.22s ease,
         transform 0.22s ease;
 }
 
 .mobileMenuButton:hover {
     background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.18);
 }
 
 .mobileMenuButton:active {
@@ -101,7 +129,7 @@
 
 .mobileMenu {
     position: absolute;
-    top: var(--header-height);
+    top: calc(var(--header-height) + 12px);
     left: 0;
     right: 0;
     display: flex;
@@ -149,17 +177,20 @@
 }
 
 .navLink {
-    font-size: 12px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 14px;
     font-weight: 400;
+    line-height: 1.35;
     letter-spacing: -0.01em;
-    color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
-    line-height: 1;
-    transition: color 0.2s ease;
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .navLink:hover {
     color: #fff;
+    transform: translateX(2px);
 }
 
 @media (min-width: 541px) {
@@ -172,6 +203,17 @@
 @media (max-width: 540px) {
     .inner {
         padding: 0 12px;
+        gap: 14px;
+    }
+
+    .brand {
+        gap: 8px;
+        font-size: 21px;
+    }
+
+    .logoMark {
+        width: 36px;
+        height: 36px;
     }
 
     .nav {
@@ -189,12 +231,12 @@
     }
 
     .social {
-        width: 28px;
-        height: 28px;
+        width: 34px;
+        height: 34px;
     }
 
     .socialIcon {
-        width: 20px;
-        height: 20px;
+        width: 21px;
+        height: 21px;
     }
 }

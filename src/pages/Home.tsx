@@ -216,9 +216,34 @@ export function Home() {
             className={styles.riverTypesBlock}
             aria-labelledby="river-types-title"
           >
-            <h2 id="river-types-title" className={styles.subsectionTitle}>
-              Наши маршруты
-            </h2>
+            <div className={styles.subsectionHead}>
+              <h2 id="river-types-title" className={styles.subsectionTitle}>
+                Наши маршруты
+              </h2>
+              {freshnessStatus !== "idle" && (
+                <div
+                  className={styles.refreshNotice}
+                  role="status"
+                  aria-live="polite"
+                >
+                  {freshnessStatus === "checking" ? (
+                    <Loader size="xs" />
+                  ) : (
+                    <span
+                      className={styles.refreshSuccessIcon}
+                      aria-hidden="true"
+                    >
+                      ✓
+                    </span>
+                  )}
+                  <span>
+                    {freshnessStatus === "checking"
+                      ? "Проверка актуальности"
+                      : "Данные актуальны"}
+                  </span>
+                </div>
+              )}
+            </div>
 
             {riversLoading ? (
               <div className={styles.sectionEmpty}>
@@ -322,30 +347,6 @@ export function Home() {
             </div>
           ) : (
             <>
-              {freshnessStatus !== "idle" && (
-                <div
-                  className={styles.refreshNotice}
-                  role="status"
-                  aria-live="polite"
-                >
-                  {freshnessStatus === "checking" ? (
-                    <Loader size="xs" />
-                  ) : (
-                    <span
-                      className={styles.refreshSuccessIcon}
-                      aria-hidden="true"
-                    >
-                      ✓
-                    </span>
-                  )}
-                  <span>
-                    {freshnessStatus === "checking"
-                      ? "Проверка актуальности"
-                      : "Данные актуальны"}
-                  </span>
-                </div>
-              )}
-
               <div className={styles.infoBox}>
                 <p>
                   Мы проводим сплавы в любой день при наборе группы от 6

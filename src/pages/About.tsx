@@ -4,7 +4,16 @@ import styles from "./About.module.css";
 const FEATURES = [
   {
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
         <circle cx="9" cy="7" r="4" />
         <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -12,37 +21,68 @@ const FEATURES = [
       </svg>
     ),
     title: "Опытная команда",
-    description: "Более 10 лет организации походов и сплавов. Инструктора с опытом работы с группами любого уровня подготовки.",
+    description:
+      "Более 10 лет организации походов и сплавов. Инструктора с опытом работы с группами любого уровня подготовки.",
   },
   {
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
         <circle cx="12" cy="10" r="3" />
       </svg>
     ),
     title: "Собственная база",
-    description: "На реке Илия расположена наша база с оборудованными стоянками, шатрами, мангалами, WC и волейбольной площадкой.",
+    description:
+      "На реке Илия расположена наша база с оборудованными стоянками, шатрами, мангалами, WC и волейбольной площадкой.",
   },
   {
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
     ),
     title: "Безопасность",
-    description: "Все маршруты рассчитаны на новичков и семьи с детьми. Спасательные жилеты, страховка и инструктаж включены.",
+    description:
+      "Все маршруты рассчитаны на новичков и семьи с детьми. Спасательные жилеты, страховка и инструктаж включены.",
   },
   {
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
         <line x1="3" y1="9" x2="21" y2="9" />
         <line x1="9" y1="21" x2="9" y2="9" />
       </svg>
     ),
     title: "Комфорт на природе",
-    description: "Уютные костровые зоны, мебель, мангалы, горячий чай и питание на берегу. Всё для приятного отдыха.",
+    description:
+      "Уютные костровые зоны, мебель, мангалы, горячий чай и питание на берегу. Всё для приятного отдыха.",
   },
 ];
 
@@ -67,9 +107,9 @@ export function About() {
               продолжительностью от нескольких часов до нескольких суток.
             </p>
             <p className={styles.heroDescription}>
-              Специализируемся на маршрутах по рекам в северо-западной стороне от
-              Минска. Все наши маршруты несложные и безопасные — рассчитаны на
-              прохождение новичками и родителями с детьми.
+              Специализируемся на маршрутах по рекам в северо-западной стороне
+              от Минска. Все наши маршруты несложные и безопасные — рассчитаны
+              на прохождение новичками и родителями с детьми.
             </p>
             <p className={styles.heroDescription}>
               На реке Илия находится наша база и обустроенные стоянки со всем
@@ -79,7 +119,16 @@ export function About() {
           </div>
           <div className={styles.heroImage} aria-hidden="true">
             <div className={styles.imagePlaceholder}>
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="64"
+                height="64"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <circle cx="12" cy="8" r="5" />
                 <path d="M20 21a8 8 0 0 0-16 0" />
               </svg>
@@ -115,17 +164,6 @@ export function About() {
           <p className={styles.routesNote}>
             Илия — 60 км от Минска и 30 км от Молодечно. На этой реке находится
             наша база.
-          </p>
-        </div>
-
-        <div className={styles.contact}>
-          <h2 className={styles.contactTitle}>Свяжитесь с нами</h2>
-          <a href="tel:+375333608720" className={styles.contactPhone}>
-            +375 33 360 87 20
-          </a>
-          <p className={styles.contactNote}>
-            Звоните, пишите — ответим на все вопросы о маршрутах, снаряжении и
-            подготовке к походу.
           </p>
         </div>
       </div>

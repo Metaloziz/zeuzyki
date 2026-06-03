@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Header } from "./components/Header/Header";
+import { Footer } from "./components/Footer/Footer";
 import { Home } from "./pages/Home";
 import { About } from "./pages/About";
 import { Corporate } from "./pages/Corporate";
@@ -29,6 +30,7 @@ export function App() {
         <Route path="/splav/:id" element={<SplavDetails />} />
         <Route path="*" element={<Home />} />
       </Routes>
+      <Footer />
     </>
   );
 }

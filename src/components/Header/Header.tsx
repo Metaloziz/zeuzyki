@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { LogoMark } from "./LogoMark";
 import styles from "./Header.module.css";
 
 const telegramIcon = new URL(
@@ -40,7 +41,8 @@ export function Header() {
     <header ref={headerRef} className={styles.header}>
       <div className={styles.inner}>
         <Link to="/" className={styles.brand} aria-label="Zeuzyki — главная">
-          Zeuzyki
+          <LogoMark />
+          <span>Zeuzyki</span>
         </Link>
         <div className={styles.right}>
           <nav className={styles.nav} aria-label="Основная навигация">
