@@ -51,11 +51,18 @@ const API_URL = GAS_API_URL;
 const API_KEY = (import.meta.env.VITE_GAS_API_KEY ?? "").trim();
 
 const SCHEDULE_CACHE_VERSION = 1;
+const RIVERS_CACHE_VERSION = 1;
 const SCHEDULE_CACHE_KEY = `zeuzyki:schedule:v${SCHEDULE_CACHE_VERSION}:${API_URL}:${API_KEY}`;
+const RIVERS_CACHE_KEY = `zeuzyki:rivers:v${RIVERS_CACHE_VERSION}:${API_URL}:${API_KEY}`;
 
 interface ScheduleCache {
   savedAt: number;
   items: Splav[];
+}
+
+interface RiversCache {
+  savedAt: number;
+  items: River[];
 }
 
 interface FetchScheduleOptions {
@@ -63,6 +70,13 @@ interface FetchScheduleOptions {
   onRefreshComplete?: () => void;
   onRefreshError?: (error: unknown) => void;
   onUpdate?: (items: Splav[]) => void;
+}
+
+interface FetchRiversOptions {
+  onRefreshStart?: () => void;
+  onRefreshComplete?: () => void;
+  onRefreshError?: (error: unknown) => void;
+  onUpdate?: (items: River[]) => void;
 }
 
 const TRIP_TEMPLATE = {
@@ -157,7 +171,45 @@ function setCachedSchedule(items: Splav[]) {
   }
 }
 
+function getCachedRivers(): River[] | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = window.localStorage.getItem(RIVERS_CACHE_KEY);
+    if (!raw) return null;
+
+    const cache = JSON.parse(raw) as Partial<RiversCache>;
+    if (!cache.savedAt || !Array.isArray(cache.items)) {
+      window.localStorage.removeItem(RIVERS_CACHE_KEY);
+      return null;
+    }
+
+    return cache.items;
+  } catch {
+    window.localStorage.removeItem(RIVERS_CACHE_KEY);
+    return null;
+  }
+}
+
+function setCachedRivers(items: River[]) {
+  if (typeof window === "undefined") return;
+
+  try {
+    const cache: RiversCache = {
+      savedAt: Date.now(),
+      items,
+    };
+    window.localStorage.setItem(RIVERS_CACHE_KEY, JSON.stringify(cache));
+  } catch {
+    // localStorage can be unavailable or full; rivers loading must still work.
+  }
+}
+
 function areSchedulesEqual(a: Splav[], b: Splav[]) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function areRiversEqual(a: River[], b: River[]) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
@@ -213,9 +265,7 @@ export async function fetchSchedule(
   return fetchScheduleFromApi();
 }
 
-export async function fetchRivers(): Promise<River[]> {
-  assertConfigured();
-
+async function fetchRiversFromApi(): Promise<River[]> {
   const url = new URL(API_URL);
   url.searchParams.set("action", "rivers");
   url.searchParams.set("key", API_KEY);
@@ -230,7 +280,41 @@ export async function fetchRivers(): Promise<River[]> {
     throw new Error(`Ошибка API видов сплавов: ${json.error ?? "unknown"}`);
   }
 
-  return (json.items ?? []).map(toRiver).filter((item) => item.river);
+  const items = (json.items ?? []).map(toRiver).filter((item) => item.river);
+  setCachedRivers(items);
+  return items;
+}
+
+async function refreshCachedRivers(
+  cached: River[],
+  options: FetchRiversOptions,
+) {
+  options.onRefreshStart?.();
+
+  try {
+    const fresh = await fetchRiversFromApi();
+    if (!areRiversEqual(cached, fresh)) {
+      options.onUpdate?.(fresh);
+    }
+  } catch (error) {
+    options.onRefreshError?.(error);
+  } finally {
+    options.onRefreshComplete?.();
+  }
+}
+
+export async function fetchRivers(
+  options: FetchRiversOptions = {},
+): Promise<River[]> {
+  assertConfigured();
+
+  const cached = getCachedRivers();
+  if (cached) {
+    void refreshCachedRivers(cached, options);
+    return cached;
+  }
+
+  return fetchRiversFromApi();
 }
 
 export async function submitBooking(payload: BookingPayload): Promise<void> {

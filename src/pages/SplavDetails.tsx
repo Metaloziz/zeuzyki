@@ -108,7 +108,7 @@ export function SplavDetails() {
     river: splav.river,
     distance: "",
     time: "",
-    price: `${splav.price} BYN`,
+    price: `${splav.price} рублей`,
     kidsPrice: "",
     description: "",
   };
@@ -148,7 +148,7 @@ export function SplavDetails() {
             <div className={styles.heroMeta}>
               <div className={styles.metaItem}>
                 <span className={styles.metaLabel}>Цена</span>
-                <span className={styles.metaValue}>{splav.price} BYN</span>
+                <span className={styles.metaValue}>{splav.price} рублей</span>
               </div>
               <div className={styles.metaItem}>
                 <span className={styles.metaLabel}>Свободно</span>
@@ -256,7 +256,7 @@ export function SplavDetails() {
       {stickyVisible && (
         <div className={styles.sticky}>
           <div className={styles.stickyInfo}>
-            <span className={styles.stickyPrice}>{splav.price} BYN</span>
+            <span className={styles.stickyPrice}>{splav.price} рублей</span>
             <span className={styles.stickySeats}>
               осталось {splav.seatsLeft} мест
             </span>

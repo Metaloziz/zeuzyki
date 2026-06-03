@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Alert, Loader, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { BookingModal } from "../components/BookingModal/BookingModal";
@@ -40,8 +40,32 @@ export function Home() {
   const [freshnessStatus, setFreshnessStatus] = useState<
     "idle" | "checking" | "success"
   >("idle");
+  const freshnessStateRef = useRef({ pending: 0, failed: false });
   const [loadError, setLoadError] = useState<string | null>(null);
   const [riversError, setRiversError] = useState<string | null>(null);
+
+  const startFreshnessCheck = () => {
+    if (freshnessStateRef.current.pending === 0) {
+      freshnessStateRef.current.failed = false;
+    }
+    freshnessStateRef.current.pending += 1;
+    setFreshnessStatus("checking");
+  };
+
+  const failFreshnessCheck = () => {
+    freshnessStateRef.current.failed = true;
+  };
+
+  const completeFreshnessCheck = () => {
+    freshnessStateRef.current.pending = Math.max(
+      0,
+      freshnessStateRef.current.pending - 1,
+    );
+
+    if (freshnessStateRef.current.pending === 0) {
+      setFreshnessStatus(freshnessStateRef.current.failed ? "idle" : "success");
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -51,7 +75,20 @@ export function Home() {
       setRiversError(null);
 
       try {
-        const items = await fetchRivers();
+        const items = await fetchRivers({
+          onRefreshStart: () => {
+            startFreshnessCheck();
+          },
+          onUpdate: (freshItems) => {
+            if (!cancelled) setRivers(freshItems);
+          },
+          onRefreshError: () => {
+            failFreshnessCheck();
+          },
+          onRefreshComplete: () => {
+            completeFreshnessCheck();
+          },
+        });
         if (!cancelled) setRivers(items);
       } catch (e) {
         if (!cancelled) {
@@ -78,16 +115,12 @@ export function Home() {
     let cancelled = false;
 
     const run = async () => {
-      let refreshFailed = false;
-
       setLoading(true);
-      setFreshnessStatus("idle");
       setLoadError(null);
       try {
         const items = await fetchSchedule({
           onRefreshStart: () => {
-            refreshFailed = false;
-            if (!cancelled) setFreshnessStatus("checking");
+            startFreshnessCheck();
           },
           onUpdate: (freshItems) => {
             if (!cancelled) {
@@ -100,11 +133,10 @@ export function Home() {
             }
           },
           onRefreshError: () => {
-            refreshFailed = true;
-            if (!cancelled) setFreshnessStatus("idle");
+            failFreshnessCheck();
           },
           onRefreshComplete: () => {
-            if (!cancelled && !refreshFailed) setFreshnessStatus("success");
+            completeFreshnessCheck();
           },
         });
         if (!cancelled) {
@@ -166,33 +198,26 @@ export function Home() {
       .sort((a, b) => toDateTime(a).getTime() - toDateTime(b).getTime());
   }, [activeRiver, splavy]);
 
-  const { featuredSplavy, listSplavy } = useMemo(() => {
-    const sortedSplavy = [...splavy].sort(
-      (a, b) => toDateTime(a).getTime() - toDateTime(b).getTime(),
-    );
-
-    const now = new Date();
-    const upcoming = sortedSplavy.filter((s) => toDateTime(s) >= now);
-    const nearestSource = upcoming.length > 0 ? upcoming : sortedSplavy;
-    const featured = nearestSource.slice(0, 2);
-    const featuredIds = new Set(featured.map((s) => s.id));
-    const list = sortedSplavy.filter((s) => !featuredIds.has(s.id));
-
-    return { featuredSplavy: featured, listSplavy: list };
-  }, [splavy]);
+  const scheduleSplavy = useMemo(
+    () =>
+      [...splavy].sort(
+        (a, b) => toDateTime(a).getTime() - toDateTime(b).getTime(),
+      ),
+    [splavy],
+  );
 
   return (
     <>
       <main>
         <section id="schedule" className={styles.section}>
-          <h1 className={styles.sectionTitle}>Расписание сплавов</h1>
+          <h1 className={styles.sectionTitle}>Выбрать сплав и записаться</h1>
 
           <section
             className={styles.riverTypesBlock}
             aria-labelledby="river-types-title"
           >
             <h2 id="river-types-title" className={styles.subsectionTitle}>
-              Виды сплавов
+              Наши маршруты
             </h2>
 
             {riversLoading ? (
@@ -200,7 +225,7 @@ export function Home() {
                 <Stack align="center" gap="xs">
                   <Loader size="sm" />
                   <Text size="sm" c="dimmed">
-                    Загружаем виды сплавов…
+                    Загружаем актуальные данные…
                   </Text>
                 </Stack>
               </div>
@@ -275,8 +300,6 @@ export function Home() {
             )}
           </section>
 
-          <h2 className={styles.subsectionTitle}>Ближайшие даты</h2>
-
           {loading ? (
             <div className={styles.sectionEmpty}>
               <Stack align="center" gap="xs">
@@ -299,46 +322,6 @@ export function Home() {
             </div>
           ) : (
             <>
-              <div className={styles.featuredGrid}>
-                {featuredSplavy.map((splav) => {
-                  const riverImage = getRiverImage(splav.river);
-
-                  return (
-                    <article key={splav.id} className={styles.featuredCard}>
-                      <div
-                        className={`${styles.featuredImageWrap} ${!riverImage ? styles.imageFallback : ""}`}
-                        aria-hidden="true"
-                      >
-                        {riverImage && (
-                          <img
-                            src={riverImage}
-                            alt={`Река ${splav.river}`}
-                            className={styles.featuredImage}
-                            loading="lazy"
-                          />
-                        )}
-                      </div>
-                      <p className={styles.featuredDate}>
-                        {humanDate.format(toDateTime(splav))}
-                      </p>
-                      <h2 className={styles.featuredTitle}>
-                        {getSplavCardTitle(splav)}
-                      </h2>
-                      <p className={styles.featuredMeta}>
-                        старт в {splav.startTime}
-                      </p>
-                      <button
-                        type="button"
-                        className={`${styles.bookButton} ${styles.featuredBookButton}`}
-                        onClick={() => handleBook(splav)}
-                      >
-                        Записаться
-                      </button>
-                    </article>
-                  );
-                })}
-              </div>
-
               {freshnessStatus !== "idle" && (
                 <div
                   className={styles.refreshNotice}
@@ -374,11 +357,11 @@ export function Home() {
                 </p>
               </div>
 
-              {listSplavy.length > 0 && (
+              {scheduleSplavy.length > 0 && (
                 <div className={styles.listBlock}>
-                  <h2 className={styles.listTitle}>Остальные сплавы</h2>
+                  <h2 className={styles.listTitle}>Расписание</h2>
                   <div className={styles.list}>
-                    {listSplavy.map((splav) => {
+                    {scheduleSplavy.map((splav) => {
                       const riverImage = getRiverImage(splav.river);
 
                       return (
