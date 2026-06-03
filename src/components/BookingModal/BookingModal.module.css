@@ -23,32 +23,41 @@
 .sectionIcon {
     width: 24px;
     height: 24px;
+    flex: 0 0 24px;
     border-radius: var(--radius-pill);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
-    line-height: 1;
+    line-height: 0;
+}
+
+.sectionIcon svg {
+    display: block;
 }
 
 .iconBlue {
     background: var(--brand-cyan-soft);
+    color: var(--brand-cyan);
 }
 
 .iconGreen {
     background: var(--brand-green-soft);
+    color: var(--brand-green);
 }
 
 .iconAmber {
-    background: #fff7d6;
+    background: color-mix(in srgb, var(--brand-green) 18%, var(--surface-tint));
+    color: var(--brand-green);
 }
 
 .iconViolet {
-    background: #f0edff;
+    background: color-mix(in srgb, var(--brand-cyan) 14%, var(--surface-tint));
+    color: var(--brand-cyan);
 }
 
 .iconRose {
     background: var(--error-soft);
+    color: var(--error);
 }
 
 .sectionTitle {

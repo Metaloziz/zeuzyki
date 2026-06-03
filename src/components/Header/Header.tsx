@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useMantineColorScheme } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { LogoMark } from "./LogoMark";
 import styles from "./Header.module.css";
@@ -15,7 +16,9 @@ const instagramIcon = new URL(
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
   const headerRef = useRef<HTMLElement | null>(null);
+  const isDark = colorScheme === "dark";
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
@@ -59,6 +62,17 @@ export function Header() {
               Про нас
             </Link>
           </nav>
+          <button
+            type="button"
+            className={styles.themeButton}
+            aria-label={
+              isDark ? "Включить светлую тему" : "Включить тёмную тему"
+            }
+            title={isDark ? "Светлая тема" : "Тёмная тема"}
+            onClick={() => setColorScheme(isDark ? "light" : "dark")}
+          >
+            <span aria-hidden="true">{isDark ? "☀" : "☾"}</span>
+          </button>
           <button
             type="button"
             className={styles.mobileMenuButton}

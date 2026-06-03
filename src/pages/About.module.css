@@ -72,6 +72,10 @@
     color: var(--brand-green-dark);
 }
 
+.imagePlaceholder svg {
+    display: block;
+}
+
 .imagePlaceholder span {
     font-size: 14px;
     color: var(--brand-green-dark);
@@ -105,7 +109,12 @@
     align-items: center;
     justify-content: center;
     color: var(--brand-green-dark);
+    line-height: 0;
     margin-bottom: 16px;
+}
+
+.featureIcon svg {
+    display: block;
 }
 
 .featureTitle {

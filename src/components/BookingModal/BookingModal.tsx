@@ -17,6 +17,16 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import {
+  IconCalendarEvent,
+  IconLock,
+  IconMessageCircle,
+  IconMinus,
+  IconMoodKid,
+  IconPlus,
+  IconUser,
+  IconUsers,
+} from "@tabler/icons-react";
 import type { River } from "../../types/river";
 import type { Splav } from "../../types/splav";
 import { formatDateRangeFull } from "../../lib/format";
@@ -250,7 +260,7 @@ export function BookingModal({
             <div className={styles.sectionCard}>
               <div className={styles.sectionHead}>
                 <span className={`${styles.sectionIcon} ${styles.iconBlue}`}>
-                  📅
+                  <IconCalendarEvent size={15} stroke={2} />
                 </span>
                 <span className={styles.sectionTitle}>Дата сплава</span>
               </div>
@@ -284,7 +294,7 @@ export function BookingModal({
             <div className={styles.sectionCard}>
               <div className={styles.sectionHead}>
                 <span className={`${styles.sectionIcon} ${styles.iconBlue}`}>
-                  👤
+                  <IconUser size={15} stroke={2} />
                 </span>
                 <span className={styles.sectionTitle}>Контакты</span>
               </div>
@@ -322,7 +332,7 @@ export function BookingModal({
             <div className={styles.sectionCard}>
               <div className={styles.sectionHead}>
                 <span className={`${styles.sectionIcon} ${styles.iconGreen}`}>
-                  👥
+                  <IconUsers size={15} stroke={2} />
                 </span>
                 <span className={styles.sectionTitle}>Участники</span>
               </div>
@@ -345,7 +355,7 @@ export function BookingModal({
                           }
                           aria-label="Уменьшить количество участников"
                         >
-                          −
+                          <IconMinus size={20} stroke={2.4} />
                         </ActionIcon>
 
                         <Text fw={700} fz={24} w={48} ta="center">
@@ -364,7 +374,7 @@ export function BookingModal({
                           }
                           aria-label="Увеличить количество участников"
                         >
-                          +
+                          <IconPlus size={20} stroke={2.4} />
                         </ActionIcon>
                       </Group>
 
@@ -400,7 +410,7 @@ export function BookingModal({
                             <span
                               className={`${styles.sectionIcon} ${styles.iconAmber}`}
                             >
-                              🧒
+                              <IconMoodKid size={15} stroke={2} />
                             </span>
                             <Text fw={600}>Будут ли дети?</Text>
                           </Group>
@@ -441,7 +451,7 @@ export function BookingModal({
                               <Stack gap={0}>
                                 <Text fw={500}>Количество детей</Text>
                                 <Text size="xs" c="dimmed">
-                                  до 14 лет
+                                  до 12 лет
                                 </Text>
                               </Stack>
                               <Group gap="xs">
@@ -455,8 +465,9 @@ export function BookingModal({
                                       Math.max(1, Number(field.value) - 1),
                                     )
                                   }
+                                  aria-label="Уменьшить количество детей"
                                 >
-                                  −
+                                  <IconMinus size={18} stroke={2.4} />
                                 </ActionIcon>
                                 <Text fw={600} w={18} ta="center">
                                   {field.value}
@@ -471,8 +482,9 @@ export function BookingModal({
                                       Math.min(10, Number(field.value) + 1),
                                     )
                                   }
+                                  aria-label="Увеличить количество детей"
                                 >
-                                  +
+                                  <IconPlus size={18} stroke={2.4} />
                                 </ActionIcon>
                               </Group>
                             </Group>
@@ -500,7 +512,7 @@ export function BookingModal({
             <div className={styles.sectionCard}>
               <div className={styles.sectionHead}>
                 <span className={`${styles.sectionIcon} ${styles.iconViolet}`}>
-                  💬
+                  <IconMessageCircle size={15} stroke={2} />
                 </span>
                 <span className={styles.sectionTitle}>Комментарий</span>
               </div>
@@ -516,7 +528,7 @@ export function BookingModal({
             <div className={styles.sectionCard}>
               <div className={styles.sectionHead}>
                 <span className={`${styles.sectionIcon} ${styles.iconRose}`}>
-                  🔒
+                  <IconLock size={15} stroke={2} />
                 </span>
                 <span className={styles.sectionTitle}>Согласие</span>
               </div>

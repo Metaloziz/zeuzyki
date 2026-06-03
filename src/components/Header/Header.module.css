@@ -74,7 +74,8 @@
     gap: 10px;
 }
 
-.social {
+.social,
+.themeButton {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -91,13 +92,20 @@
         transform 0.2s ease;
 }
 
+.themeButton {
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 1;
+}
+
 .socialIcon {
     width: 24px;
     height: 24px;
     display: block;
 }
 
-.social:hover {
+.social:hover,
+.themeButton:hover {
     color: #fff;
     background: rgba(255, 255, 255, 0.14);
     border-color: rgba(255, 255, 255, 0.16);
@@ -232,7 +240,8 @@
         gap: 4px;
     }
 
-    .social {
+    .social,
+    .themeButton {
         width: 34px;
         height: 34px;
     }

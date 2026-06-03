@@ -1,85 +1,33 @@
 import { Badge, Group } from "@mantine/core";
+import {
+  IconCampfire,
+  IconShieldCheck,
+  IconTent,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 import styles from "./About.module.css";
 
 const FEATURES = [
   {
-    icon: (
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
+    icon: <IconUsersGroup size={28} stroke={1.7} />,
     title: "Опытная команда",
     description:
       "Более 10 лет организации походов и сплавов. Инструктора с опытом работы с группами любого уровня подготовки.",
   },
   {
-    icon: (
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-        <circle cx="12" cy="10" r="3" />
-      </svg>
-    ),
+    icon: <IconTent size={28} stroke={1.7} />,
     title: "Собственная база",
     description:
       "На реке Илия расположена наша база с оборудованными стоянками, шатрами, мангалами, WC и волейбольной площадкой.",
   },
   {
-    icon: (
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    ),
+    icon: <IconShieldCheck size={28} stroke={1.7} />,
     title: "Безопасность",
     description:
       "Все маршруты рассчитаны на новичков и семьи с детьми. Спасательные жилеты, страховка и инструктаж включены.",
   },
   {
-    icon: (
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-        <line x1="3" y1="9" x2="21" y2="9" />
-        <line x1="9" y1="21" x2="9" y2="9" />
-      </svg>
-    ),
+    icon: <IconCampfire size={28} stroke={1.7} />,
     title: "Комфорт на природе",
     description:
       "Уютные костровые зоны, мебель, мангалы, горячий чай и питание на берегу. Всё для приятного отдыха.",
@@ -119,19 +67,7 @@ export function About() {
           </div>
           <div className={styles.heroImage} aria-hidden="true">
             <div className={styles.imagePlaceholder}>
-              <svg
-                width="64"
-                height="64"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="8" r="5" />
-                <path d="M20 21a8 8 0 0 0-16 0" />
-              </svg>
+              <IconUsersGroup size={64} stroke={1.2} />
               <span>Фото команды</span>
             </div>
           </div>

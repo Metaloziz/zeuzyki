@@ -13,7 +13,7 @@ const basename = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <MantineProvider theme={theme} defaultColorScheme="light">
+    <MantineProvider theme={theme} defaultColorScheme="dark">
       <BrowserRouter basename={basename}>
         <App />
       </BrowserRouter>
