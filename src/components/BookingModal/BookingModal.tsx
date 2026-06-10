@@ -559,9 +559,10 @@ export function BookingModal({
               type="submit"
               variant="primary"
               fullWidth
-              disabled={isSubmitting || dateOptions.length === 0}
+              loading={isSubmitting}
+              disabled={dateOptions.length === 0}
             >
-              {isSubmitting ? "Отправка…" : "Отправить заявку"}
+              Отправить заявку
             </V2Button>
           </div>
         </form>

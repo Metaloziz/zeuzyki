@@ -25,6 +25,7 @@
     --v2-radius-lg: var(--radius-lg);
     --v2-radius-md: var(--radius-md);
     --v2-radius-btn: var(--radius-btn);
+    --v2-btn-water-height: 200px;
     --v2-radius-pill: var(--radius-pill);
 
     --v2-shadow-soft: var(--shadow-sm);

@@ -7,6 +7,8 @@ interface V2ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: V2ButtonVariant;
   onDark?: boolean;
   fullWidth?: boolean;
+  loading?: boolean;
+  loadingLabel?: ReactNode;
   children: ReactNode;
 }
 
@@ -14,26 +16,35 @@ export function V2Button({
   variant = "primary",
   onDark = false,
   fullWidth = false,
+  loading = false,
+  loadingLabel = "Отправляем…",
   children,
   className,
   type = "button",
+  disabled,
   ...props
 }: V2ButtonProps) {
+  const isDisabled = disabled || loading;
+
   return (
     <button
       type={type}
+      disabled={isDisabled}
+      aria-busy={loading || undefined}
       className={[
         styles.root,
         styles[variant],
         onDark ? styles.onDark : "",
         fullWidth ? styles.fullWidth : "",
+        loading ? styles.loading : "",
         className,
       ]
         .filter(Boolean)
         .join(" ")}
       {...props}
     >
-      {children}
+      <span className={styles.water} aria-hidden="true" />
+      <span className={styles.label}>{loading ? loadingLabel : children}</span>
     </button>
   );
 }
