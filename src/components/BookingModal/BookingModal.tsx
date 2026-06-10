@@ -27,10 +27,12 @@ import {
   IconUser,
   IconUsers,
 } from "@tabler/icons-react";
-import type { River } from "../../types/river";
-import type { Splav } from "../../types/splav";
-import { formatDateRangeFull } from "../../lib/format";
-import { submitBooking } from "../../lib/sheetsApi";
+import { BOOKING_LIMITS, PHONE_REGEX } from "@/constants/booking";
+import type { River } from "@/types/river";
+import type { Splav } from "@/types/splav";
+import { formatDateRangeFull } from "@/utils/format";
+import { formatPhone, normalizePhone } from "@/utils/phone";
+import { submitBooking } from "@/utils/sheetsApi";
 import styles from "./BookingModal.module.css";
 
 interface BookingModalProps {
@@ -41,15 +43,6 @@ interface BookingModalProps {
   onClose: () => void;
 }
 
-// +375 (XX) XXX-XX-XX — 9 цифр после +375
-const phoneRegex = /^\+375\s?\(?\d{2}\)?\s?\d{3}-?\d{2}-?\d{2}$/;
-
-function normalizePhone(raw: string): string {
-  const digits = raw.replace(/\D/g, "");
-  const tail = digits.startsWith("375") ? digits.slice(3) : digits;
-  return `+375${tail.slice(0, 9)}`;
-}
-
 const schema = z
   .object({
     scheduleId: z.string().min(1, "Выберите дату сплава"),
@@ -58,18 +51,18 @@ const schema = z
       .trim()
       .min(2, "Слишком короткое")
       .max(120, "Слишком длинное"),
-    phone: z.string().trim().regex(phoneRegex, "Формат: +375 (XX) XXX-XX-XX"),
+    phone: z.string().trim().regex(PHONE_REGEX, "Формат: +375 (XX) XXX-XX-XX"),
     peopleCount: z
       .number({ invalid_type_error: "Укажите количество участников" })
       .int("Только целое число")
-      .min(1, "Минимум 1 человек")
-      .max(20, "Максимум 20 человек"),
+      .min(BOOKING_LIMITS.minPeople, "Минимум 1 человек")
+      .max(BOOKING_LIMITS.maxPeople, "Максимум 20 человек"),
     hasKids: z.boolean(),
     kidsCount: z
       .number({ invalid_type_error: "Укажите количество детей" })
       .int("Только целое число")
       .min(0)
-      .max(10, "Максимум 10 детей"),
+      .max(BOOKING_LIMITS.maxKids, "Максимум 10 детей"),
     kidsAges: z.string().trim().max(120, "Слишком длинно").optional(),
     comment: z.string().trim().max(1000, "Слишком длинно").optional(),
     consent: z.literal(true, {
@@ -87,23 +80,6 @@ const schema = z
   });
 
 type FormValues = z.infer<typeof schema>;
-
-/** Маска ввода телефона для +375 */
-function formatPhone(raw: string): string {
-  const digits = raw.replace(/\D/g, "");
-  const tail = digits.startsWith("375") ? digits.slice(3) : digits;
-  const d = tail.slice(0, 9);
-
-  if (d.length === 0) return "+375 ";
-
-  let out = "+375 (";
-  out += d.slice(0, 2);
-  if (d.length >= 2) out += ") ";
-  if (d.length > 2) out += d.slice(2, 5);
-  if (d.length > 5) out += "-" + d.slice(5, 7);
-  if (d.length > 7) out += "-" + d.slice(7, 9);
-  return out;
-}
 
 export function BookingModal({
   river,
@@ -376,7 +352,10 @@ export function BookingModal({
                           size={46}
                           onClick={() =>
                             field.onChange(
-                              Math.min(20, Number(field.value) + 1),
+                              Math.min(
+                                BOOKING_LIMITS.maxPeople,
+                                Number(field.value) + 1,
+                              ),
                             )
                           }
                           disabled={isSubmitting}
@@ -489,7 +468,10 @@ export function BookingModal({
                                   size="lg"
                                   onClick={() =>
                                     field.onChange(
-                                      Math.min(10, Number(field.value) + 1),
+                                      Math.min(
+                                        BOOKING_LIMITS.maxKids,
+                                        Number(field.value) + 1,
+                                      ),
                                     )
                                   }
                                   disabled={isSubmitting}

@@ -1,293 +1,63 @@
-import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Alert, Skeleton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { BookingModal } from "../components/BookingModal/BookingModal";
+import { BookingModal } from "@/components/BookingModal";
+import { RiverPhotoCarousel } from "@/components/RiverPhotoCarousel";
+import { ROUTES } from "@/constants/routes";
+import { useFreshnessTracker } from "@/hooks/useFreshnessTracker";
+import { useRivers } from "@/hooks/useRivers";
+import { useSchedule } from "@/hooks/useSchedule";
+import type { River } from "@/types/river";
+import type { Splav } from "@/types/splav";
+import { formatHumanDate } from "@/utils/format";
+import { getRoutePhoto } from "@/utils/routePhotos";
 import {
-  corporateHeroPhoto,
-  getRoutePhoto,
-  getRoutePhotos,
-} from "../lib/routePhotos";
-import { fetchRivers, fetchSchedule } from "../lib/sheetsApi";
-import type { River } from "../types/river";
-import type { Splav } from "../types/splav";
+  getSplavCardTitle,
+  isCorporateRiver,
+  matchSplavToRiver,
+  toDateTime,
+} from "@/utils/splav";
 import styles from "./Home.module.css";
-
-function toDateTime(splav: Splav) {
-  return new Date(`${splav.startDate}T${splav.startTime}`);
-}
-
-const humanDate = new Intl.DateTimeFormat("ru-RU", {
-  day: "numeric",
-  month: "long",
-});
-
-function isCorporateRiver(river: River): boolean {
-  return river.river.trim().toLowerCase() === "корпоративный сплав";
-}
-
-function getSplavCardTitle(splav: Splav): string {
-  const title = splav.title?.trim();
-  if (!title) return `Сплав по р. ${splav.river}`;
-
-  const hasRiverInTitle = title
-    .toLowerCase()
-    .includes(splav.river.toLowerCase());
-  return hasRiverInTitle ? title : `${title} · р. ${splav.river}`;
-}
 
 const RIVER_SKELETONS = Array.from({ length: 4 }, (_, index) => index);
 const RIVER_DETAIL_SKELETONS = Array.from({ length: 4 }, (_, index) => index);
 const SCHEDULE_SKELETONS = Array.from({ length: 5 }, (_, index) => index);
-const MIN_SWIPE_DISTANCE = 44;
-
-function getRiverCarouselPhotos(riverName: string): string[] {
-  const routePhotos = getRoutePhotos(riverName);
-
-  if (riverName.trim().toLowerCase() !== "корпоративный сплав") {
-    return routePhotos;
-  }
-
-  if (routePhotos.length === 0) return [corporateHeroPhoto];
-
-  return [corporateHeroPhoto, ...routePhotos.slice(1)];
-}
-
-function RiverPhotoCarousel({ riverName }: { riverName: string }) {
-  const photos = useMemo(
-    () => getRiverCarouselPhotos(riverName),
-    [riverName],
-  );
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [dragStartX, setDragStartX] = useState<number | null>(null);
-
-  const showSlide = (index: number) => {
-    setActiveIndex((index + photos.length) % photos.length);
-  };
-
-  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    setDragStartX(event.clientX);
-  };
-
-  const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
-    if (dragStartX === null) return;
-
-    const distance = event.clientX - dragStartX;
-    setDragStartX(null);
-
-    if (Math.abs(distance) < MIN_SWIPE_DISTANCE) return;
-    showSlide(activeIndex + (distance < 0 ? 1 : -1));
-  };
-
-  if (photos.length === 0) return null;
-
-  return (
-    <div
-      className={styles.photoCarousel}
-      aria-label={`Фотографии маршрута ${riverName}`}
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={() => setDragStartX(null)}
-    >
-      <div
-        className={styles.photoCarouselTrack}
-        style={{ transform: `translateX(-${activeIndex * 100}%)` }}
-      >
-        {photos.map((photo, index) => (
-          <div
-            key={photo}
-            className={styles.photoSlide}
-            aria-hidden={activeIndex !== index}
-          >
-            <img
-              src={photo}
-              alt={`Пейзаж маршрута ${riverName}, фото ${index + 1}`}
-              className={styles.photoSlideImage}
-              loading={index === 0 ? "eager" : "lazy"}
-              draggable={false}
-            />
-          </div>
-        ))}
-      </div>
-
-      {photos.length > 1 && (
-        <>
-          <button
-            type="button"
-            className={`${styles.photoCarouselButton} ${styles.photoCarouselButtonPrev}`}
-            onClick={() => showSlide(activeIndex - 1)}
-            aria-label="Предыдущее фото"
-          >
-            <IconChevronLeft size={20} stroke={2.4} aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            className={`${styles.photoCarouselButton} ${styles.photoCarouselButtonNext}`}
-            onClick={() => showSlide(activeIndex + 1)}
-            aria-label="Следующее фото"
-          >
-            <IconChevronRight size={20} stroke={2.4} aria-hidden="true" />
-          </button>
-
-          <div className={styles.photoCarouselDots} aria-hidden="true">
-            {photos.map((photo, index) => (
-              <span
-                key={photo}
-                className={`${styles.photoCarouselDot} ${
-                  activeIndex === index ? styles.photoCarouselDotActive : ""
-                }`}
-              />
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
 
 export function Home() {
   const [opened, { open, close }] = useDisclosure(false);
-  const [splavy, setSplavy] = useState<Splav[]>([]);
-  const [rivers, setRivers] = useState<River[]>([]);
   const [activeRiver, setActiveRiver] = useState<River | null>(null);
   const [preselectedDateId, setPreselectedDateId] = useState<string | null>(
     null,
   );
-  const [loading, setLoading] = useState(true);
-  const [riversLoading, setRiversLoading] = useState(true);
-  const [, setFreshnessStatus] = useState<"idle" | "checking" | "success">(
-    "idle",
-  );
-  const freshnessStateRef = useRef({ pending: 0, failed: false });
-  const [loadError, setLoadError] = useState<string | null>(null);
-  const [riversError, setRiversError] = useState<string | null>(null);
+  const { startCheck, failCheck, completeCheck } = useFreshnessTracker();
 
-  const startFreshnessCheck = () => {
-    if (freshnessStateRef.current.pending === 0) {
-      freshnessStateRef.current.failed = false;
-    }
-    freshnessStateRef.current.pending += 1;
-    setFreshnessStatus("checking");
+  const freshnessOptions = {
+    onRefreshStart: startCheck,
+    onRefreshError: failCheck,
+    onRefreshComplete: completeCheck,
   };
 
-  const failFreshnessCheck = () => {
-    freshnessStateRef.current.failed = true;
-  };
+  const {
+    rivers,
+    loading: riversLoading,
+    error: riversError,
+  } = useRivers(freshnessOptions);
 
-  const completeFreshnessCheck = () => {
-    freshnessStateRef.current.pending = Math.max(
-      0,
-      freshnessStateRef.current.pending - 1,
+  const {
+    splavy,
+    loading,
+    error: loadError,
+  } = useSchedule(freshnessOptions);
+
+  useEffect(() => {
+    setPreselectedDateId((current) =>
+      current && splavy.some((item) => item.id === current) ? current : null,
     );
-
-    if (freshnessStateRef.current.pending === 0) {
-      setFreshnessStatus(freshnessStateRef.current.failed ? "idle" : "success");
-    }
-  };
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const run = async () => {
-      setRiversLoading(true);
-      setRiversError(null);
-
-      try {
-        const items = await fetchRivers({
-          onRefreshStart: () => {
-            startFreshnessCheck();
-          },
-          onUpdate: (freshItems) => {
-            if (!cancelled) setRivers(freshItems);
-          },
-          onRefreshError: () => {
-            failFreshnessCheck();
-          },
-          onRefreshComplete: () => {
-            completeFreshnessCheck();
-          },
-        });
-        if (!cancelled) setRivers(items);
-      } catch (e) {
-        if (!cancelled) {
-          setRiversError(
-            e instanceof Error
-              ? e.message
-              : "Не удалось загрузить виды сплавов. Попробуйте позже.",
-          );
-          setRivers([]);
-        }
-      } finally {
-        if (!cancelled) setRiversLoading(false);
-      }
-    };
-
-    void run();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const run = async () => {
-      setLoading(true);
-      setLoadError(null);
-      try {
-        const items = await fetchSchedule({
-          onRefreshStart: () => {
-            startFreshnessCheck();
-          },
-          onUpdate: (freshItems) => {
-            if (!cancelled) {
-              setSplavy(freshItems);
-              setPreselectedDateId((current) =>
-                current && freshItems.some((item) => item.id === current)
-                  ? current
-                  : null,
-              );
-            }
-          },
-          onRefreshError: () => {
-            failFreshnessCheck();
-          },
-          onRefreshComplete: () => {
-            completeFreshnessCheck();
-          },
-        });
-        if (!cancelled) {
-          setSplavy(items);
-        }
-      } catch (e) {
-        if (!cancelled) {
-          setLoadError(
-            e instanceof Error
-              ? e.message
-              : "Не удалось загрузить расписание. Попробуйте позже.",
-          );
-          setSplavy([]);
-          setActiveRiver(null);
-          setPreselectedDateId(null);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    void run();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  }, [splavy]);
 
   const handleBook = (splav: Splav) => {
-    const river = rivers.find((item) =>
-      splav.riverId ? item.id === splav.riverId : item.river === splav.river,
-    );
+    const river = rivers.find((item) => matchSplavToRiver(splav, item));
 
     if (!river) {
       window.alert("Не удалось найти тип сплава для выбранной даты.");
@@ -309,11 +79,7 @@ export function Home() {
     if (!activeRiver) return [];
 
     return splavy
-      .filter((splav) =>
-        splav.riverId
-          ? splav.riverId === activeRiver.id
-          : splav.river === activeRiver.river,
-      )
+      .filter((splav) => matchSplavToRiver(splav, activeRiver))
       .sort((a, b) => toDateTime(a).getTime() - toDateTime(b).getTime());
   }, [activeRiver, splavy]);
 
@@ -380,7 +146,10 @@ export function Home() {
                     key={river.id}
                     className={`${styles.featuredCard} ${styles.riverCard}`}
                   >
-                    <RiverPhotoCarousel riverName={river.river} />
+                    <RiverPhotoCarousel
+                      riverName={river.river}
+                      variant="riverCard"
+                    />
                     <h3 className={styles.featuredTitle}>{river.river}</h3>
                     {river.description && (
                       <p className={styles.riverDescription}>
@@ -423,7 +192,7 @@ export function Home() {
                           Забронировать
                         </button>
                         <Link
-                          to="/corporate"
+                          to={ROUTES.CORPORATE}
                           className={`${styles.bookButton} ${styles.riverCardDetailsButton}`}
                         >
                           Подробнее
@@ -520,10 +289,15 @@ export function Home() {
                             )}
                             <div>
                               <p className={styles.listItemDate}>
-                                {humanDate.format(toDateTime(splav))}
+                                {formatHumanDate(toDateTime(splav))}
                               </p>
                               <h3 className={styles.listItemTitle}>
-                                {getSplavCardTitle(splav)}
+                                <Link
+                                  to={ROUTES.splav(splav.id)}
+                                  className={styles.listItemTitleLink}
+                                >
+                                  {getSplavCardTitle(splav)}
+                                </Link>
                               </h3>
                               <p className={styles.listItemMeta}>
                                 старт в {splav.startTime}

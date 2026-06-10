@@ -1,4 +1,4 @@
-import styles from "./Header.module.css";
+import styles from "./LogoMark.module.css";
 
 const logo = `${import.meta.env.BASE_URL}assets/logo.png`;
 

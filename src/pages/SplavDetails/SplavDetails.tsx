@@ -1,75 +1,30 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { Alert, Loader, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { BookingModal } from "../components/BookingModal/BookingModal";
-import { formatDateRangeFull } from "../lib/format";
-import { fetchSchedule } from "../lib/sheetsApi";
-import type { River } from "../types/river";
-import type { Splav } from "../types/splav";
+import { BookingModal } from "@/components/BookingModal";
+import { ROUTES } from "@/constants/routes";
+import { useSchedule } from "@/hooks/useSchedule";
+import type { River } from "@/types/river";
+import { formatDateRangeFull } from "@/utils/format";
+import { matchSplavs } from "@/utils/splav";
 import styles from "./SplavDetails.module.css";
 
 export function SplavDetails() {
   const { id } = useParams<{ id: string }>();
-  const [splav, setSplav] = useState<Splav | null>(null);
-  const [splavy, setSplavy] = useState<Splav[]>([]);
-  const [loading, setLoading] = useState(true);
   const [checkingFreshness, setCheckingFreshness] = useState(false);
-  const [loadError, setLoadError] = useState<string | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [stickyVisible, setStickyVisible] = useState(true);
 
-  useEffect(() => {
-    let cancelled = false;
+  const { splavy, loading, error: loadError } = useSchedule({
+    onRefreshStart: () => setCheckingFreshness(true),
+    onRefreshComplete: () => setCheckingFreshness(false),
+  });
 
-    const run = async () => {
-      if (!id) {
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-      setLoadError(null);
-
-      try {
-        const items = await fetchSchedule({
-          onRefreshStart: () => {
-            if (!cancelled) setCheckingFreshness(true);
-          },
-          onUpdate: (freshItems) => {
-            if (!cancelled) {
-              setSplavy(freshItems);
-              setSplav(freshItems.find((item) => item.id === id) ?? null);
-            }
-          },
-          onRefreshComplete: () => {
-            if (!cancelled) setCheckingFreshness(false);
-          },
-        });
-        const found = items.find((item) => item.id === id) ?? null;
-        if (!cancelled) {
-          setSplavy(items);
-          setSplav(found);
-        }
-      } catch (e) {
-        if (!cancelled) {
-          setLoadError(
-            e instanceof Error
-              ? e.message
-              : "Не удалось загрузить данные сплава",
-          );
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    void run();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [id]);
+  const splav = useMemo(
+    () => (id ? (splavy.find((item) => item.id === id) ?? null) : null),
+    [id, splavy],
+  );
 
   if (loading) {
     return (
@@ -99,7 +54,7 @@ export function SplavDetails() {
   }
 
   if (!splav) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={ROUTES.HOME} replace />;
   }
 
   const paragraphs = splav.longDescription.split("\n\n");
@@ -112,18 +67,15 @@ export function SplavDetails() {
     kidsPrice: "",
     description: "",
   };
-  const bookingDates = splavy.filter((item) =>
-    splav.riverId ? item.riverId === splav.riverId : item.river === splav.river,
-  );
+  const bookingDates = splavy.filter((item) => matchSplavs(item, splav));
 
   return (
     <>
       <article className={styles.page}>
-        {/* HERO */}
         <header className={styles.hero}>
           <div className={styles.heroGlow} aria-hidden="true" />
           <div className={styles.heroInner}>
-            <Link to="/" className={styles.back}>
+            <Link to={ROUTES.HOME} className={styles.back}>
               <span aria-hidden="true">‹</span> Все сплавы
             </Link>
 
@@ -173,7 +125,6 @@ export function SplavDetails() {
           </div>
         </header>
 
-        {/* ABOUT */}
         <section className={styles.section}>
           <div className={styles.container}>
             <h2 className={styles.sectionTitle}>Подробно</h2>
@@ -185,7 +136,6 @@ export function SplavDetails() {
           </div>
         </section>
 
-        {/* ROUTE */}
         <section className={`${styles.section} ${styles.sectionDark}`}>
           <div className={styles.container}>
             <h2 className={styles.sectionTitle}>Маршрут</h2>
@@ -193,7 +143,6 @@ export function SplavDetails() {
           </div>
         </section>
 
-        {/* PROGRAM */}
         <section className={styles.section}>
           <div className={styles.container}>
             <h2 className={styles.sectionTitle}>Программа по дням</h2>
@@ -213,7 +162,6 @@ export function SplavDetails() {
           </div>
         </section>
 
-        {/* INCLUDES */}
         <section className={`${styles.section} ${styles.sectionDark}`}>
           <div className={styles.container}>
             <h2 className={styles.sectionTitle}>Что входит в стоимость</h2>
@@ -230,7 +178,6 @@ export function SplavDetails() {
           </div>
         </section>
 
-        {/* FINAL CTA */}
         <section className={styles.finalCta}>
           <div className={styles.container}>
             <h2 className={styles.finalCtaTitle}>Готовы в путь?</h2>
@@ -252,7 +199,6 @@ export function SplavDetails() {
         </section>
       </article>
 
-      {/* STICKY BAR (mobile) */}
       {stickyVisible && (
         <div className={styles.sticky}>
           <div className={styles.stickyInfo}>

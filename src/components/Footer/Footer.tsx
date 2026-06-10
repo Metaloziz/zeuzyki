@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
+import {
+  INSTAGRAM_HANDLE,
+  INSTAGRAM_URL,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  TELEGRAM_HANDLE,
+  TELEGRAM_URL,
+} from "@/constants/contacts";
+import { NAV_ITEMS, ROUTES } from "@/constants/routes";
+import { SocialLinks } from "@/components/SocialLinks";
 import styles from "./Footer.module.css";
-
-const telegramIcon = new URL(
-  "../../../assets/telegram-icon.svg",
-  import.meta.url,
-).href;
-
-const instagramIcon = new URL(
-  "../../../assets/instagramm-icon.png",
-  import.meta.url,
-).href;
 
 const currentYear = new Date().getFullYear();
 
@@ -18,73 +18,43 @@ export function Footer() {
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.brandBlock}>
-          <Link to="/" className={styles.brand} aria-label="ЖЭЎЖЫКІ — главная">
+          <Link
+            to={ROUTES.HOME}
+            className={styles.brand}
+            aria-label="ЖЭЎЖЫКІ — главная"
+          >
             ЖЭЎЖЫКІ
           </Link>
           <p className={styles.tagline}>
             Байдарочные сплавы по живописным рекам Беларуси для новичков,
             компаний и корпоративных команд.
           </p>
-          <div className={styles.socials} aria-label="Социальные сети">
-            <a
-              href="https://t.me/zeuzyki_admin"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.social}
-              aria-label="ЖЭЎЖЫКІ в Telegram"
-              title="@zeuzyki_admin"
-            >
-              <img
-                src={telegramIcon}
-                alt=""
-                aria-hidden="true"
-                className={styles.socialIcon}
-              />
-            </a>
-            <a
-              href="https://www.instagram.com/zeuzyki/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.social}
-              aria-label="ЖЭЎЖЫКІ в Instagram"
-              title="Мы в Instagram"
-            >
-              <img
-                src={instagramIcon}
-                alt=""
-                aria-hidden="true"
-                className={styles.socialIcon}
-              />
-            </a>
-          </div>
+          <SocialLinks
+            className={styles.socials}
+            linkClassName={styles.social}
+            iconClassName={styles.socialIcon}
+          />
         </div>
 
         <nav className={styles.navBlock} aria-label="Навигация в футере">
           <h2 className={styles.blockTitle}>Разделы</h2>
-          <Link to="/#schedule" className={styles.link}>
-            Расписание сплавов
-          </Link>
-          <Link to="/corporate" className={styles.link}>
-            Корпоративные сплавы
-          </Link>
-          <Link to="/faq" className={styles.link}>
-            Популярные вопросы
-          </Link>
-          <Link to="/about" className={styles.link}>
-            Про нас
-          </Link>
+          {NAV_ITEMS.map((item) => (
+            <Link key={item.to} to={item.to} className={styles.link}>
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <address className={styles.contactBlock}>
           <h2 className={styles.blockTitle}>Связаться</h2>
-          <a href="tel:+375296826327" className={styles.link}>
-            Телефон: +375 (29) 682-63-27
+          <a href={PHONE_HREF} className={styles.link}>
+            Телефон: {PHONE_DISPLAY}
           </a>
-          <a href="https://t.me/zeuzyki_admin" className={styles.link}>
-            Telegram: @zeuzyki_admin
+          <a href={TELEGRAM_URL} className={styles.link}>
+            Telegram: {TELEGRAM_HANDLE}
           </a>
-          <a href="https://www.instagram.com/zeuzyki/" className={styles.link}>
-            Instagram: @zeuzyki
+          <a href={INSTAGRAM_URL} className={styles.link}>
+            Instagram: {INSTAGRAM_HANDLE}
           </a>
           <span className={styles.muted}>Ответим, подберём реку и дату.</span>
         </address>

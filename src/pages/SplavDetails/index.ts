@@ -1,0 +1,1 @@
+export { SplavDetails } from "./SplavDetails";

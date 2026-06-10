@@ -1,8 +1,7 @@
+import { CORPORATE_RIVER_NAME } from "@/constants/rivers";
+
 const routePhotoModules = import.meta.glob(
-  [
-    "../../assets/routes/*/*.{jpg,jpeg,png}",
-    "../../assets/corporate/0*.jpg",
-  ],
+  ["../assets/routes/*/*.{jpg,jpeg,png}", "../assets/corporate/0*.jpg"],
   {
     eager: true,
     import: "default",
@@ -24,12 +23,14 @@ for (const [path, url] of Object.entries(routePhotoModules)) {
 }
 
 for (const [group, items] of routePhotosByGroup) {
-  items.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+  items.sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, { numeric: true }),
+  );
   routePhotosByGroup.set(group, items);
 }
 
 export const corporateHeroPhoto = new URL(
-  "../../assets/corporate/hero.jpg",
+  "../assets/corporate/hero.jpg",
   import.meta.url,
 ).href;
 
@@ -48,7 +49,7 @@ function routeNameToGroupSlug(name: string): string | null {
 
   if (normalized === "вилия") return "viliya";
 
-  if (normalized === "корпоративный сплав") return "corporate";
+  if (normalized === CORPORATE_RIVER_NAME) return "corporate";
 
   const iliaPart1 = normalized.match(/^илия 1 (?:часть|этап)(?:\s*(\d+))?$/);
   if (iliaPart1) return "ilia-1-chast";

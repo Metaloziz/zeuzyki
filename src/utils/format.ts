@@ -23,6 +23,11 @@ const weekdaysShort: Record<number, string> = {
   6: "сб",
 };
 
+const humanDateFormatter = new Intl.DateTimeFormat("ru-RU", {
+  day: "numeric",
+  month: "long",
+});
+
 export function formatDateRange(startIso: string, endIso: string): string {
   const start = new Date(startIso);
   const end = new Date(endIso);
@@ -45,12 +50,6 @@ export function formatDateRangeFull(startIso: string, endIso: string): string {
   return `${formatDateRange(startIso, endIso)} ${end.getFullYear()}`;
 }
 
-/** Грамотное «1 день / 2 дня / 5 дней» */
-export function pluralizeDays(n: number): string {
-  const abs = Math.abs(n) % 100;
-  const last = abs % 10;
-  if (abs > 10 && abs < 20) return `${n} дней`;
-  if (last === 1) return `${n} день`;
-  if (last >= 2 && last <= 4) return `${n} дня`;
-  return `${n} дней`;
+export function formatHumanDate(date: Date): string {
+  return humanDateFormatter.format(date);
 }

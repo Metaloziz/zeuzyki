@@ -1,45 +1,6 @@
 import { Badge, Group } from "@mantine/core";
-import {
-  IconCampfire,
-  IconShieldCheck,
-  IconTent,
-  IconUsersGroup,
-} from "@tabler/icons-react";
+import { ABOUT_FEATURES, ABOUT_ROUTES } from "@/data/about";
 import styles from "./About.module.css";
-
-const FEATURES = [
-  {
-    icon: <IconUsersGroup size={28} stroke={1.7} />,
-    title: "Опытная команда",
-    description:
-      "Более 10 лет организации походов и сплавов. Инструктора с опытом работы с группами любого уровня подготовки.",
-  },
-  {
-    icon: <IconTent size={28} stroke={1.7} />,
-    title: "Собственная база",
-    description:
-      "На реке Илия расположена наша база с оборудованными стоянками, шатрами, мангалами, WC и волейбольной площадкой.",
-  },
-  {
-    icon: <IconShieldCheck size={28} stroke={1.7} />,
-    title: "Безопасность",
-    description:
-      "Все маршруты рассчитаны на новичков и семьи с детьми. Спасательные жилеты, страховка и инструктаж включены.",
-  },
-  {
-    icon: <IconCampfire size={28} stroke={1.7} />,
-    title: "Комфорт на природе",
-    description:
-      "Уютные костровые зоны, мебель, мангалы, горячий чай и питание на берегу. Всё для приятного отдыха.",
-  },
-];
-
-const ROUTES = [
-  { name: "р. Илия", distance: "60 км от Минска, 30 км от Молодечно" },
-  { name: "р. Вилия", distance: "живописные виды и спокойное течение" },
-  { name: "р. Рыбчанка", distance: "тихие воды и лесные пейзажи" },
-  { name: "р. Нарочанка", distance: "маршруты выходного дня" },
-];
 
 export function About() {
   return (
@@ -68,7 +29,7 @@ export function About() {
         </div>
 
         <div className={styles.features}>
-          {FEATURES.map((feature, idx) => (
+          {ABOUT_FEATURES.map((feature, idx) => (
             <div key={idx} className={styles.feature}>
               <div className={styles.featureIcon}>{feature.icon}</div>
               <h3 className={styles.featureTitle}>{feature.title}</h3>
@@ -80,7 +41,7 @@ export function About() {
         <div className={styles.routes}>
           <h2 className={styles.routesTitle}>Наши маршруты</h2>
           <Group justify="center" wrap="wrap" gap="sm" mb="md">
-            {ROUTES.map((route) => (
+            {ABOUT_ROUTES.map((route) => (
               <Badge
                 key={route.name}
                 size="lg"

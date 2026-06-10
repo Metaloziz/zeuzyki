@@ -2,18 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useMantineColorScheme } from "@mantine/core";
 import { IconMoonStars, IconSunHigh } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
+import { NAV_ITEMS, ROUTES } from "@/constants/routes";
+import { SocialLinks } from "@/components/SocialLinks";
 import { LogoMark } from "./LogoMark";
 import styles from "./Header.module.css";
-
-const telegramIcon = new URL(
-  "../../../assets/telegram-icon.svg",
-  import.meta.url,
-).href;
-
-const instagramIcon = new URL(
-  "../../../assets/instagramm-icon.png",
-  import.meta.url,
-).href;
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -44,24 +36,21 @@ export function Header() {
   return (
     <header ref={headerRef} className={styles.header}>
       <div className={styles.inner}>
-        <Link to="/" className={styles.brand} aria-label="ЖЭЎЖЫКІ — главная">
+        <Link
+          to={ROUTES.HOME}
+          className={styles.brand}
+          aria-label="ЖЭЎЖЫКІ — главная"
+        >
           <LogoMark />
           <span>ЖЭЎЖЫКІ</span>
         </Link>
         <div className={styles.right}>
           <nav className={styles.nav} aria-label="Основная навигация">
-            <Link to="/#schedule" className={styles.navLink}>
-              Расписание сплавов
-            </Link>
-            <Link to="/corporate" className={styles.navLink}>
-              Корпоративные сплавы
-            </Link>
-            <Link to="/faq" className={styles.navLink}>
-              Популярные вопросы
-            </Link>
-            <Link to="/about" className={styles.navLink}>
-              Про нас
-            </Link>
+            {NAV_ITEMS.map((item) => (
+              <Link key={item.to} to={item.to} className={styles.navLink}>
+                {item.label}
+              </Link>
+            ))}
           </nav>
           <button
             type="button"
@@ -90,38 +79,11 @@ export function Header() {
           >
             {isMobileMenuOpen ? "✕" : "☰"}
           </button>
-          <div className={styles.socials}>
-            <a
-              href="https://t.me/zeuzyki_admin"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.social}
-              aria-label="ЖЭЎЖЫКІ в Telegram"
-              title="@zeuzyki_admin"
-            >
-              <img
-                src={telegramIcon}
-                alt=""
-                aria-hidden="true"
-                className={styles.socialIcon}
-              />
-            </a>
-            <a
-              href="https://www.instagram.com/zeuzyki/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.social}
-              aria-label="ЖЭЎЖЫКІ в Instagram"
-              title="Мы в Instagram"
-            >
-              <img
-                src={instagramIcon}
-                alt=""
-                aria-hidden="true"
-                className={styles.socialIcon}
-              />
-            </a>
-          </div>
+          <SocialLinks
+            className={styles.socials}
+            linkClassName={styles.social}
+            iconClassName={styles.socialIcon}
+          />
         </div>
       </div>
       {isMobileMenuOpen && (
@@ -130,34 +92,16 @@ export function Header() {
           className={styles.mobileMenu}
           aria-label="Мобильная навигация"
         >
-          <Link
-            to="/#schedule"
-            className={styles.mobileNavLink}
-            onClick={closeMobileMenu}
-          >
-            Расписание сплавов
-          </Link>
-          <Link
-            to="/corporate"
-            className={styles.mobileNavLink}
-            onClick={closeMobileMenu}
-          >
-            Корпоративные сплавы
-          </Link>
-          <Link
-            to="/faq"
-            className={styles.mobileNavLink}
-            onClick={closeMobileMenu}
-          >
-            Популярные вопросы
-          </Link>
-          <Link
-            to="/about"
-            className={styles.mobileNavLink}
-            onClick={closeMobileMenu}
-          >
-            Про нас
-          </Link>
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={styles.mobileNavLink}
+              onClick={closeMobileMenu}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
       )}
     </header>

@@ -1,0 +1,138 @@
+.carousel {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: var(--surface-tint);
+    border: 1px solid var(--border-soft);
+    touch-action: pan-y;
+    user-select: none;
+}
+
+.riverCardVariant {
+    aspect-ratio: 40 / 39;
+    margin-bottom: 12px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}
+
+.track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.32s ease;
+}
+
+.slide {
+    position: relative;
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    overflow: hidden;
+}
+
+.slide::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(
+            circle at 22% 18%,
+            rgba(255, 255, 255, 0.22),
+            transparent 28%
+        ),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 45%);
+}
+
+.slideImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+}
+
+.button {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: rgba(8, 17, 18, 0.42);
+    color: #fff;
+    line-height: 0;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition:
+        background var(--transition-fast),
+        transform var(--transition-fast),
+        opacity var(--transition-fast);
+}
+
+.button svg {
+    display: block;
+}
+
+.button:hover {
+    background: rgba(8, 17, 18, 0.62);
+}
+
+.button:active {
+    transform: translateY(-50%) scale(0.96);
+}
+
+.buttonPrev {
+    left: 10px;
+}
+
+.buttonNext {
+    right: 10px;
+}
+
+.dots {
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    z-index: 2;
+    display: inline-flex;
+    gap: 6px;
+    transform: translateX(-50%);
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.42);
+    transition:
+        width var(--transition-fast),
+        background var(--transition-fast);
+}
+
+.dotActive {
+    width: 18px;
+    border-radius: var(--radius-pill);
+    background: #fff;
+}
+
+@media (max-width: 640px) {
+    .button {
+        display: none;
+    }
+}

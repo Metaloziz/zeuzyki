@@ -1,21 +1,12 @@
-import { useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
-import { Header } from "./components/Header/Header";
-import { Footer } from "./components/Footer/Footer";
-import { Home } from "./pages/Home";
-import { About } from "./pages/About";
-import { Corporate } from "./pages/Corporate";
-import { SplavDetails } from "./pages/SplavDetails";
-import { Faq } from "./pages/Faq";
-
-/** Scrolls to top on every route change — important for stacked-banners → details page. */
-function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  }, [pathname]);
-  return null;
-}
+import { Route, Routes } from "react-router-dom";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import { About } from "@/pages/About";
+import { Corporate } from "@/pages/Corporate";
+import { Faq } from "@/pages/Faq";
+import { Home } from "@/pages/Home";
+import { SplavDetails } from "@/pages/SplavDetails";
 
 export function App() {
   return (

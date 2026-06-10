@@ -125,130 +125,6 @@
     display: block;
 }
 
-.photoCarousel {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    border-radius: var(--radius-md);
-    margin-bottom: 10px;
-    overflow: hidden;
-    background: var(--surface-tint);
-    border: 1px solid var(--border-soft);
-    touch-action: pan-y;
-    user-select: none;
-}
-
-.photoCarouselTrack {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.32s ease;
-}
-
-.photoSlide {
-    position: relative;
-    min-width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255, 255, 255, 0.86);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    overflow: hidden;
-}
-
-.photoSlide::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(
-            circle at 22% 18%,
-            rgba(255, 255, 255, 0.22),
-            transparent 28%
-        ),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 45%);
-}
-
-.photoSlideImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    pointer-events: none;
-}
-
-.photoCarouselButton {
-    position: absolute;
-    top: 50%;
-    z-index: 2;
-    width: 34px;
-    height: 34px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    background: rgba(8, 17, 18, 0.42);
-    color: #fff;
-    line-height: 0;
-    cursor: pointer;
-    transform: translateY(-50%);
-    transition:
-        background var(--transition-fast),
-        transform var(--transition-fast),
-        opacity var(--transition-fast);
-}
-
-.photoCarouselButton svg {
-    display: block;
-}
-
-.photoCarouselButton:hover {
-    background: rgba(8, 17, 18, 0.62);
-}
-
-.photoCarouselButton:active {
-    transform: translateY(-50%) scale(0.96);
-}
-
-.photoCarouselButtonPrev {
-    left: 10px;
-}
-
-.photoCarouselButtonNext {
-    right: 10px;
-}
-
-.photoCarouselDots {
-    position: absolute;
-    left: 50%;
-    bottom: 10px;
-    z-index: 2;
-    display: inline-flex;
-    gap: 6px;
-    transform: translateX(-50%);
-}
-
-.photoCarouselDot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.42);
-    transition:
-        width var(--transition-fast),
-        background var(--transition-fast);
-}
-
-.photoCarouselDotActive {
-    width: 18px;
-    border-radius: var(--radius-pill);
-    background: #fff;
-}
-
 .imageFallback {
     background: linear-gradient(
         135deg,
@@ -285,15 +161,6 @@
     min-height: 0;
     padding: 0 0 14px;
     overflow: hidden;
-}
-
-.riverCard .photoCarousel {
-    aspect-ratio: 40 / 39;
-    margin-bottom: 12px;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-top: none;
 }
 
 .riverCard .featuredTitle,
@@ -465,6 +332,15 @@
     line-height: 1.25;
 }
 
+.listItemTitleLink {
+    color: inherit;
+    text-decoration: none;
+}
+
+.listItemTitleLink:hover {
+    color: var(--brand-cyan);
+}
+
 .listItemMeta {
     margin: 0;
     color: var(--text-muted);
@@ -534,10 +410,6 @@
     .refreshNotice {
         font-size: 13px;
         padding: 7px 12px;
-    }
-
-    .photoCarouselButton {
-        display: none;
     }
 
     .listItem {

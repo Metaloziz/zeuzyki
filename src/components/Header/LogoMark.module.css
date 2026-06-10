@@ -1,0 +1,13 @@
+.logoMark {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+    .logoMark {
+        width: 36px;
+        height: 36px;
+    }
+}

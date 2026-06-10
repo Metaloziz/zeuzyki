@@ -1,5 +1,10 @@
-import type { River } from "../types/river";
-import type { Splav } from "../types/splav";
+import {
+  GAS_API_URL,
+  getRiversCacheKey,
+  getScheduleCacheKey,
+} from "@/constants/api";
+import type { River } from "@/types/river";
+import type { Splav } from "@/types/splav";
 
 interface ScheduleItem {
   id: string | number;
@@ -44,16 +49,8 @@ export interface BookingPayload {
   comment?: string;
 }
 
-const GAS_API_URL =
-  "https://script.google.com/macros/s/AKfycbxccist5FQVr6JcHbmKlCIsvIgFmidHLM1qDq3I6QdNVVN4N611qpFlRLERANoVtoCC/exec";
-
 const API_URL = GAS_API_URL;
 const API_KEY = (import.meta.env.VITE_GAS_API_KEY ?? "").trim();
-
-const SCHEDULE_CACHE_VERSION = 1;
-const RIVERS_CACHE_VERSION = 1;
-const SCHEDULE_CACHE_KEY = `zeuzyki:schedule:v${SCHEDULE_CACHE_VERSION}:${API_URL}:${API_KEY}`;
-const RIVERS_CACHE_KEY = `zeuzyki:rivers:v${RIVERS_CACHE_VERSION}:${API_URL}:${API_KEY}`;
 
 interface ScheduleCache {
   savedAt: number;
@@ -106,6 +103,14 @@ const TRIP_TEMPLATE = {
   seatsLeft: 8,
 };
 
+function getScheduleCacheKeyForApi(): string {
+  return getScheduleCacheKey(API_URL, API_KEY);
+}
+
+function getRiversCacheKeyForApi(): string {
+  return getRiversCacheKey(API_URL, API_KEY);
+}
+
 function assertConfigured() {
   if (!API_KEY) {
     throw new Error("Не задан VITE_GAS_API_KEY");
@@ -156,13 +161,15 @@ function pruneScheduleItems(items: Splav[]): Splav[] {
 function getCachedSchedule(): Splav[] | null {
   if (typeof window === "undefined") return null;
 
+  const cacheKey = getScheduleCacheKeyForApi();
+
   try {
-    const raw = window.localStorage.getItem(SCHEDULE_CACHE_KEY);
+    const raw = window.localStorage.getItem(cacheKey);
     if (!raw) return null;
 
     const cache = JSON.parse(raw) as Partial<ScheduleCache>;
     if (!cache.savedAt || !Array.isArray(cache.items)) {
-      window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
+      window.localStorage.removeItem(cacheKey);
       return null;
     }
 
@@ -171,13 +178,13 @@ function getCachedSchedule(): Splav[] | null {
       if (actualItems.length > 0) {
         setCachedSchedule(actualItems);
       } else {
-        window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
+        window.localStorage.removeItem(cacheKey);
       }
     }
 
     return actualItems.length > 0 ? actualItems : null;
   } catch {
-    window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
+    window.localStorage.removeItem(cacheKey);
     return null;
   }
 }
@@ -185,10 +192,12 @@ function getCachedSchedule(): Splav[] | null {
 function setCachedSchedule(items: Splav[]) {
   if (typeof window === "undefined") return;
 
+  const cacheKey = getScheduleCacheKeyForApi();
+
   try {
     const actualItems = pruneScheduleItems(items);
     if (actualItems.length === 0) {
-      window.localStorage.removeItem(SCHEDULE_CACHE_KEY);
+      window.localStorage.removeItem(cacheKey);
       return;
     }
 
@@ -196,7 +205,7 @@ function setCachedSchedule(items: Splav[]) {
       savedAt: Date.now(),
       items: actualItems,
     };
-    window.localStorage.setItem(SCHEDULE_CACHE_KEY, JSON.stringify(cache));
+    window.localStorage.setItem(cacheKey, JSON.stringify(cache));
   } catch {
     // localStorage can be unavailable or full; schedule loading must still work.
   }
@@ -205,19 +214,21 @@ function setCachedSchedule(items: Splav[]) {
 function getCachedRivers(): River[] | null {
   if (typeof window === "undefined") return null;
 
+  const cacheKey = getRiversCacheKeyForApi();
+
   try {
-    const raw = window.localStorage.getItem(RIVERS_CACHE_KEY);
+    const raw = window.localStorage.getItem(cacheKey);
     if (!raw) return null;
 
     const cache = JSON.parse(raw) as Partial<RiversCache>;
     if (!cache.savedAt || !Array.isArray(cache.items)) {
-      window.localStorage.removeItem(RIVERS_CACHE_KEY);
+      window.localStorage.removeItem(cacheKey);
       return null;
     }
 
     return cache.items;
   } catch {
-    window.localStorage.removeItem(RIVERS_CACHE_KEY);
+    window.localStorage.removeItem(cacheKey);
     return null;
   }
 }
@@ -225,12 +236,14 @@ function getCachedRivers(): River[] | null {
 function setCachedRivers(items: River[]) {
   if (typeof window === "undefined") return;
 
+  const cacheKey = getRiversCacheKeyForApi();
+
   try {
     const cache: RiversCache = {
       savedAt: Date.now(),
       items,
     };
-    window.localStorage.setItem(RIVERS_CACHE_KEY, JSON.stringify(cache));
+    window.localStorage.setItem(cacheKey, JSON.stringify(cache));
   } catch {
     // localStorage can be unavailable or full; rivers loading must still work.
   }

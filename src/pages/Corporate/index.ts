@@ -1,0 +1,1 @@
+export { Corporate } from "./Corporate";
