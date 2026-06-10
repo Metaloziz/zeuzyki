@@ -44,9 +44,9 @@ export function Header() {
   return (
     <header ref={headerRef} className={styles.header}>
       <div className={styles.inner}>
-        <Link to="/" className={styles.brand} aria-label="Zeuzyki — главная">
+        <Link to="/" className={styles.brand} aria-label="ЖЭЎЖЫКІ — главная">
           <LogoMark />
-          <span>Zeuzyki</span>
+          <span>ЖЭЎЖЫКІ</span>
         </Link>
         <div className={styles.right}>
           <nav className={styles.nav} aria-label="Основная навигация">
@@ -96,7 +96,7 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               className={styles.social}
-              aria-label="Zeuzyki в Telegram"
+              aria-label="ЖЭЎЖЫКІ в Telegram"
               title="@zeuzyki_admin"
             >
               <img
@@ -111,7 +111,7 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               className={styles.social}
-              aria-label="Zeuzyki в Instagram"
+              aria-label="ЖЭЎЖЫКІ в Instagram"
               title="Мы в Instagram"
             >
               <img

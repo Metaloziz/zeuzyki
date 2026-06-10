@@ -283,6 +283,25 @@
 
 .riverCard {
     min-height: 0;
+    padding: 0 0 14px;
+    overflow: hidden;
+}
+
+.riverCard .photoCarousel {
+    aspect-ratio: 40 / 39;
+    margin-bottom: 12px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}
+
+.riverCard .featuredTitle,
+.riverCard .riverDescription,
+.riverCard .riverDetails,
+.riverCard .featuredBookButton,
+.riverCard .riverCardActions {
+    margin-inline: 12px;
 }
 
 .riverDescription {
@@ -339,6 +358,7 @@
     border: none;
     background: var(--brand-cyan);
     color: #fff;
+    text-decoration: none;
     transition:
         background var(--transition),
         transform var(--transition-fast);
@@ -454,6 +474,25 @@
 
 .featuredBookButton {
     margin-top: 14px;
+}
+
+.riverCardActions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.riverCardDetailsButton {
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.riverCardDetailsButton:hover {
+    background: var(--surface-soft);
+    border-color: var(--text-muted);
 }
 
 .listBookButton {
@@ -581,6 +620,7 @@
     }
 
     .featuredGrid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 920px;
     }
 }

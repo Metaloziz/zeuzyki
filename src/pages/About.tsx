@@ -65,12 +65,6 @@ export function About() {
               туалет, волейбольная площадка и другое.
             </p>
           </div>
-          <div className={styles.heroImage} aria-hidden="true">
-            <div className={styles.imagePlaceholder}>
-              <IconUsersGroup size={64} stroke={1.2} />
-              <span>Фото команды</span>
-            </div>
-          </div>
         </div>
 
         <div className={styles.features}>

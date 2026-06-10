@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
+import { Link } from "react-router-dom";
 import { Alert, Skeleton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
@@ -18,6 +19,10 @@ const humanDate = new Intl.DateTimeFormat("ru-RU", {
   month: "long",
 });
 
+function isCorporateRiver(river: River): boolean {
+  return river.river.trim().toLowerCase() === "корпоративный сплав";
+}
+
 function getSplavCardTitle(splav: Splav): string {
   const title = splav.title?.trim();
   if (!title) return `Сплав по р. ${splav.river}`;
@@ -28,7 +33,7 @@ function getSplavCardTitle(splav: Splav): string {
   return hasRiverInTitle ? title : `${title} · р. ${splav.river}`;
 }
 
-const RIVER_SKELETONS = Array.from({ length: 3 }, (_, index) => index);
+const RIVER_SKELETONS = Array.from({ length: 4 }, (_, index) => index);
 const RIVER_DETAIL_SKELETONS = Array.from({ length: 4 }, (_, index) => index);
 const SCHEDULE_SKELETONS = Array.from({ length: 5 }, (_, index) => index);
 const MIN_SWIPE_DISTANCE = 44;
@@ -362,30 +367,56 @@ export function Home() {
                       </p>
                     )}
                     <dl className={styles.riverDetails}>
-                      <div>
-                        <dt>Дистанция</dt>
-                        <dd>{river.distance}</dd>
-                      </div>
-                      <div>
-                        <dt>Время</dt>
-                        <dd>{river.time}</dd>
-                      </div>
-                      <div>
-                        <dt>Цена</dt>
-                        <dd>{river.price}</dd>
-                      </div>
-                      <div>
-                        <dt>Дети до 12 лет</dt>
-                        <dd>{river.kidsPrice}</dd>
-                      </div>
+                      {river.distance?.trim() && (
+                        <div>
+                          <dt>Дистанция</dt>
+                          <dd>{river.distance}</dd>
+                        </div>
+                      )}
+                      {river.time?.trim() && (
+                        <div>
+                          <dt>Время</dt>
+                          <dd>{river.time}</dd>
+                        </div>
+                      )}
+                      {river.price?.trim() && (
+                        <div>
+                          <dt>Цена</dt>
+                          <dd>{river.price}</dd>
+                        </div>
+                      )}
+                      {river.kidsPrice?.trim() && (
+                        <div>
+                          <dt>Дети до 12 лет</dt>
+                          <dd>{river.kidsPrice}</dd>
+                        </div>
+                      )}
                     </dl>
-                    <button
-                      type="button"
-                      className={`${styles.bookButton} ${styles.featuredBookButton}`}
-                      onClick={() => handleRiverBook(river)}
-                    >
-                      Забронировать
-                    </button>
+                    {isCorporateRiver(river) ? (
+                      <div className={styles.riverCardActions}>
+                        <button
+                          type="button"
+                          className={styles.bookButton}
+                          onClick={() => handleRiverBook(river)}
+                        >
+                          Забронировать
+                        </button>
+                        <Link
+                          to="/corporate"
+                          className={`${styles.bookButton} ${styles.riverCardDetailsButton}`}
+                        >
+                          Подробнее
+                        </Link>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        className={`${styles.bookButton} ${styles.featuredBookButton}`}
+                        onClick={() => handleRiverBook(river)}
+                      >
+                        Забронировать
+                      </button>
+                    )}
                   </article>
                 ))}
               </div>

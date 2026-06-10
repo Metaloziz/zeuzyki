@@ -40,11 +40,13 @@ function routeNameToGroupSlug(name: string): string | null {
 
   if (normalized === "вилия") return "viliya";
 
-  const iliaStage1 = normalized.match(/^илия 1 этап(?:\s*(\d+))?$/);
-  if (iliaStage1) return "ilia-1-etap";
+  if (normalized === "корпоративный сплав") return "corporate";
 
-  const iliaStage2 = normalized.match(/^илия 2 этап(?:\s*(\d+))?$/);
-  if (iliaStage2) return "ilia-2-etap";
+  const iliaPart1 = normalized.match(/^илия 1 (?:часть|этап)(?:\s*(\d+))?$/);
+  if (iliaPart1) return "ilia-1-chast";
+
+  const iliaPart2 = normalized.match(/^илия 2 (?:часть|этап)(?:\s*(\d+))?$/);
+  if (iliaPart2) return "ilia-2-chast";
 
   return null;
 }
@@ -52,11 +54,11 @@ function routeNameToGroupSlug(name: string): string | null {
 function routeNameToPhotoIndex(name: string): number | null {
   const normalized = normalizeRouteName(name);
 
-  const iliaStage1 = normalized.match(/^илия 1 этап\s*(\d+)$/);
-  if (iliaStage1) return Number(iliaStage1[1]);
+  const iliaPart1 = normalized.match(/^илия 1 (?:часть|этап)\s*(\d+)$/);
+  if (iliaPart1) return Number(iliaPart1[1]);
 
-  const iliaStage2 = normalized.match(/^илия 2 этап\s*(\d+)$/);
-  if (iliaStage2) return Number(iliaStage2[1]);
+  const iliaPart2 = normalized.match(/^илия 2 (?:часть|этап)\s*(\d+)$/);
+  if (iliaPart2) return Number(iliaPart2[1]);
 
   const viliya = normalized.match(/^вилия\s*(\d+)$/);
   if (viliya) return Number(viliya[1]);

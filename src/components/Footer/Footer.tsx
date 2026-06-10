@@ -18,8 +18,8 @@ export function Footer() {
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.brandBlock}>
-          <Link to="/" className={styles.brand} aria-label="Zeuzyki — главная">
-            Zeuzyki
+          <Link to="/" className={styles.brand} aria-label="ЖЭЎЖЫКІ — главная">
+            ЖЭЎЖЫКІ
           </Link>
           <p className={styles.tagline}>
             Байдарочные сплавы по живописным рекам Беларуси для новичков,
@@ -31,7 +31,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className={styles.social}
-              aria-label="Zeuzyki в Telegram"
+              aria-label="ЖЭЎЖЫКІ в Telegram"
               title="@zeuzyki_admin"
             >
               <img
@@ -46,7 +46,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className={styles.social}
-              aria-label="Zeuzyki в Instagram"
+              aria-label="ЖЭЎЖЫКІ в Instagram"
               title="Мы в Instagram"
             >
               <img
@@ -91,7 +91,7 @@ export function Footer() {
       </div>
 
       <div className={styles.bottom}>
-        <span>© {currentYear} Zeuzyki</span>
+        <span>© {currentYear} ЖЭЎЖЫКІ</span>
         <span>Сплавы на байдарках в Беларуси</span>
       </div>
     </footer>
