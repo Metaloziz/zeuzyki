@@ -18,10 +18,10 @@
     letter-spacing: 0.01em;
     cursor: pointer;
     transition:
-        box-shadow 0.4s ease,
-        color 0.4s ease,
-        border-color 0.4s ease,
-        background 0.4s ease;
+        box-shadow 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+        color 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+        background 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .root:focus-visible {
@@ -32,6 +32,7 @@
 .label {
     position: relative;
     z-index: 1;
+    transition: color 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .root:disabled:not(.loading) {
@@ -57,12 +58,12 @@
     width: 100%;
     height: var(--v2-btn-water-height, 200px);
     transform: translateY(-50%);
-    background-color: inherit;
+    background-color: var(--brand-cyan);
     box-shadow: inset 0 0 50px color-mix(in srgb, var(--brand-cyan-deep) 48%, transparent);
     overflow: hidden;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.35s ease;
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .water::before,
@@ -92,11 +93,11 @@
 }
 
 .root:hover:not(:disabled):not(.loading) .water::before {
-    animation: waterSpin 5s linear 1 forwards;
+    animation: waterSpin var(--v2-btn-water-spin-a, 5s) linear 0.18s 1 forwards;
 }
 
 .root:hover:not(:disabled):not(.loading) .water::after {
-    animation: waterSpin 10s linear 1 forwards;
+    animation: waterSpin var(--v2-btn-water-spin-b, 10s) linear 0.18s 1 forwards;
 }
 
 .root:not(:hover):not(.loading) .water::before,
@@ -105,17 +106,17 @@
     transform: translate(-50%, -75%);
 }
 
-/* Loading — волна крутится, пока ждём ответ */
-.loading:not(:disabled) .water {
+/* Loading — «Отправляем…» (кнопка disabled, но волна видна) */
+.loading .water {
     opacity: 1;
 }
 
 .loading .water::before {
-    animation: waterSpin 5s linear infinite;
+    animation: waterSpin var(--v2-btn-water-spin-a, 5s) linear infinite;
 }
 
 .loading .water::after {
-    animation: waterSpin 10s linear infinite;
+    animation: waterSpin var(--v2-btn-water-spin-b, 10s) linear infinite;
 }
 
 @keyframes waterSpin {
@@ -139,10 +140,14 @@
         0 0 18px 0 color-mix(in srgb, var(--brand-cyan) 48%, transparent);
 }
 
-.loading .label,
+.loading .label {
+    color: #fff;
+    transition-delay: 0.08s;
+}
+
 .root:hover:not(:disabled):not(.loading) .label {
     color: #fff;
-    transition: color 0.35s ease;
+    transition-delay: 0.14s;
 }
 
 /* Primary — «Выбрать сплав» */
@@ -162,13 +167,16 @@
 }
 
 .primary:hover:not(:disabled):not(.loading) {
-    background: var(--brand-cyan);
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--brand-cyan) 14%, var(--v2-btn-fill-start)) 0%,
+        color-mix(in srgb, var(--brand-cyan) 22%, var(--v2-btn-fill-end)) 100%
+    );
     border-color: transparent;
     box-shadow:
-        0 0 2px 0 color-mix(in srgb, var(--brand-cyan) 18%, transparent),
-        0 0 6px 0 color-mix(in srgb, var(--brand-cyan) 28%, transparent),
-        0 0 12px 0 color-mix(in srgb, var(--brand-cyan) 38%, transparent),
-        0 0 18px 0 color-mix(in srgb, var(--brand-cyan) 48%, transparent);
+        inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent),
+        0 2px 10px color-mix(in srgb, var(--brand-cyan-deep) 14%, transparent),
+        0 8px 24px color-mix(in srgb, var(--brand-cyan) 22%, transparent);
 }
 
 .primary:active:not(:disabled) {
@@ -185,11 +193,10 @@
 }
 
 .secondary:hover:not(:disabled):not(.loading) {
-    background: var(--brand-cyan);
-    border-color: transparent;
+    background: transparent;
+    border-color: color-mix(in srgb, var(--brand-cyan) 45%, var(--v2-btn-fill-end));
     box-shadow:
-        0 0 2px 0 color-mix(in srgb, var(--brand-cyan) 18%, transparent),
-        0 0 8px 0 color-mix(in srgb, var(--brand-cyan) 32%, transparent);
+        0 2px 10px color-mix(in srgb, var(--brand-cyan) 14%, transparent);
 }
 
 .secondary:active:not(:disabled) {
@@ -217,11 +224,10 @@
 }
 
 .onDark.secondary:hover:not(:disabled):not(.loading) {
-    background: var(--brand-cyan);
-    border-color: transparent;
+    background: transparent;
+    border-color: color-mix(in srgb, var(--v2-btn-fill-start) 70%, transparent);
     box-shadow:
-        0 0 6px 0 color-mix(in srgb, var(--brand-cyan) 28%, transparent),
-        0 0 18px 0 color-mix(in srgb, #000 34%, transparent);
+        0 4px 16px color-mix(in srgb, #000 28%, transparent);
 }
 
 .fullWidth {
@@ -230,7 +236,8 @@
 
 @media (prefers-reduced-motion: reduce) {
     .root,
-    .water {
+    .water,
+    .label {
         transition: none;
     }
 
