@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
   INSTAGRAM_HANDLE,
   INSTAGRAM_URL,
@@ -7,25 +6,23 @@ import {
   TELEGRAM_HANDLE,
   TELEGRAM_URL,
 } from "@/constants/contacts";
-import { NAV_ITEMS, ROUTES } from "@/constants/routes";
 import { DesignDevPanel } from "@/components/DesignDevPanel";
 import { SocialLinks } from "@/components/SocialLinks";
-import styles from "./Footer.module.css";
+import { MODERN_NAV_ITEMS, SECTION_IDS } from "@/modern/constants/sections";
+import { useSectionNav } from "@/modern/hooks/useSectionNav";
+import { SectionShell } from "@/modern/components/SectionShell";
+import styles from "./ModernFooter.module.css";
 
 const currentYear = new Date().getFullYear();
 
-export function Footer() {
+export function ModernFooter() {
+  const { scrollToSection } = useSectionNav();
+
   return (
-    <footer className={styles.footer}>
+    <SectionShell id={SECTION_IDS.contacts} dark className={styles.footer}>
       <div className={styles.inner}>
-        <div className={styles.brandBlock}>
-          <Link
-            to={ROUTES.HOME}
-            className={styles.brand}
-            aria-label="ЖЭЎЖЫКІ — главная"
-          >
-            ЖЭЎЖЫКІ
-          </Link>
+        <div>
+          <p className={styles.brand}>ЖЭЎЖЫКІ</p>
           <p className={styles.tagline}>
             Байдарочные сплавы по живописным рекам Беларуси для новичков,
             компаний и корпоративных команд.
@@ -37,16 +34,21 @@ export function Footer() {
           />
         </div>
 
-        <nav className={styles.navBlock} aria-label="Навигация в футере">
+        <nav aria-label="Навигация в футере">
           <h2 className={styles.blockTitle}>Разделы</h2>
-          {NAV_ITEMS.map((item) => (
-            <Link key={item.to} to={item.to} className={styles.link}>
+          {MODERN_NAV_ITEMS.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className={styles.navButton}
+              onClick={() => scrollToSection(item.id)}
+            >
               {item.label}
-            </Link>
+            </button>
           ))}
         </nav>
 
-        <address className={styles.contactBlock}>
+        <address>
           <h2 className={styles.blockTitle}>Связаться</h2>
           <a href={PHONE_HREF} className={styles.link}>
             Телефон: {PHONE_DISPLAY}
@@ -57,7 +59,6 @@ export function Footer() {
           <a href={INSTAGRAM_URL} className={styles.link}>
             Instagram: {INSTAGRAM_HANDLE}
           </a>
-          <span className={styles.muted}>Ответим, подберём реку и дату.</span>
         </address>
       </div>
 
@@ -65,6 +66,6 @@ export function Footer() {
         <DesignDevPanel year={currentYear} />
         <span>Сплавы на байдарках в Беларуси</span>
       </div>
-    </footer>
+    </SectionShell>
   );
 }

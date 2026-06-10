@@ -1,0 +1,128 @@
+[data-design-version="modern"] {
+    --v2-font-display: "Outfit", system-ui, sans-serif;
+    --v2-font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+    --v2-accent: var(--brand-cyan);
+    --v2-accent-deep: var(--brand-cyan-deep);
+    --v2-accent-glow: color-mix(in srgb, var(--brand-cyan) 35%, transparent);
+    --v2-green: var(--brand-green);
+
+    --v2-bg: var(--surface-soft);
+    --v2-surface: var(--surface);
+    --v2-surface-elevated: var(--surface-card);
+    --v2-surface-alt: var(--surface-gray);
+    --v2-surface-hero: var(--brand-dark);
+
+    --v2-text: var(--text-primary);
+    --v2-text-muted: var(--text-muted);
+    --v2-text-on-dark: var(--text-on-dark);
+    --v2-text-on-dark-muted: var(--text-on-dark-muted);
+
+    --v2-border: color-mix(in srgb, var(--border) 55%, transparent);
+    --v2-page-max: var(--page-max, 1180px);
+    --v2-header-height: 72px;
+
+    --v2-radius-lg: var(--radius-lg);
+    --v2-radius-md: var(--radius-md);
+    --v2-radius-btn: var(--radius-btn);
+    --v2-radius-pill: var(--radius-pill);
+
+    --v2-shadow-soft: var(--shadow-sm);
+    --v2-shadow-card: var(--shadow-md);
+
+    --v2-page-bg: var(--page-bg);
+    --v2-cta-gradient: var(--cta-gradient);
+    --v2-brand-gradient: var(--brand-gradient);
+
+    background: var(--v2-page-bg);
+    color: var(--v2-text);
+    font-family: var(--v2-font-body);
+}
+
+[data-design-version="modern"][data-mantine-color-scheme="dark"] {
+    --v2-surface-elevated: color-mix(in srgb, var(--surface-card) 90%, transparent);
+    --v2-surface-alt: var(--surface-tint);
+    --v2-accent-glow: color-mix(in srgb, var(--brand-cyan) 42%, transparent);
+}
+
+[data-design-version="modern"] body {
+    background: var(--v2-page-bg);
+}
+
+[data-design-version="modern"] .modernRoot {
+    min-height: 100dvh;
+    overflow-x: clip;
+    background: var(--v2-page-bg);
+}
+
+[data-design-version="modern"] a {
+    color: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-design-version="modern"] {
+        scroll-behavior: smooth;
+    }
+}
+
+[data-design-version="modern"] .v2-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: var(--v2-radius-pill);
+    padding: 11px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    background: var(--brand-cyan);
+    color: #fff;
+    transition:
+        transform 0.2s ease,
+        filter 0.2s ease;
+}
+
+[data-design-version="modern"] .v2-btn-primary:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+}
+
+[data-design-version="modern"] .v2-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1.5px solid var(--brand-cyan);
+    border-radius: var(--v2-radius-pill);
+    padding: 11px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    background: transparent;
+    color: var(--v2-accent-deep);
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+[data-design-version="modern"] .v2-btn-secondary:hover {
+    background: var(--brand-cyan-soft);
+    transform: translateY(-1px);
+}
+
+[data-design-version="modern"] .v2-btn-secondary-on-dark {
+    border-color: var(--v2-text-on-dark);
+    color: var(--v2-text-on-dark);
+}
+
+[data-design-version="modern"] .v2-btn-secondary-on-dark:hover {
+    background: color-mix(in srgb, var(--v2-text-on-dark) 12%, transparent);
+}
+
+[data-design-version="modern"] .v2-btn-compact {
+    padding: 7px 14px;
+    font-size: 13px;
+}

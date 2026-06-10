@@ -4,7 +4,6 @@ export const ROUTES = {
   CORPORATE: "/corporate",
   FAQ: "/faq",
   SCHEDULE: "/#schedule",
-  splav: (id: string) => `/splav/${id}`,
 } as const;
 
 export const NAV_ITEMS = [

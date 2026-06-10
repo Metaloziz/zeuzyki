@@ -1,0 +1,221 @@
+.hiddenHeader {
+    display: none;
+}
+
+.modalContent {
+    overflow: hidden;
+}
+
+.modalBody {
+    padding: 0 !important;
+}
+
+.modalHeader {
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid var(--v2-border);
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--v2-accent);
+}
+
+.title {
+    margin: 0;
+    font-family: var(--v2-font-display);
+    font-size: clamp(1.5rem, 4vw, 1.85rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.riverMeta {
+    margin: 12px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--v2-text-muted);
+}
+
+.formRoot {
+    display: flex;
+    flex-direction: column;
+}
+
+.formScroll {
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fieldLabel {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--v2-text-muted);
+}
+
+.hint {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--v2-text-muted);
+}
+
+.participantsBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 8px;
+    border-top: 1px solid var(--v2-border);
+}
+
+.stepperRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.stepperLabel {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.stepperControls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stepperValue {
+    min-width: 28px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: var(--v2-font-display);
+}
+
+.counterButton {
+    width: 40px !important;
+    height: 40px !important;
+    border: 1.5px solid var(--brand-cyan) !important;
+    background: transparent !important;
+    color: var(--v2-accent-deep) !important;
+    border-radius: 50% !important;
+    transition: background 0.2s ease;
+}
+
+.counterButton:hover:not(:disabled) {
+    background: var(--brand-cyan-soft) !important;
+}
+
+.kidsRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid color-mix(in srgb, var(--v2-border) 60%, transparent);
+}
+
+.kidsFields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 12px;
+}
+
+.formFooter {
+    flex-shrink: 0;
+    padding: 16px 28px 24px;
+    border-top: 1px solid var(--v2-border);
+    background: var(--v2-surface-elevated);
+}
+
+.successWrap {
+    padding: 40px 28px 32px;
+    text-align: center;
+}
+
+.successTitle {
+    margin: 0 0 12px;
+    font-family: var(--v2-font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.successText {
+    margin: 0 0 28px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--v2-text-muted);
+}
+
+.formRoot :global(.mantine-Input-input),
+.formRoot :global(.mantine-Select-input),
+.formRoot :global(.mantine-Textarea-input) {
+    border: none;
+    border-bottom: 1px solid var(--v2-border);
+    border-radius: 0;
+    padding-left: 0;
+    padding-right: 0;
+    background: transparent;
+    font-size: 15px;
+    transition: border-color 0.2s ease;
+}
+
+.formRoot :global(.mantine-Input-input:focus),
+.formRoot :global(.mantine-Select-input:focus),
+.formRoot :global(.mantine-Textarea-input:focus) {
+    border-bottom-color: var(--brand-cyan);
+}
+
+.formRoot :global(.mantine-Checkbox-label) {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--v2-text-muted);
+}
+
+.formRoot :global(.mantine-Switch-track) {
+    cursor: pointer;
+}
+
+@media (max-width: 640px) {
+    .formRoot {
+        max-height: min(88dvh, 720px);
+    }
+
+    .formScroll {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .modalHeader,
+    .formScroll,
+    .formFooter,
+    .successWrap {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .formRoot :global(.mantine-Input-input),
+    .formRoot :global(.mantine-Select-input),
+    .formRoot :global(.mantine-Textarea-input) {
+        font-size: 16px;
+    }
+}

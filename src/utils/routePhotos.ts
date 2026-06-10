@@ -87,6 +87,20 @@ function getGroupPhotos(group: string, photoIndex: number | null): string[] {
   return items.map((item) => item.url);
 }
 
+const SCHEDULE_PHOTO_INDEX: Record<string, number> = {
+  "ilia-1-chast": 4,
+  "ilia-2-chast": 3,
+};
+
+export function getScheduleRowPhoto(riverName: string): string | undefined {
+  const group = routeNameToGroupSlug(riverName);
+  if (group && SCHEDULE_PHOTO_INDEX[group] !== undefined) {
+    const photo = getGroupPhotos(group, SCHEDULE_PHOTO_INDEX[group])[0];
+    if (photo) return photo;
+  }
+  return getRoutePhoto(riverName);
+}
+
 export function getRoutePhoto(...names: string[]): string | undefined {
   return getRoutePhotos(...names)[0];
 }

@@ -1,0 +1,163 @@
+.root {
+    --v2-btn-fill-start: color-mix(in srgb, #fff 92%, var(--brand-cyan));
+    --v2-btn-fill-end: color-mix(in srgb, #fff 78%, var(--brand-cyan));
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 44px;
+    padding: 12px 26px;
+    border-radius: var(--v2-radius-btn);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition:
+        box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        color 0.4s ease,
+        border-color 0.4s ease,
+        background 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.root:focus-visible {
+    outline: 2px solid var(--brand-cyan);
+    outline-offset: 3px;
+}
+
+.root:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.root:disabled::after {
+    display: none;
+}
+
+.primary::after,
+.secondary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -130%;
+    width: 65%;
+    height: 100%;
+    background: linear-gradient(
+        105deg,
+        transparent 0%,
+        color-mix(in srgb, #fff 72%, transparent) 42%,
+        color-mix(in srgb, #fff 38%, transparent) 58%,
+        transparent 100%
+    );
+    transform: skewX(-14deg);
+    transition: left 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+}
+
+.primary:hover:not(:disabled)::after,
+.secondary:hover:not(:disabled)::after {
+    left: 150%;
+}
+
+/* Primary — «Выбрать сплав» */
+.primary {
+    border: 1.5px solid transparent;
+    color: var(--brand-cyan-deep);
+    font-weight: 700;
+    background: linear-gradient(
+        135deg,
+        var(--v2-btn-fill-start) 0%,
+        var(--v2-btn-fill-end) 100%
+    );
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #fff 80%, transparent),
+        0 2px 10px color-mix(in srgb, var(--brand-cyan-deep) 14%, transparent),
+        0 6px 22px color-mix(in srgb, var(--v2-text) 7%, transparent);
+}
+
+.primary:hover:not(:disabled) {
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #fff 88%, transparent),
+        0 4px 14px color-mix(in srgb, var(--brand-cyan-deep) 16%, transparent),
+        0 12px 32px color-mix(in srgb, var(--v2-text) 10%, transparent);
+}
+
+.primary:active:not(:disabled) {
+    transition-duration: 0.2s;
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #fff 70%, transparent),
+        0 2px 10px color-mix(in srgb, var(--brand-cyan-deep) 12%, transparent);
+}
+
+/* Secondary — как primary, без фона, с границей цвета заливки */
+.secondary {
+    border: 1.5px solid var(--v2-btn-fill-end);
+    background: transparent;
+    color: var(--brand-cyan-deep);
+    font-weight: 700;
+    box-shadow: none;
+}
+
+.secondary:hover:not(:disabled) {
+    border-color: var(--v2-btn-fill-start);
+    background: transparent;
+    box-shadow: none;
+}
+
+.secondary:active:not(:disabled) {
+    background: transparent;
+    box-shadow: none;
+}
+
+/* Тёмный фон (hero) */
+.onDark.primary {
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #fff 80%, transparent),
+        0 4px 24px color-mix(in srgb, #000 32%, transparent);
+}
+
+.onDark.primary:hover:not(:disabled) {
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #fff 90%, transparent),
+        0 8px 36px color-mix(in srgb, #000 38%, transparent);
+}
+
+.onDark.secondary {
+    border-color: var(--v2-btn-fill-end);
+    color: var(--v2-text-on-dark);
+    background: transparent;
+    box-shadow: none;
+}
+
+.onDark.secondary:hover:not(:disabled) {
+    border-color: var(--v2-btn-fill-start);
+    background: transparent;
+    box-shadow: none;
+}
+
+.onDark.secondary:active:not(:disabled) {
+    background: transparent;
+    box-shadow: none;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .root,
+    .root::after {
+        transition: none;
+    }
+
+    .primary:hover:not(:disabled)::after,
+    .secondary:hover:not(:disabled)::after {
+        left: -130%;
+    }
+}

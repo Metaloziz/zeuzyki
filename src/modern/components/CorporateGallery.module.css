@@ -1,0 +1,71 @@
+.viewport {
+  margin-bottom: 28px;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 3%,
+    #000 97%,
+    transparent
+  );
+}
+
+.viewport.interactive {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  animation: marquee 50s linear infinite;
+  will-change: transform;
+}
+
+.track.paused {
+  animation-play-state: paused;
+}
+
+.track.manual {
+  animation: none;
+  transform: none;
+}
+
+.item {
+  margin: 0;
+  flex: 0 0 min(780px, 94vw);
+  height: 364px;
+  border-radius: var(--v2-radius-md);
+  overflow: hidden;
+  scroll-snap-align: start;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    overflow-x: auto;
+  }
+
+  .track {
+    animation: none;
+  }
+}

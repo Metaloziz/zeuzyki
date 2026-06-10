@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -28,12 +30,15 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import { BOOKING_LIMITS, PHONE_REGEX } from "@/constants/booking";
+import { V2Button } from "@/modern/components/V2Button";
+import { useReducedMotion } from "@/modern/hooks/useReducedMotion";
 import type { River } from "@/types/river";
 import type { Splav } from "@/types/splav";
 import { formatDateRangeFull } from "@/utils/format";
 import { formatPhone, normalizePhone } from "@/utils/phone";
 import { submitBooking } from "@/utils/sheetsApi";
-import styles from "./BookingModal.module.css";
+import classicStyles from "./BookingModal.module.css";
+import modernStyles from "./BookingModal.modern.module.css";
 
 interface BookingModalProps {
   river: River;
@@ -41,6 +46,7 @@ interface BookingModalProps {
   preselectedDateId?: string | null;
   opened: boolean;
   onClose: () => void;
+  variant?: "classic" | "modern";
 }
 
 const schema = z
@@ -87,7 +93,12 @@ export function BookingModal({
   preselectedDateId,
   opened,
   onClose,
+  variant = "classic",
 }: BookingModalProps) {
+  const styles = variant === "modern" ? modernStyles : classicStyles;
+  const isModern = variant === "modern";
+  const reducedMotion = useReducedMotion();
+  const modernFormRef = useRef<HTMLFormElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const [submittedDateLabel, setSubmittedDateLabel] = useState<string | null>(
     null,
@@ -140,6 +151,30 @@ export function BookingModal({
       reset(defaultValues);
     }
   }, [defaultValues, opened, reset]);
+
+  useGSAP(
+    () => {
+      if (!opened || !isModern || submitted || reducedMotion || !modernFormRef.current) {
+        return;
+      }
+
+      gsap.fromTo(
+        "[data-field-reveal]",
+        { opacity: 0, y: 18 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.45,
+          stagger: 0.07,
+          ease: "power3.out",
+        },
+      );
+    },
+    {
+      scope: modernFormRef,
+      dependencies: [opened, isModern, submitted, reducedMotion],
+    },
+  );
 
   const hasKids = watch("hasKids");
 
@@ -194,46 +229,352 @@ export function BookingModal({
     }
   };
 
+  const riverMeta = [
+    `р. ${river.river}`,
+    river.distance,
+    river.time,
+    river.price,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
   return (
     <Modal
       opened={opened}
       onClose={isSubmitting ? () => undefined : handleClose}
       title={
-        <Title order={3} className={styles.title}>
-          {submitted ? "Заявка отправлена" : "Записаться на сплав"}
-        </Title>
+        isModern ? undefined : (
+          <Title order={3} className={styles.title}>
+            {submitted ? "Заявка отправлена" : "Записаться на сплав"}
+          </Title>
+        )
       }
       centered
       size="md"
-      radius="md"
+      radius={isModern ? "lg" : "md"}
       closeOnClickOutside={!isSubmitting}
       closeOnEscape={!isSubmitting}
       withCloseButton={!isSubmitting}
-      overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
+      overlayProps={{ backgroundOpacity: 0.55, blur: isModern ? 8 : 3 }}
+      classNames={
+        isModern
+          ? {
+              header: modernStyles.hiddenHeader,
+              content: modernStyles.modalContent,
+              body: modernStyles.modalBody,
+            }
+          : undefined
+      }
     >
       {submitted ? (
-        <Stack gap="md">
-          <Text>
-            Спасибо! Заявка на <b>сплав по р. {river.river}</b>
-            {submittedDateLabel ? ` на ${submittedDateLabel}` : ""} отправлена.
-            Мы свяжемся с вами в ближайшее время по указанному номеру.
-          </Text>
-          <Button onClick={handleClose} fullWidth>
-            Закрыть
-          </Button>
-        </Stack>
+        isModern ? (
+          <div className={modernStyles.successWrap}>
+            <h3 className={modernStyles.successTitle}>Заявка отправлена</h3>
+            <p className={modernStyles.successText}>
+              Спасибо! Заявка на <b>сплав по р. {river.river}</b>
+              {submittedDateLabel ? ` на ${submittedDateLabel}` : ""} отправлена.
+              Мы свяжемся с вами в ближайшее время.
+            </p>
+            <V2Button variant="primary" fullWidth onClick={handleClose}>
+              Закрыть
+            </V2Button>
+          </div>
+        ) : (
+          <Stack gap="md">
+            <Text>
+              Спасибо! Заявка на <b>сплав по р. {river.river}</b>
+              {submittedDateLabel ? ` на ${submittedDateLabel}` : ""} отправлена.
+              Мы свяжемся с вами в ближайшее время по указанному номеру.
+            </Text>
+            <Button onClick={handleClose} fullWidth>
+              Закрыть
+            </Button>
+          </Stack>
+        )
+      ) : isModern ? (
+        <form
+          ref={modernFormRef}
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+          className={modernStyles.formRoot}
+          data-booking-variant={variant}
+        >
+          <div className={modernStyles.modalHeader} data-field-reveal>
+            <p className={modernStyles.eyebrow}>Запись</p>
+            <h2 className={modernStyles.title}>Записаться на сплав</h2>
+            <p className={modernStyles.riverMeta}>{riverMeta}</p>
+          </div>
+
+          <div className={modernStyles.formScroll}>
+            <div className={modernStyles.fieldGroup} data-field-reveal>
+              <span className={modernStyles.fieldLabel}>Дата сплава</span>
+              {dateOptions.length > 0 ? (
+                <Controller
+                  control={control}
+                  name="scheduleId"
+                  render={({ field }) => (
+                    <Select
+                      variant="unstyled"
+                      placeholder="Выберите дату и время старта"
+                      aria-label="Выберите дату и время старта"
+                      data={dateOptions}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value ?? "")}
+                      onBlur={field.onBlur}
+                      error={errors.scheduleId?.message}
+                      disabled={isSubmitting}
+                      searchable={dateOptions.length > 6}
+                      nothingFoundMessage="Даты не найдены"
+                    />
+                  )}
+                />
+              ) : (
+                <Alert color="yellow" variant="light">
+                  Пока нет активных дат для этого сплава. Напишите нам —
+                  подберём дату.
+                </Alert>
+              )}
+            </div>
+
+            <div className={modernStyles.fieldGroup} data-field-reveal>
+              <span className={modernStyles.fieldLabel}>Контакты</span>
+              <TextInput
+                variant="unstyled"
+                placeholder="Имя и фамилия"
+                aria-label="Имя и фамилия"
+                autoComplete="name"
+                error={errors.name?.message}
+                disabled={isSubmitting}
+                {...register("name")}
+              />
+              <Controller
+                control={control}
+                name="phone"
+                render={({ field }) => (
+                  <TextInput
+                    variant="unstyled"
+                    placeholder="Телефон: +375 (29) 123-45-67"
+                    aria-label="Телефон"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    error={errors.phone?.message}
+                    disabled={isSubmitting}
+                    value={field.value}
+                    onChange={(e) =>
+                      field.onChange(formatPhone(e.currentTarget.value))
+                    }
+                    onBlur={field.onBlur}
+                  />
+                )}
+              />
+            </div>
+
+            <div className={modernStyles.participantsBlock} data-field-reveal>
+              <Controller
+                control={control}
+                name="peopleCount"
+                render={({ field }) => (
+                  <div className={modernStyles.stepperRow}>
+                    <span className={modernStyles.stepperLabel}>
+                      Участников
+                    </span>
+                    <div className={modernStyles.stepperControls}>
+                      <ActionIcon
+                        variant="subtle"
+                        className={modernStyles.counterButton}
+                        onClick={() =>
+                          field.onChange(Math.max(1, Number(field.value) - 1))
+                        }
+                        disabled={isSubmitting}
+                        aria-label="Уменьшить количество участников"
+                      >
+                        <IconMinus size={18} stroke={2.4} />
+                      </ActionIcon>
+                      <span className={modernStyles.stepperValue}>
+                        {field.value}
+                      </span>
+                      <ActionIcon
+                        variant="subtle"
+                        className={modernStyles.counterButton}
+                        onClick={() =>
+                          field.onChange(
+                            Math.min(
+                              BOOKING_LIMITS.maxPeople,
+                              Number(field.value) + 1,
+                            ),
+                          )
+                        }
+                        disabled={isSubmitting}
+                        aria-label="Увеличить количество участников"
+                      >
+                        <IconPlus size={18} stroke={2.4} />
+                      </ActionIcon>
+                    </div>
+                  </div>
+                )}
+              />
+              {errors.peopleCount?.message && (
+                <Text size="xs" c="red">
+                  {errors.peopleCount.message}
+                </Text>
+              )}
+              {watch("peopleCount") === 1 && (
+                <p className={modernStyles.hint}>
+                  Если вы один — укажем формат байдарки и согласуем экипаж
+                  заранее.
+                </p>
+              )}
+
+              <Controller
+                control={control}
+                name="hasKids"
+                render={({ field }) => (
+                  <div className={modernStyles.kidsRow}>
+                    <span className={modernStyles.stepperLabel}>
+                      Будут дети до 12 лет
+                    </span>
+                    <Switch
+                      checked={field.value}
+                      disabled={isSubmitting}
+                      onChange={(event) => {
+                        const checked = event.currentTarget.checked;
+                        field.onChange(checked);
+                        if (checked && watch("kidsCount") === 0) {
+                          setValue("kidsCount", 1, { shouldValidate: true });
+                        }
+                        if (!checked) {
+                          setValue("kidsCount", 0, { shouldValidate: true });
+                          setValue("kidsAges", "");
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+              />
+
+              {hasKids && (
+                <div className={modernStyles.kidsFields}>
+                  <Controller
+                    control={control}
+                    name="kidsCount"
+                    render={({ field }) => (
+                      <div className={modernStyles.stepperRow}>
+                        <span className={modernStyles.stepperLabel}>
+                          Детей
+                        </span>
+                        <div className={modernStyles.stepperControls}>
+                          <ActionIcon
+                            variant="subtle"
+                            className={modernStyles.counterButton}
+                            onClick={() =>
+                              field.onChange(
+                                Math.max(1, Number(field.value) - 1),
+                              )
+                            }
+                            disabled={isSubmitting}
+                            aria-label="Уменьшить количество детей"
+                          >
+                            <IconMinus size={18} stroke={2.4} />
+                          </ActionIcon>
+                          <span className={modernStyles.stepperValue}>
+                            {field.value}
+                          </span>
+                          <ActionIcon
+                            variant="subtle"
+                            className={modernStyles.counterButton}
+                            onClick={() =>
+                              field.onChange(
+                                Math.min(
+                                  BOOKING_LIMITS.maxKids,
+                                  Number(field.value) + 1,
+                                ),
+                              )
+                            }
+                            disabled={isSubmitting}
+                            aria-label="Увеличить количество детей"
+                          >
+                            <IconPlus size={18} stroke={2.4} />
+                          </ActionIcon>
+                        </div>
+                      </div>
+                    )}
+                  />
+                  {errors.kidsCount?.message && (
+                    <Text size="xs" c="red">
+                      {errors.kidsCount.message}
+                    </Text>
+                  )}
+                  <TextInput
+                    variant="unstyled"
+                    placeholder="Возраст детей, например: 6 и 10 лет"
+                    aria-label="Возраст детей"
+                    error={errors.kidsAges?.message}
+                    disabled={isSubmitting}
+                    {...register("kidsAges")}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className={modernStyles.fieldGroup} data-field-reveal>
+              <span className={modernStyles.fieldLabel}>Комментарий</span>
+              <Textarea
+                variant="unstyled"
+                placeholder="Вопрос или важная информация"
+                aria-label="Комментарий"
+                minRows={2}
+                autosize
+                error={errors.comment?.message}
+                disabled={isSubmitting}
+                {...register("comment")}
+              />
+            </div>
+
+            <div className={modernStyles.fieldGroup} data-field-reveal>
+              <Controller
+                control={control}
+                name="consent"
+                render={({ field }) => (
+                  <Checkbox
+                    checked={!!field.value}
+                    onChange={(e) => field.onChange(e.currentTarget.checked)}
+                    onBlur={field.onBlur}
+                    disabled={isSubmitting}
+                    error={errors.consent?.message}
+                    label="Согласен на обработку персональных данных в соответствии с Законом Республики Беларусь № 99-З"
+                  />
+                )}
+              />
+            </div>
+
+            {error && (
+              <Alert color="red" variant="light" data-field-reveal>
+                {error}
+              </Alert>
+            )}
+          </div>
+
+          <div className={modernStyles.formFooter}>
+            <V2Button
+              type="submit"
+              variant="primary"
+              fullWidth
+              disabled={isSubmitting || dateOptions.length === 0}
+            >
+              {isSubmitting ? "Отправка…" : "Отправить заявку"}
+            </V2Button>
+          </div>
+        </form>
       ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
           noValidate
           className={styles.formRoot}
+          data-booking-variant={variant}
         >
           <Stack gap="md">
             <Text size="sm" c="dimmed">
-              р. {river.river}
-              {river.distance ? ` · ${river.distance}` : ""}
-              {river.time ? ` · ${river.time}` : ""}
-              {river.price ? ` · ${river.price}` : ""}
+              {riverMeta}
             </Text>
 
             <div className={styles.sectionCard}>

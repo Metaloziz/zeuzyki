@@ -1,17 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { useMantineColorScheme } from "@mantine/core";
-import { IconMoonStars, IconSunHigh } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import { NAV_ITEMS, ROUTES } from "@/constants/routes";
 import { SocialLinks } from "@/components/SocialLinks";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { LogoMark } from "./LogoMark";
 import styles from "./Header.module.css";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { colorScheme, setColorScheme } = useMantineColorScheme();
   const headerRef = useRef<HTMLElement | null>(null);
-  const isDark = colorScheme === "dark";
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
@@ -52,21 +49,7 @@ export function Header() {
               </Link>
             ))}
           </nav>
-          <button
-            type="button"
-            className={styles.themeButton}
-            aria-label={
-              isDark ? "Включить светлую тему" : "Включить тёмную тему"
-            }
-            title={isDark ? "Светлая тема" : "Тёмная тема"}
-            onClick={() => setColorScheme(isDark ? "light" : "dark")}
-          >
-            {isDark ? (
-              <IconSunHigh size={20} stroke={2.2} aria-hidden="true" />
-            ) : (
-              <IconMoonStars size={20} stroke={2.2} aria-hidden="true" />
-            )}
-          </button>
+          <ThemeToggle className={styles.themeButton} />
           <button
             type="button"
             className={styles.mobileMenuButton}

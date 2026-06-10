@@ -189,7 +189,7 @@ export function Home() {
                           className={styles.bookButton}
                           onClick={() => handleRiverBook(river)}
                         >
-                          Забронировать
+                          Занять место
                         </button>
                         <Link
                           to={ROUTES.CORPORATE}
@@ -204,7 +204,7 @@ export function Home() {
                         className={`${styles.bookButton} ${styles.featuredBookButton}`}
                         onClick={() => handleRiverBook(river)}
                       >
-                        Забронировать
+                        Занять место
                       </button>
                     )}
                   </article>
@@ -292,12 +292,7 @@ export function Home() {
                                 {formatHumanDate(toDateTime(splav))}
                               </p>
                               <h3 className={styles.listItemTitle}>
-                                <Link
-                                  to={ROUTES.splav(splav.id)}
-                                  className={styles.listItemTitleLink}
-                                >
-                                  {getSplavCardTitle(splav)}
-                                </Link>
+                                {getSplavCardTitle(splav)}
                               </h3>
                               <p className={styles.listItemMeta}>
                                 старт в {splav.startTime}
