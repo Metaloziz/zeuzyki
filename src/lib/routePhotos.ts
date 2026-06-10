@@ -1,5 +1,8 @@
 const routePhotoModules = import.meta.glob(
-  "../../assets/routes/*/*.{jpg,jpeg,png}",
+  [
+    "../../assets/routes/*/*.{jpg,jpeg,png}",
+    "../../assets/corporate/0*.jpg",
+  ],
   {
     eager: true,
     import: "default",
@@ -11,19 +14,24 @@ const routePhotosByGroup = new Map<string, { name: string; url: string }[]>();
 for (const [path, url] of Object.entries(routePhotoModules)) {
   const segments = path.split("/");
   const fileName = segments.at(-1) ?? "";
-  const group = (segments.at(-2) ?? "").toLowerCase();
+  const folder = (segments.at(-2) ?? "").toLowerCase();
 
-  if (!group) continue;
+  if (!folder) continue;
 
-  const items = routePhotosByGroup.get(group) ?? [];
+  const items = routePhotosByGroup.get(folder) ?? [];
   items.push({ name: fileName, url });
-  routePhotosByGroup.set(group, items);
+  routePhotosByGroup.set(folder, items);
 }
 
 for (const [group, items] of routePhotosByGroup) {
   items.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
   routePhotosByGroup.set(group, items);
 }
+
+export const corporateHeroPhoto = new URL(
+  "../../assets/corporate/hero.jpg",
+  import.meta.url,
+).href;
 
 function normalizeRouteName(name: string): string {
   return name

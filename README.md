@@ -1,13 +1,13 @@
 # ЖЭЎЖЫКІ — сплавы на байдарках
 
-SPA для записи на байдарочные сплавы. Витрина + страница деталей + форма записи.
+SPA для записи на байдарочные сплавы. Витрина маршрутов, расписание, форма записи и страницы «Про нас», «Корпоративные сплавы», FAQ.
 
 ## Стек
 
 - **Vite + React 18 + TypeScript**
 - **Yarn Berry 4** (`nodeLinker: node-modules`)
 - **Mantine v7** (UI-кит)
-- **CSS Modules** (стили)
+- **CSS Modules** + `brand.css` (дизайн-токены)
 - **react-router-dom** (роутинг)
 - **react-hook-form + zod** (форма + валидация)
 - Деплой: **GitHub Pages** через GitHub Actions
@@ -24,71 +24,66 @@ yarn typecheck   # проверка типов без сборки
 ## Структура
 
 ```
+assets/
+├── routes/              фото маршрутов (папка = slug реки из API)
+│   ├── viliya/
+│   ├── ilia-1-chast/
+│   └── ilia-2-chast/
+├── corporate/           фото корпоративных сплавов (hero.jpg, 01.jpg…)
+└── telegram-icon.svg
+
+public/
+├── favicon.png
+└── assets/logo.png
+
 src/
-├── App.tsx                     routes
-├── main.tsx                    entry, BrowserRouter + MantineProvider
-├── theme.ts                    Mantine theme
-├── global.css                  reset
+├── App.tsx
+├── main.tsx
+├── brand.css
 ├── components/
-│   ├── Header/                 sticky apple-style nav
-│   ├── BookingModal/           форма "Записаться"
-│   ├── AboutSection/           информация о компании
-│   ├── CorporateSection/       корпоративные сплавы
-│   └── SplavCard/              карточка сплава
+│   ├── Header/
+│   ├── Footer/
+│   └── BookingModal/
 ├── pages/
-│   ├── Home.tsx                главная (витрина)
-│   ├── About.tsx               страница "Про нас"
-│   ├── Corporate.tsx           страница корпоративных сплавов
-│   └── SplavDetails.tsx        страница деталей сплава
-├── mocks/splavy.ts             fallback-моки расписания
-├── types/splav.ts              Splav, ProgramDay, Difficulty
+│   ├── Home.tsx         главная: маршруты + расписание
+│   ├── About.tsx
+│   ├── Corporate.tsx
+│   ├── Faq.tsx
+│   └── SplavDetails.tsx
 ├── lib/
-│   ├── format.ts               форматтер дат
-│   └── sheetsApi.ts            Google Apps Script API (GET/POST)
-└── generated/
-    └── form-schema.ts          legacy (можно удалить позже)
+│   ├── routePhotos.ts   маппинг названий рек из API → фото
+│   ├── sheetsApi.ts     Google Apps Script API
+│   └── format.ts
+└── types/
 ```
 
 ## Переменные окружения
 
-Создай `.env.local` (локально) или задай переменную в CI:
+Создай `.env` (локально) или задай переменную в CI:
 
 ```sh
 VITE_GAS_API_KEY=<YOUR_SECRET_API_KEY>
 ```
 
-URL Google Apps Script задан в `src/lib/sheetsApi.ts` как публичный endpoint.
+URL Google Apps Script задан в `src/lib/sheetsApi.ts`.
 
-Для GitHub Pages добавь в Secrets:
-- `VITE_GAS_API_KEY`
+Для GitHub Pages добавь в Secrets: `VITE_GAS_API_KEY`.
+
+## Добавление фото маршрута
+
+1. Создай папку в `assets/routes/` со slug, совпадающим с API (см. `routePhotos.ts`).
+2. Положи файлы `01.jpg`, `02.jpg` и т.д.
+3. Название реки в Google Sheets должно совпадать с маппингом (например `Илия 1 часть`, `Вилия`, `Корпоративный сплав`).
+
+Корпоративные фото: `assets/corporate/hero.jpg` + `01.jpg`…`06.jpg`.
 
 ## Деплой на GitHub Pages
 
-1. Запушить репозиторий на GitHub под именем **`zeuzyki`** (если другое имя — поменять `VITE_BASE` в `.github/workflows/deploy.yml` и дефолт в `vite.config.ts`).
-2. В настройках репозитория **Settings → Pages → Build and deployment → Source** выбрать **GitHub Actions**.
-3. Push в `main` запускает workflow `.github/workflows/deploy.yml`:
-   - `yarn install --immutable`
-   - `yarn build` с `VITE_BASE=/zeuzyki/`
-   - Загрузка `dist/` как Pages-артефакт
-   - Публикация
-4. Сайт будет доступен по адресу `https://<username>.github.io/zeuzyki/`.
-
-### Кастомный домен или деплой в корень
-
-- Если используешь кастомный домен — задай `VITE_BASE: /` в workflow.
-- Для локального деплоя в корень: `VITE_BASE=/ yarn build`.
+1. Репозиторий **`zeuzyki`** (или поменять `VITE_BASE` в `.github/workflows/deploy.yml`).
+2. **Settings → Pages → Source → GitHub Actions**.
+3. Push в `main` запускает `.github/workflows/deploy.yml`.
+4. Сайт: `https://<username>.github.io/zeuzyki/`.
 
 ### Глубокие ссылки (`/splav/1`)
 
-GitHub Pages не умеет SPA-fallback сам. Решено просто: `scripts/spa-404.mjs` после сборки копирует `dist/index.html` → `dist/404.html`. GH Pages подаёт `404.html` на любой неизвестный путь, и React Router подхватывает.
-
-## Что дальше
-
-См. план развития в чате с агентом (`.agents/`):
-
-- [x] Страница "Про нас" (/about)
-- [x] Страница корпоративных сплавов (/corporate)
-- [x] Интеграция формы с Google Apps Script Web App (запись в Google Sheet)
-- [x] Чтение сплавов из Google Sheet вместо моков
-- [ ] Фото-галерея для сплавов
-- [ ] Популярные вопросы (FAQ секция)
+`scripts/spa-404.mjs` копирует `dist/index.html` → `dist/404.html` для SPA fallback на GitHub Pages.

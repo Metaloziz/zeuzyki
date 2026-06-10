@@ -7,8 +7,8 @@ dist-ssr
 .env.*
 !.env.example
 
-# Auto-generated at build time from Google Form schema
-src/generated/
+# TypeScript incremental build info
+*.tsbuildinfo
 
 # Editor
 .vscode/*

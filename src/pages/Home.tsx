@@ -61,6 +61,8 @@ function RiverPhotoCarousel({ riverName }: { riverName: string }) {
     showSlide(activeIndex + (distance < 0 ? 1 : -1));
   };
 
+  if (photos.length === 0) return null;
+
   return (
     <div
       className={styles.photoCarousel}

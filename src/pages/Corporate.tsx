@@ -3,6 +3,7 @@ import belgosstrakhLogo from "../assets/company-logos/belgosstrakh.svg";
 import gazpromLogo from "../assets/company-logos/gazprom.svg";
 import mtsLogo from "../assets/company-logos/mts.svg";
 import omaLogo from "../assets/company-logos/oma.png";
+import { corporateHeroPhoto, getRoutePhotos } from "../lib/routePhotos";
 import styles from "./Corporate.module.css";
 
 const FEATURES = [
@@ -139,44 +140,24 @@ const CORPORATE_OPTIONS = [
   },
 ];
 
-function corporatePhoto(fileName: string): string {
-  return new URL(`../../assets/corporate/${fileName}`, import.meta.url).href;
-}
-
-const corporateHeroImage = corporatePhoto("hero.jpg");
-
-const CORPORATE_GALLERY = [
-  {
-    src: corporatePhoto("01.jpg"),
-    alt: "Команда на корпоративном сплаве",
-    layout: "wide",
-  },
-  {
-    src: corporatePhoto("02.jpg"),
-    alt: "Участники корпоративного сплава на реке",
-    layout: "default",
-  },
-  {
-    src: corporatePhoto("03.jpg"),
-    alt: "Корпоративный выезд на байдарках",
-    layout: "tall",
-  },
-  {
-    src: corporatePhoto("04.jpg"),
-    alt: "Отдых команды после сплава",
-    layout: "default",
-  },
-  {
-    src: corporatePhoto("05.jpg"),
-    alt: "Корпоративный сплав на реке",
-    layout: "default",
-  },
-  {
-    src: corporatePhoto("06.jpg"),
-    alt: "Корпоративная команда на байдарках",
-    layout: "default",
-  },
+const CORPORATE_GALLERY_META = [
+  { alt: "Команда на корпоративном сплаве", layout: "wide" },
+  { alt: "Участники корпоративного сплава на реке", layout: "default" },
+  { alt: "Корпоративный выезд на байдарках", layout: "tall" },
+  { alt: "Отдых команды после сплава", layout: "default" },
+  { alt: "Корпоративный сплав на реке", layout: "default" },
+  { alt: "Корпоративная команда на байдарках", layout: "default" },
 ] as const;
+
+const CORPORATE_GALLERY = getRoutePhotos("Корпоративный сплав").map(
+  (src, index) => ({
+    src,
+    alt:
+      CORPORATE_GALLERY_META[index]?.alt ??
+      `Корпоративный сплав, фото ${index + 1}`,
+    layout: CORPORATE_GALLERY_META[index]?.layout ?? "default",
+  }),
+);
 
 const TRUSTED_COMPANIES = [
   { name: "ОМА", logo: omaLogo, variant: "blue" },
@@ -211,7 +192,7 @@ export function Corporate() {
           </div>
           <div className={styles.heroImage}>
             <img
-              src={corporateHeroImage}
+              src={corporateHeroPhoto}
               alt="Корпоративный сплав на байдарках"
               className={styles.heroImg}
             />
