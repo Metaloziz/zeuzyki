@@ -85,33 +85,37 @@ function RiverPhotoCarousel({ riverName }: { riverName: string }) {
         ))}
       </div>
 
-      <button
-        type="button"
-        className={`${styles.photoCarouselButton} ${styles.photoCarouselButtonPrev}`}
-        onClick={() => showSlide(activeIndex - 1)}
-        aria-label="Предыдущее фото"
-      >
-        <IconChevronLeft size={20} stroke={2.4} aria-hidden="true" />
-      </button>
-      <button
-        type="button"
-        className={`${styles.photoCarouselButton} ${styles.photoCarouselButtonNext}`}
-        onClick={() => showSlide(activeIndex + 1)}
-        aria-label="Следующее фото"
-      >
-        <IconChevronRight size={20} stroke={2.4} aria-hidden="true" />
-      </button>
+      {photos.length > 1 && (
+        <>
+          <button
+            type="button"
+            className={`${styles.photoCarouselButton} ${styles.photoCarouselButtonPrev}`}
+            onClick={() => showSlide(activeIndex - 1)}
+            aria-label="Предыдущее фото"
+          >
+            <IconChevronLeft size={20} stroke={2.4} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className={`${styles.photoCarouselButton} ${styles.photoCarouselButtonNext}`}
+            onClick={() => showSlide(activeIndex + 1)}
+            aria-label="Следующее фото"
+          >
+            <IconChevronRight size={20} stroke={2.4} aria-hidden="true" />
+          </button>
 
-      <div className={styles.photoCarouselDots} aria-hidden="true">
-        {photos.map((photo, index) => (
-          <span
-            key={photo}
-            className={`${styles.photoCarouselDot} ${
-              activeIndex === index ? styles.photoCarouselDotActive : ""
-            }`}
-          />
-        ))}
-      </div>
+          <div className={styles.photoCarouselDots} aria-hidden="true">
+            {photos.map((photo, index) => (
+              <span
+                key={photo}
+                className={`${styles.photoCarouselDot} ${
+                  activeIndex === index ? styles.photoCarouselDotActive : ""
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -446,20 +450,22 @@ export function Home() {
                 <div className={styles.listBlock}>
                   <h2 className={styles.listTitle}>Расписание</h2>
                   <div className={styles.list}>
-                    {scheduleSplavy.map((splav, index) => {
-                      const riverImage = getRoutePhoto(splav.river, index);
+                    {scheduleSplavy.map((splav) => {
+                      const routeImage = getRoutePhoto(splav.river);
 
                       return (
                         <article key={splav.id} className={styles.listItem}>
                           <div className={styles.listItemMain}>
-                            <div className={styles.listThumbWrap}>
-                              <img
-                                src={riverImage}
-                                alt={`Пейзаж маршрута ${splav.river}`}
-                                className={styles.listThumb}
-                                loading="lazy"
-                              />
-                            </div>
+                            {routeImage && (
+                              <div className={styles.listThumbWrap}>
+                                <img
+                                  src={routeImage}
+                                  alt={`Пейзаж маршрута ${splav.title}`}
+                                  className={styles.listThumb}
+                                  loading="lazy"
+                                />
+                              </div>
+                            )}
                             <div>
                               <p className={styles.listItemDate}>
                                 {humanDate.format(toDateTime(splav))}

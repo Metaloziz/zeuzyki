@@ -139,28 +139,41 @@ const CORPORATE_OPTIONS = [
   },
 ];
 
-const corporateHeroImage = new URL("../../assets/corporat.jpg", import.meta.url)
-  .href;
+function corporatePhoto(fileName: string): string {
+  return new URL(`../../assets/corporate/${fileName}`, import.meta.url).href;
+}
+
+const corporateHeroImage = corporatePhoto("hero.jpg");
 
 const CORPORATE_GALLERY = [
   {
-    src: new URL("../../assets/IMG_5375.jpg", import.meta.url).href,
+    src: corporatePhoto("01.jpg"),
     alt: "Команда на корпоративном сплаве",
     layout: "wide",
   },
   {
-    src: new URL("../../assets/IMG_5377.jpg", import.meta.url).href,
+    src: corporatePhoto("02.jpg"),
     alt: "Участники корпоративного сплава на реке",
     layout: "default",
   },
   {
-    src: new URL("../../assets/IMG_5378.jpg", import.meta.url).href,
+    src: corporatePhoto("03.jpg"),
     alt: "Корпоративный выезд на байдарках",
     layout: "tall",
   },
   {
-    src: new URL("../../assets/IMG_4842.jpg", import.meta.url).href,
+    src: corporatePhoto("04.jpg"),
     alt: "Отдых команды после сплава",
+    layout: "default",
+  },
+  {
+    src: corporatePhoto("05.jpg"),
+    alt: "Корпоративный сплав на реке",
+    layout: "default",
+  },
+  {
+    src: corporatePhoto("06.jpg"),
+    alt: "Корпоративная команда на байдарках",
     layout: "default",
   },
 ] as const;
