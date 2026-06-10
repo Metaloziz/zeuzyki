@@ -4,7 +4,11 @@ import { Alert, Skeleton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { BookingModal } from "../components/BookingModal/BookingModal";
-import { getRoutePhoto, getRoutePhotos } from "../lib/routePhotos";
+import {
+  corporateHeroPhoto,
+  getRoutePhoto,
+  getRoutePhotos,
+} from "../lib/routePhotos";
 import { fetchRivers, fetchSchedule } from "../lib/sheetsApi";
 import type { River } from "../types/river";
 import type { Splav } from "../types/splav";
@@ -38,8 +42,23 @@ const RIVER_DETAIL_SKELETONS = Array.from({ length: 4 }, (_, index) => index);
 const SCHEDULE_SKELETONS = Array.from({ length: 5 }, (_, index) => index);
 const MIN_SWIPE_DISTANCE = 44;
 
+function getRiverCarouselPhotos(riverName: string): string[] {
+  const routePhotos = getRoutePhotos(riverName);
+
+  if (riverName.trim().toLowerCase() !== "корпоративный сплав") {
+    return routePhotos;
+  }
+
+  if (routePhotos.length === 0) return [corporateHeroPhoto];
+
+  return [corporateHeroPhoto, ...routePhotos.slice(1)];
+}
+
 function RiverPhotoCarousel({ riverName }: { riverName: string }) {
-  const photos = getRoutePhotos(riverName);
+  const photos = useMemo(
+    () => getRiverCarouselPhotos(riverName),
+    [riverName],
+  );
   const [activeIndex, setActiveIndex] = useState(0);
   const [dragStartX, setDragStartX] = useState<number | null>(null);
 
