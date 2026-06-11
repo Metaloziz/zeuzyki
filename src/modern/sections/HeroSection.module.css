@@ -97,6 +97,10 @@
     color: var(--v2-text-on-dark-muted);
 }
 
+.heroDevSwipe {
+    touch-action: pan-y;
+}
+
 @media (max-width: 720px) {
     .hero {
         padding-bottom: 56px;

@@ -15,8 +15,9 @@ gsap.registerPlugin(ScrollTrigger);
 export function HeroSection() {
   const { scrollToSection } = useSectionNav();
   const reducedMotion = useReducedMotion();
-  const { photo: heroBgPhoto, onTouchStart, onTouchEnd } = useHeroDevBgSwipe();
   const rootRef = useRef<HTMLElement>(null);
+  const { photo: heroBgPhoto, enabled: devBgSwipe } =
+    useHeroDevBgSwipe(rootRef);
   const bgRef = useRef<HTMLImageElement>(null);
 
   useGSAP(
@@ -51,9 +52,7 @@ export function HeroSection() {
     <SectionShell id={SECTION_IDS.hero} fullBleed>
       <div
         ref={rootRef as RefObject<HTMLDivElement>}
-        className={styles.hero}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
+        className={`${styles.hero}${devBgSwipe ? ` ${styles.heroDevSwipe}` : ""}`}
       >
         <div className={styles.bg} aria-hidden="true">
           <img
