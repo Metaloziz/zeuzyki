@@ -3,8 +3,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef, type RefObject } from "react";
 import { V2Button } from "@/modern/components/V2Button";
-import { corporateHeroPhoto } from "@/utils/routePhotos";
 import { SECTION_IDS } from "@/modern/constants/sections";
+import { useHeroDevBgSwipe } from "@/modern/hooks/useHeroDevBgSwipe";
 import { useSectionNav } from "@/modern/hooks/useSectionNav";
 import { useReducedMotion } from "@/modern/hooks/useReducedMotion";
 import { SectionShell } from "@/modern/components/SectionShell";
@@ -15,6 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
 export function HeroSection() {
   const { scrollToSection } = useSectionNav();
   const reducedMotion = useReducedMotion();
+  const { photo: heroBgPhoto, onTouchStart, onTouchEnd } = useHeroDevBgSwipe();
   const rootRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLImageElement>(null);
 
@@ -48,11 +49,16 @@ export function HeroSection() {
 
   return (
     <SectionShell id={SECTION_IDS.hero} fullBleed>
-      <div ref={rootRef as RefObject<HTMLDivElement>} className={styles.hero}>
+      <div
+        ref={rootRef as RefObject<HTMLDivElement>}
+        className={styles.hero}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         <div className={styles.bg} aria-hidden="true">
           <img
             ref={bgRef}
-            src={corporateHeroPhoto}
+            src={heroBgPhoto}
             alt=""
             className={styles.bgImage}
           />

@@ -182,3 +182,12 @@ export function getRoutePhotos(...names: string[]): string[] {
 
   return [];
 }
+
+/** Dev-only: все фото маршрутов и корпоратива для превью фона hero на мобилке. */
+export function getHeroDevBackgroundPhotos(): string[] {
+  const urls = new Set<string>([corporateHeroPhoto]);
+  for (const items of routePhotosByGroup.values()) {
+    for (const { url } of items) urls.add(url);
+  }
+  return [...urls];
+}
