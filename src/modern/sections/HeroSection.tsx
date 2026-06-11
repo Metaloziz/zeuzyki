@@ -74,6 +74,7 @@ export function HeroSection() {
             <V2Button
               variant="primary"
               onDark
+              waterAlways
               onClick={() => scrollToSection(SECTION_IDS.schedule)}
             >
               Выбрать сплав

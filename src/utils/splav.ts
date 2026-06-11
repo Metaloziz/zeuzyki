@@ -1,4 +1,7 @@
-import { CORPORATE_RIVER_NAME } from "@/constants/rivers";
+import {
+  CORPORATE_RIVER_ID,
+  CORPORATE_RIVER_NAME,
+} from "@/constants/rivers";
 import type { River } from "@/types/river";
 import type { Splav } from "@/types/splav";
 
@@ -6,8 +9,15 @@ export function toDateTime(splav: Splav): Date {
   return new Date(`${splav.startDate}T${splav.startTime}`);
 }
 
+export function isCorporateRiverId(riverId: string | number): boolean {
+  return String(riverId).trim() === CORPORATE_RIVER_ID;
+}
+
 export function isCorporateRiver(river: River): boolean {
-  return river.river.trim().toLowerCase() === CORPORATE_RIVER_NAME;
+  return (
+    isCorporateRiverId(river.id) ||
+    river.river.trim().toLowerCase() === CORPORATE_RIVER_NAME
+  );
 }
 
 export function isCorporateRiverName(name: string): boolean {

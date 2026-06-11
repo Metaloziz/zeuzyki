@@ -71,9 +71,9 @@ URL Google Apps Script задан в `src/lib/sheetsApi.ts`.
 
 ## Добавление фото маршрута
 
-1. Создай папку в `assets/routes/` со slug, совпадающим с API (см. `routePhotos.ts`).
+1. Создай папку в `assets/routes/` со slug из `RIVER_ID_TO_PHOTO_GROUP` в `src/constants/rivers.ts` (`viliya`, `ilia-1-chast`, `ilia-2-chast`, `corporate`).
 2. Положи файлы `01.jpg`, `02.jpg` и т.д.
-3. Название реки в Google Sheets должно совпадать с маппингом (например `Илия 1 часть`, `Вилия`, `Корпоративный сплав`).
+3. В Google Sheets фото привязаны к **ID** реки (лист `Rivers`), а не к названию — название можно менять свободно. Актуальные ID: `1` — Вилия, `2` — Илия Маршрут №1, `3` — Илия Маршрут №2, `4` — Корпоративный сплав.
 
 Корпоративные фото: `assets/corporate/hero.jpg` + `01.jpg`…`06.jpg`.
 

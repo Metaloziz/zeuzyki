@@ -9,6 +9,8 @@ interface V2ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
   loading?: boolean;
   loadingLabel?: ReactNode;
+  /** Постоянная «водная» анимация как при hover */
+  waterAlways?: boolean;
   children: ReactNode;
 }
 
@@ -18,6 +20,7 @@ export function V2Button({
   fullWidth = false,
   loading = false,
   loadingLabel = "Отправляем…",
+  waterAlways = false,
   children,
   className,
   type = "button",
@@ -37,6 +40,7 @@ export function V2Button({
         onDark ? styles.onDark : "",
         fullWidth ? styles.fullWidth : "",
         loading ? styles.loading : "",
+        waterAlways ? styles.waterAlways : "",
         className,
       ]
         .filter(Boolean)

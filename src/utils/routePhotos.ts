@@ -1,4 +1,7 @@
-import { CORPORATE_RIVER_NAME } from "@/constants/rivers";
+import {
+  CORPORATE_RIVER_NAME,
+  RIVER_ID_TO_PHOTO_GROUP,
+} from "@/constants/rivers";
 
 const routePhotoModules = import.meta.glob(
   ["../assets/routes/*/*.{jpg,jpeg,png}", "../assets/corporate/0*.jpg"],
@@ -11,7 +14,7 @@ const routePhotoModules = import.meta.glob(
 const routePhotosByGroup = new Map<string, { name: string; url: string }[]>();
 
 for (const [path, url] of Object.entries(routePhotoModules)) {
-  const segments = path.split("/");
+  const segments = path.split(/[/\\]/);
   const fileName = segments.at(-1) ?? "";
   const folder = (segments.at(-2) ?? "").toLowerCase();
 
@@ -34,12 +37,24 @@ export const corporateHeroPhoto = new URL(
   import.meta.url,
 ).href;
 
+function normalizeRiverId(riverId?: string | number | null): string {
+  if (riverId == null) return "";
+  return String(riverId).trim();
+}
+
+function routeIdToGroupSlug(riverId: string): string | null {
+  const id = normalizeRiverId(riverId);
+  if (!id) return null;
+  return RIVER_ID_TO_PHOTO_GROUP[id] ?? null;
+}
+
 function normalizeRouteName(name: string): string {
   return name
     .trim()
     .toLowerCase()
     .replace(/^р\.\s*/, "")
-    .replace(/№\s*/g, "")
+    .replace(/маршрут\s*[^\d\s]+\s*(?=\d)/g, "маршрут ")
+    .replace(/(?:№|#)\s*/g, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -50,6 +65,9 @@ function routeNameToGroupSlug(name: string): string | null {
   if (normalized === "вилия") return "viliya";
 
   if (normalized === CORPORATE_RIVER_NAME) return "corporate";
+
+  if (/^илия маршрут\s*1(?:\s|$)/.test(normalized)) return "ilia-1-chast";
+  if (/^илия маршрут\s*2(?:\s|$)/.test(normalized)) return "ilia-2-chast";
 
   const iliaPart1 = normalized.match(/^илия 1 (?:часть|этап)(?:\s*(\d+))?$/);
   if (iliaPart1) return "ilia-1-chast";
@@ -88,17 +106,65 @@ function getGroupPhotos(group: string, photoIndex: number | null): string[] {
 }
 
 const SCHEDULE_PHOTO_INDEX: Record<string, number> = {
-  "ilia-1-chast": 4,
+  "ilia-1-chast": 1,
   "ilia-2-chast": 3,
 };
 
-export function getScheduleRowPhoto(riverName: string): string | undefined {
-  const group = routeNameToGroupSlug(riverName);
+function resolveGroup(
+  riverId?: string | number | null,
+  riverName?: string,
+): string | null {
+  const id = normalizeRiverId(riverId);
+  if (id) {
+    const byId = routeIdToGroupSlug(id);
+    if (byId) return byId;
+  }
+  if (riverName) return routeNameToGroupSlug(riverName);
+  return null;
+}
+
+export function getRoutePhotosByRiverId(
+  riverId?: string | number | null,
+  ...fallbackNames: string[]
+): string[] {
+  const id = normalizeRiverId(riverId);
+  if (id) {
+    const group = routeIdToGroupSlug(id);
+    if (group) {
+      for (const name of fallbackNames) {
+        const photos = getGroupPhotos(group, routeNameToPhotoIndex(name));
+        if (photos.length > 0) return photos;
+      }
+
+      const allPhotos = getGroupPhotos(group, null);
+      if (allPhotos.length > 0) return allPhotos;
+    }
+  }
+
+  return getRoutePhotos(...fallbackNames);
+}
+
+export function getRoutePhotoByRiverId(
+  riverId?: string | number | null,
+  ...fallbackNames: string[]
+): string | undefined {
+  return getRoutePhotosByRiverId(riverId, ...fallbackNames)[0];
+}
+
+export function getScheduleRowPhoto(
+  riverId?: string | number | null,
+  riverName?: string,
+): string | undefined {
+  const group = resolveGroup(riverId, riverName);
   if (group && SCHEDULE_PHOTO_INDEX[group] !== undefined) {
     const photo = getGroupPhotos(group, SCHEDULE_PHOTO_INDEX[group])[0];
     if (photo) return photo;
   }
-  return getRoutePhoto(riverName);
+
+  return getRoutePhotoByRiverId(
+    riverId,
+    ...(riverName ? [riverName] : []),
+  );
 }
 
 export function getRoutePhoto(...names: string[]): string | undefined {

@@ -69,7 +69,10 @@ export function ScheduleSection({
             </div>
             <div ref={listRef} className={styles.list}>
               {sorted.map((splav) => {
-                const routeImage = getScheduleRowPhoto(splav.river);
+                const routeImage = getScheduleRowPhoto(
+                  splav.riverId,
+                  splav.river,
+                );
                 return (
                   <article
                     key={splav.id}
@@ -78,7 +81,9 @@ export function ScheduleSection({
                     }`}
                     style={
                       routeImage
-                        ? ({ "--item-bg": `url(${routeImage})` } as CSSProperties)
+                        ? ({
+                            "--item-bg": `url("${routeImage}")`,
+                          } as CSSProperties)
                         : undefined
                     }
                     data-reveal

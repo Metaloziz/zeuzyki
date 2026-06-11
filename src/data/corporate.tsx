@@ -3,7 +3,8 @@ import belgosstrakhLogo from "@/assets/company-logos/belgosstrakh.svg";
 import gazpromLogo from "@/assets/company-logos/gazprom.svg";
 import mtsLogo from "@/assets/company-logos/mts.svg";
 import omaLogo from "@/assets/company-logos/oma.png";
-import { getRoutePhotos } from "@/utils/routePhotos";
+import { CORPORATE_RIVER_ID } from "@/constants/rivers";
+import { getRoutePhotosByRiverId } from "@/utils/routePhotos";
 
 export const CORPORATE_FEATURES = [
   {
@@ -148,7 +149,10 @@ const CORPORATE_GALLERY_META = [
   { alt: "Корпоративная команда на байдарках", layout: "default" as const },
 ];
 
-export const CORPORATE_GALLERY = getRoutePhotos("Корпоративный сплав").map(
+export const CORPORATE_GALLERY = getRoutePhotosByRiverId(
+  CORPORATE_RIVER_ID,
+  "Корпоративный сплав",
+).map(
   (src, index) => ({
     src,
     alt:

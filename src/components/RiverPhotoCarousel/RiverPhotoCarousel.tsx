@@ -2,17 +2,22 @@ import { useMemo, useState, type PointerEvent } from "react";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import {
   corporateHeroPhoto,
-  getRoutePhotos,
+  getRoutePhotosByRiverId,
 } from "@/utils/routePhotos";
-import { isCorporateRiverName } from "@/utils/splav";
+import { isCorporateRiverId, isCorporateRiverName } from "@/utils/splav";
 import styles from "./RiverPhotoCarousel.module.css";
 
 const MIN_SWIPE_DISTANCE = 44;
 
-function getRiverCarouselPhotos(riverName: string): string[] {
-  const routePhotos = getRoutePhotos(riverName);
+function getRiverCarouselPhotos(
+  riverId: string | number,
+  riverName: string,
+): string[] {
+  const routePhotos = getRoutePhotosByRiverId(riverId, riverName);
+  const isCorporate =
+    isCorporateRiverId(riverId) || isCorporateRiverName(riverName);
 
-  if (!isCorporateRiverName(riverName)) {
+  if (!isCorporate) {
     return routePhotos;
   }
 
@@ -22,17 +27,19 @@ function getRiverCarouselPhotos(riverName: string): string[] {
 }
 
 interface RiverPhotoCarouselProps {
+  riverId: string | number;
   riverName: string;
   variant?: "default" | "riverCard";
 }
 
 export function RiverPhotoCarousel({
+  riverId,
   riverName,
   variant = "default",
 }: RiverPhotoCarouselProps) {
   const photos = useMemo(
-    () => getRiverCarouselPhotos(riverName),
-    [riverName],
+    () => getRiverCarouselPhotos(riverId, riverName),
+    [riverId, riverName],
   );
   const [activeIndex, setActiveIndex] = useState(0);
   const [dragStartX, setDragStartX] = useState<number | null>(null);

@@ -55,9 +55,18 @@ export function RoutesSection({
         ) : (
           <div ref={gridRef} className={styles.grid}>
             {rivers.map((river) => (
-              <article key={river.id} className={styles.card} data-reveal>
-                <RiverPhotoCarousel riverName={river.river} variant="riverCard" />
-                <div className={styles.body}>
+              <article
+                key={river.id}
+                className={`${styles.card} ${
+                  isCorporateRiver(river) ? styles.desktopOnlyRiverCard : ""
+                }`}
+              >
+                <RiverPhotoCarousel
+                  riverId={river.id}
+                  riverName={river.river}
+                  variant="riverCard"
+                />
+                <div className={styles.body} data-reveal>
                   <h3 className={styles.title}>{river.river}</h3>
                   {river.description && (
                     <p className={styles.description}>{river.description}</p>

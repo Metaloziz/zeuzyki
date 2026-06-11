@@ -11,7 +11,7 @@ import { useSchedule } from "@/hooks/useSchedule";
 import type { River } from "@/types/river";
 import type { Splav } from "@/types/splav";
 import { formatHumanDate } from "@/utils/format";
-import { getRoutePhoto } from "@/utils/routePhotos";
+import { getScheduleRowPhoto } from "@/utils/routePhotos";
 import {
   getSplavCardTitle,
   isCorporateRiver,
@@ -144,9 +144,14 @@ export function Home() {
                 {rivers.map((river) => (
                   <article
                     key={river.id}
-                    className={`${styles.featuredCard} ${styles.riverCard}`}
+                    className={`${styles.featuredCard} ${styles.riverCard} ${
+                      isCorporateRiver(river)
+                        ? styles.desktopOnlyRiverCard
+                        : ""
+                    }`}
                   >
                     <RiverPhotoCarousel
+                      riverId={river.id}
                       riverName={river.river}
                       variant="riverCard"
                     />
@@ -272,7 +277,10 @@ export function Home() {
                   <h2 className={styles.listTitle}>Расписание</h2>
                   <div className={styles.list}>
                     {scheduleSplavy.map((splav) => {
-                      const routeImage = getRoutePhoto(splav.river);
+                      const routeImage = getScheduleRowPhoto(
+                        splav.riverId,
+                        splav.river,
+                      );
 
                       return (
                         <article key={splav.id} className={styles.listItem}>

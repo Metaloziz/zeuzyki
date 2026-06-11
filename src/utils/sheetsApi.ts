@@ -226,7 +226,10 @@ function getCachedRivers(): River[] | null {
       return null;
     }
 
-    return cache.items;
+    return cache.items.map((item) => ({
+      ...item,
+      id: String(item.id),
+    }));
   } catch {
     window.localStorage.removeItem(cacheKey);
     return null;

@@ -163,6 +163,17 @@
     overflow: hidden;
 }
 
+.desktopOnlyRiverCard {
+    display: none;
+}
+
+@media (min-width: 721px) {
+    .desktopOnlyRiverCard {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 .riverCard .featuredTitle,
 .riverCard .riverDescription,
 .riverCard .riverDetails,
