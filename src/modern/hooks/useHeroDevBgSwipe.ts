@@ -5,8 +5,8 @@ import {
   type RefObject,
 } from "react";
 import {
-  corporateHeroPhoto,
   getHeroDevBackgroundPhotos,
+  homeHeroPhoto,
 } from "@/utils/routePhotos";
 
 const MOBILE_MQ = "(max-width: 720px)";
@@ -34,8 +34,8 @@ export function useHeroDevBgSwipe(targetRef: RefObject<HTMLElement | null>) {
   const enabled = import.meta.env.DEV && isMobile && devPhotos.length > 1;
 
   const photo = enabled
-    ? (devPhotos[index] ?? corporateHeroPhoto)
-    : corporateHeroPhoto;
+    ? (devPhotos[index] ?? homeHeroPhoto)
+    : homeHeroPhoto;
 
   useEffect(() => {
     if (!enabled) return;

@@ -37,6 +37,9 @@ export const corporateHeroPhoto = new URL(
   import.meta.url,
 ).href;
 
+export const homeHeroPhoto =
+  routePhotosByGroup.get("ilia-1-chast")?.[0]?.url ?? corporateHeroPhoto;
+
 function normalizeRiverId(riverId?: string | number | null): string {
   if (riverId == null) return "";
   return String(riverId).trim();
@@ -185,9 +188,16 @@ export function getRoutePhotos(...names: string[]): string[] {
 
 /** Dev-only: все фото маршрутов и корпоратива для превью фона hero на мобилке. */
 export function getHeroDevBackgroundPhotos(): string[] {
-  const urls = new Set<string>([corporateHeroPhoto]);
+  const urls: string[] = [];
+  const add = (url?: string) => {
+    if (url && !urls.includes(url)) urls.push(url);
+  };
+
+  add(homeHeroPhoto);
+  add(corporateHeroPhoto);
   for (const items of routePhotosByGroup.values()) {
-    for (const { url } of items) urls.add(url);
+    for (const { url } of items) add(url);
   }
-  return [...urls];
+
+  return urls;
 }
