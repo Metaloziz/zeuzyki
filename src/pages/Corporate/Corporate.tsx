@@ -116,9 +116,6 @@ export function Corporate() {
                 />
               </div>
             ))}
-            <div className={styles.clientTextCard} aria-label="Квалитет">
-              Квалитет
-            </div>
           </div>
           <p className={styles.clientsNote}>и другие компании</p>
         </div>

@@ -123,11 +123,6 @@
     background: var(--brand-dark);
 }
 
-.clientText {
-    font-weight: 700;
-    font-size: 14px;
-}
-
 @media (max-width: 1100px) {
     .pricingGrid {
         grid-template-columns: repeat(3, 1fr);

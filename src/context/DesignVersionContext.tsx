@@ -23,13 +23,13 @@ const DesignVersionContext = createContext<DesignVersionContextValue | null>(
 );
 
 function readStoredVersion(): DesignVersion {
-  if (typeof window === "undefined") return "classic";
+  if (typeof window === "undefined") return "modern";
 
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored === "modern" ? "modern" : "classic";
+    return stored === "classic" ? "classic" : "modern";
   } catch {
-    return "classic";
+    return "modern";
   }
 }
 

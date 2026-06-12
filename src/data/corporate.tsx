@@ -2,6 +2,7 @@ import belarusbankLogo from "@/assets/company-logos/belarusbank.jpg";
 import belgosstrakhLogo from "@/assets/company-logos/belgosstrakh.svg";
 import gazpromLogo from "@/assets/company-logos/gazprom.svg";
 import mtsLogo from "@/assets/company-logos/mts.svg";
+import kvalitetLogo from "@/assets/company-logos/kvalitet.png";
 import omaLogo from "@/assets/company-logos/oma.png";
 import { CORPORATE_RIVER_ID } from "@/constants/rivers";
 import { getRoutePhotosByRiverId } from "@/utils/routePhotos";
@@ -168,4 +169,5 @@ export const TRUSTED_COMPANIES = [
   { name: "Белгосстрах", logo: belgosstrakhLogo, variant: "light" as const },
   { name: "МТС", logo: mtsLogo, variant: "light" as const },
   { name: "Газпром", logo: gazpromLogo, variant: "light" as const },
+  { name: "Квалитет", logo: kvalitetLogo, variant: "light" as const },
 ];

@@ -71,9 +71,6 @@ export function CorporateSection() {
                 />
               </div>
             ))}
-            <div className={styles.clientCard}>
-              <span className={styles.clientText}>Квалитет</span>
-            </div>
           </div>
         </div>
       </div>
