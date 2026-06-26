@@ -1,0 +1,55 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.text {
+    min-width: 0;
+    flex: 1;
+}
+
+.plainText {
+    cursor: default;
+}
+
+.copyButton {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    color: inherit;
+    background: color-mix(in srgb, currentColor 10%, transparent);
+    cursor: pointer;
+    opacity: 0.72;
+    transition:
+        opacity 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.copyButton:hover {
+    opacity: 1;
+    background: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+.copyButton:active {
+    transform: scale(0.96);
+}
+
+.copyButton:focus-visible {
+    outline: 2px solid color-mix(in srgb, currentColor 40%, transparent);
+    outline-offset: 2px;
+}

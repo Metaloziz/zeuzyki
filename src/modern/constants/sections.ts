@@ -16,4 +16,5 @@ export const MODERN_NAV_ITEMS: { id: SectionId; label: string }[] = [
   { id: SECTION_IDS.corporate, label: "Корпоратив" },
   { id: SECTION_IDS.about, label: "О нас" },
   { id: SECTION_IDS.faq, label: "Вопросы" },
+  { id: SECTION_IDS.contacts, label: "Контакты" },
 ];

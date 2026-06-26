@@ -1,11 +1,4 @@
-import {
-  INSTAGRAM_HANDLE,
-  INSTAGRAM_URL,
-  PHONE_DISPLAY,
-  PHONE_HREF,
-  TELEGRAM_HANDLE,
-  TELEGRAM_URL,
-} from "@/constants/contacts";
+import { FooterContacts } from "@/components/ContactInfoRow";
 import { DesignDevPanel } from "@/components/DesignDevPanel";
 import { SocialLinks } from "@/components/SocialLinks";
 import { MODERN_NAV_ITEMS, SECTION_IDS } from "@/modern/constants/sections";
@@ -50,15 +43,7 @@ export function ModernFooter() {
 
         <address>
           <h2 className={styles.blockTitle}>Связаться</h2>
-          <a href={PHONE_HREF} className={styles.link}>
-            Телефон: {PHONE_DISPLAY}
-          </a>
-          <a href={TELEGRAM_URL} className={styles.link}>
-            Telegram: {TELEGRAM_HANDLE}
-          </a>
-          <a href={INSTAGRAM_URL} className={styles.link}>
-            Instagram: {INSTAGRAM_HANDLE}
-          </a>
+          <FooterContacts linkClassName={styles.link} />
         </address>
       </div>
 

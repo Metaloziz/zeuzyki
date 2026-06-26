@@ -1,13 +1,6 @@
 import { Link } from "react-router-dom";
-import {
-  INSTAGRAM_HANDLE,
-  INSTAGRAM_URL,
-  PHONE_DISPLAY,
-  PHONE_HREF,
-  TELEGRAM_HANDLE,
-  TELEGRAM_URL,
-} from "@/constants/contacts";
 import { NAV_ITEMS, ROUTES } from "@/constants/routes";
+import { FooterContacts } from "@/components/ContactInfoRow";
 import { DesignDevPanel } from "@/components/DesignDevPanel";
 import { SocialLinks } from "@/components/SocialLinks";
 import styles from "./Footer.module.css";
@@ -16,7 +9,7 @@ const currentYear = new Date().getFullYear();
 
 export function Footer() {
   return (
-    <footer className={styles.footer}>
+    <footer id="contacts" className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.brandBlock}>
           <Link
@@ -48,15 +41,7 @@ export function Footer() {
 
         <address className={styles.contactBlock}>
           <h2 className={styles.blockTitle}>Связаться</h2>
-          <a href={PHONE_HREF} className={styles.link}>
-            Телефон: {PHONE_DISPLAY}
-          </a>
-          <a href={TELEGRAM_URL} className={styles.link}>
-            Telegram: {TELEGRAM_HANDLE}
-          </a>
-          <a href={INSTAGRAM_URL} className={styles.link}>
-            Instagram: {INSTAGRAM_HANDLE}
-          </a>
+          <FooterContacts linkClassName={styles.link} />
           <span className={styles.muted}>Ответим, подберём реку и дату.</span>
         </address>
       </div>

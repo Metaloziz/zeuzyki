@@ -32,7 +32,6 @@ export function SectionNavProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const ids = MODERN_NAV_ITEMS.map((item) => item.id).concat([
       SECTION_IDS.hero,
-      SECTION_IDS.contacts,
     ]);
 
     const observer = new IntersectionObserver(
