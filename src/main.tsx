@@ -11,7 +11,14 @@ import "./global.css";
 // Vite injects the base path here at build time. Drop trailing slash for router.
 const basename = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-createRoot(document.getElementById("root")!).render(
+const rootEl = document.getElementById("root");
+if (!rootEl) {
+  throw new Error("Root element #root not found");
+}
+
+// Always client-mount. Prerendered HTML in dist is for crawlers/social scrapers;
+// hydrating would fight GSAP/Mantine and risk mismatch warnings.
+createRoot(rootEl).render(
   <StrictMode>
     <MantineProvider theme={theme} defaultColorScheme="dark">
       <BrowserRouter basename={basename}>

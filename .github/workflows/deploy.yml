@@ -37,11 +37,15 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Install Playwright Chromium
+        run: yarn playwright install --with-deps chromium
+
       - name: Build
         run: yarn build
         env:
-          # Repo deployed at https://<user>.github.io/zeuzyki/. Override if custom domain.
-          VITE_BASE: /zeuzyki/
+          # Custom domain https://zeuzyki.by/ is served from site root.
+          VITE_BASE: /
+          VITE_SITE_URL: https://zeuzyki.by
           # Configure in GitHub -> Settings -> Secrets and variables -> Actions
           VITE_GAS_API_KEY: ${{ secrets.VITE_GAS_API_KEY || vars.VITE_GAS_API_KEY }}
 

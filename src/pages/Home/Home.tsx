@@ -18,7 +18,12 @@ import {
   matchSplavToRiver,
   toDateTime,
 } from "@/utils/splav";
+import { PageMeta } from "@/seo/PageMeta";
+import { buildHomeJsonLd } from "@/seo/jsonLd";
+import { HOME_SEO } from "@/seo/pages";
 import styles from "./Home.module.css";
+
+const homeJsonLd = buildHomeJsonLd();
 
 const RIVER_SKELETONS = Array.from({ length: 4 }, (_, index) => index);
 const RIVER_DETAIL_SKELETONS = Array.from({ length: 4 }, (_, index) => index);
@@ -93,6 +98,7 @@ export function Home() {
 
   return (
     <>
+      <PageMeta seo={HOME_SEO} jsonLd={homeJsonLd} />
       <main>
         <section id="schedule" className={styles.section}>
           <h1 className={styles.sectionTitle}>Выбрать сплав и записаться</h1>

@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { FAQ_ITEMS } from "@/data/faq";
+import { PageMeta } from "@/seo/PageMeta";
+import { buildFaqPageJsonLd } from "@/seo/jsonLd";
+import { FAQ_SEO } from "@/seo/pages";
 import styles from "./Faq.module.css";
+
+const faqJsonLd = buildFaqPageJsonLd();
 
 export function Faq() {
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
@@ -14,6 +19,7 @@ export function Faq() {
 
   return (
     <main className={styles.page}>
+      <PageMeta seo={FAQ_SEO} jsonLd={faqJsonLd} />
       <div className={styles.container}>
         <h1 className={styles.title}>Популярные вопросы</h1>
 

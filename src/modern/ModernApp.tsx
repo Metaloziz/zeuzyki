@@ -16,7 +16,12 @@ import { ScheduleSection } from "@/modern/sections/ScheduleSection";
 import { CorporateSection } from "@/modern/sections/CorporateSection";
 import { AboutSection } from "@/modern/sections/AboutSection";
 import { FaqSection } from "@/modern/sections/FaqSection";
+import { PageMeta } from "@/seo/PageMeta";
+import { buildHomeJsonLd } from "@/seo/jsonLd";
+import { HOME_SEO } from "@/seo/pages";
 import "./modern.css";
+
+const homeJsonLd = buildHomeJsonLd();
 
 export function ModernApp() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -79,6 +84,7 @@ export function ModernApp() {
 
   return (
     <SectionNavProvider>
+      <PageMeta seo={HOME_SEO} jsonLd={homeJsonLd} />
       <div className="modernRoot">
         <ModernHeader />
         <main>

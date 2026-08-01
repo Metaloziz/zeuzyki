@@ -1,10 +1,16 @@
 import { Badge, Group } from "@mantine/core";
 import { ABOUT_FEATURES, ABOUT_ROUTES } from "@/data/about";
+import { PageMeta } from "@/seo/PageMeta";
+import { buildLocalBusinessJsonLd } from "@/seo/jsonLd";
+import { ABOUT_SEO } from "@/seo/pages";
 import styles from "./About.module.css";
+
+const aboutJsonLd = buildLocalBusinessJsonLd();
 
 export function About() {
   return (
     <main className={styles.page}>
+      <PageMeta seo={ABOUT_SEO} jsonLd={aboutJsonLd} />
       <div className={styles.container}>
         <h1 className={styles.title}>Про нас</h1>
 
@@ -13,12 +19,13 @@ export function About() {
             <p className={styles.heroIntro}>
               <strong>ЖЭЎЖЫКІ</strong> — коллектив единомышленников с опытом
               походов более 10 лет. Организуем сборные и корпоративные сплавы
-              продолжительностью от нескольких часов до нескольких суток.
+              на байдарках недалеко от Минска — от нескольких часов до
+              нескольких суток.
             </p>
             <p className={styles.heroDescription}>
-              Специализируемся на маршрутах по рекам в северо-западной стороне
-              от Минска. Все наши маршруты несложные и безопасные — рассчитаны
-              на прохождение новичками и родителями с детьми.
+              Специализируемся на маршрутах по рекам северо-западнее Минска
+              (база на р. Илия — около 60 км). Все маршруты несложные и
+              безопасные — для новичков и родителей с детьми.
             </p>
             <p className={styles.heroDescription}>
               На реке Илия находится наша база и обустроенные стоянки со всем

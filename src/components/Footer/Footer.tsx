@@ -20,7 +20,7 @@ export function Footer() {
             ЖЭЎЖЫКІ
           </Link>
           <p className={styles.tagline}>
-            Байдарочные сплавы по живописным рекам Беларуси для новичков,
+            Байдарочные сплавы из Минска по рекам Беларуси для новичков,
             компаний и корпоративных команд.
           </p>
           <SocialLinks
@@ -48,7 +48,7 @@ export function Footer() {
 
       <div className={styles.bottom}>
         <DesignDevPanel year={currentYear} />
-        <span>Сплавы на байдарках в Беларуси</span>
+        <span>Байдарки Минск · сплавы ЖЭЎЖЫКІ</span>
       </div>
     </footer>
   );

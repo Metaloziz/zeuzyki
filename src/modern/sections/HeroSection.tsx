@@ -66,14 +66,15 @@ export function HeroSection() {
 
         <div className={styles.content}>
           <p className={styles.eyebrow} data-hero-item>
-            Беларусь · байдарки · природа
+            Минск · байдарки · природа
           </p>
           <h1 className={styles.title} data-hero-item>
             Сплавы, которые запомнятся
           </h1>
           <p className={styles.subtitle} data-hero-item>
-            Сборные и корпоративные маршруты для новичков и семей. Инструктаж,
-            комфорт на воде и тёплый финиш с чаем на берегу.
+            Байдарки и сплавы недалеко от Минска: сборные и корпоративные
+            маршруты для новичков и семей. Инструктаж, комфорт на воде и
+            тёплый финиш с чаем на берегу.
           </p>
           <div className={styles.actions} data-hero-item>
             <V2Button

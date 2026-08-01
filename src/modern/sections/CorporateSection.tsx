@@ -20,8 +20,8 @@ export function CorporateSection() {
           <p className={shellStyles.eyebrow}>Корпоратив</p>
           <h2 className={shellStyles.title}>Командные сплавы под ключ</h2>
           <p className={shellStyles.lead}>
-            Укрепите командный дух на реке Илия — с трансфером, питанием и
-            обустроенной базой.
+            Корпоративные байдарки из Минска: тимбилдинг на реке Илия — с
+            трансфером, питанием и обустроенной базой.
           </p>
         </div>
 

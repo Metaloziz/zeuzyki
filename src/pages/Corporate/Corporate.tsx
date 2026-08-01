@@ -5,19 +5,25 @@ import {
   CORPORATE_OPTIONS,
   TRUSTED_COMPANIES,
 } from "@/data/corporate";
+import { PageMeta } from "@/seo/PageMeta";
+import { buildLocalBusinessJsonLd } from "@/seo/jsonLd";
+import { CORPORATE_SEO } from "@/seo/pages";
 import styles from "./Corporate.module.css";
+
+const corporateJsonLd = buildLocalBusinessJsonLd();
 
 export function Corporate() {
   return (
     <main className={styles.page}>
+      <PageMeta seo={CORPORATE_SEO} jsonLd={corporateJsonLd} />
       <div className={styles.container}>
         <h1 className={styles.title}>Корпоративные сплавы</h1>
 
         <div className={styles.hero}>
           <div className={styles.heroText}>
             <p className={styles.heroIntro}>
-              Отличный способ укрепить командный дух и узнать свой коллектив с
-              новой стороны.
+              Корпоративные байдарки из Минска — отличный способ укрепить
+              командный дух и узнать коллектив с новой стороны.
             </p>
             <p className={styles.heroDescription}>
               Наши маршруты рассчитаны на новичков с учётом всех мер
@@ -33,7 +39,7 @@ export function Corporate() {
           <div className={styles.heroImage}>
             <img
               src={corporateHeroPhoto}
-              alt="Корпоративный сплав на байдарках"
+              alt="Корпоративный сплав на байдарках недалеко от Минска"
               className={styles.heroImg}
             />
           </div>

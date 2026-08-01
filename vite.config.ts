@@ -2,8 +2,7 @@ import path from "node:path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-// On GitHub Pages the app lives under /<repo-name>/.
-// Local dev uses root; workflow sets VITE_BASE=/zeuzyki/ for deploy.
+// Local dev uses root; custom domain deploy sets VITE_BASE=/.
 const base = process.env.VITE_BASE ?? "/";
 
 export default defineConfig({
