@@ -2,7 +2,7 @@ import path from "node:path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-// Local dev uses root; custom domain deploy sets VITE_BASE=/.
+// Local/prod host uses VITE_BASE=/ ; GitHub Pages test stand uses /zeuzyki/.
 const base = process.env.VITE_BASE ?? "/";
 
 export default defineConfig({

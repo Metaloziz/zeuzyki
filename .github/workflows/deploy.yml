@@ -43,8 +43,9 @@ jobs:
       - name: Build
         run: yarn build
         env:
-          # Custom domain https://zeuzyki.by/ is served from site root.
-          VITE_BASE: /
+          # GitHub Pages project site: https://<user>.github.io/zeuzyki/
+          VITE_BASE: /zeuzyki/
+          # Canonical/OG always point at the real domain (prod hosting).
           VITE_SITE_URL: https://zeuzyki.by
           # Configure in GitHub -> Settings -> Secrets and variables -> Actions
           VITE_GAS_API_KEY: ${{ secrets.VITE_GAS_API_KEY || vars.VITE_GAS_API_KEY }}

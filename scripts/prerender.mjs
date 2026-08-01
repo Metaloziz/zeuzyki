@@ -1,6 +1,9 @@
 /**
  * Build-time prerender for SEO: serve dist, visit key routes with Playwright,
  * write static HTML shells Google can index without waiting on CSR.
+ *
+ * Respects VITE_BASE (e.g. /zeuzyki/ on GitHub Pages, / on production host).
+ * Strips localhost absolute URLs that Playwright serializes into the DOM.
  */
 import { createServer } from "node:http";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -12,6 +15,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(__dirname, "..", "dist");
 const PORT = 4179;
 const ORIGIN = `http://127.0.0.1:${PORT}`;
+
+/** "" | "/zeuzyki" — no trailing slash */
+const BASE = (process.env.VITE_BASE ?? "/").replace(/\/$/, "");
 
 const ROUTES = [
   { path: "/", out: "index.html", titleIncludes: "Байдарки Минск" },
@@ -41,15 +47,23 @@ const MIME = {
   ".xml": "application/xml",
 };
 
+function stripBase(urlPath) {
+  if (!BASE) return urlPath || "/";
+  if (urlPath === BASE || urlPath === `${BASE}/`) return "/";
+  if (urlPath.startsWith(`${BASE}/`)) return urlPath.slice(BASE.length);
+  return urlPath;
+}
+
 async function fileFromUrl(urlPath) {
-  const clean = decodeURIComponent(urlPath.split("?")[0].split("#")[0]);
+  const clean = stripBase(
+    decodeURIComponent(urlPath.split("?")[0].split("#")[0]),
+  );
   const relative =
     clean === "/" || clean === ""
       ? "index.html"
       : clean.replace(/^\//, "").replace(/\/$/, "") +
         (extname(clean) ? "" : "/index.html");
 
-  // Prefer exact file, then SPA fallback to root index.html
   const candidates = [
     join(distDir, relative),
     join(distDir, clean.replace(/^\//, "")),
@@ -78,7 +92,9 @@ function startStaticServer() {
           res.end("Not found");
           return;
         }
-        const type = MIME[extname(found.filePath).toLowerCase()] || "application/octet-stream";
+        const type =
+          MIME[extname(found.filePath).toLowerCase()] ||
+          "application/octet-stream";
         res.writeHead(200, { "Content-Type": type });
         res.end(found.data);
       } catch (err) {
@@ -90,8 +106,21 @@ function startStaticServer() {
   });
 }
 
+/** Playwright serializes some attrs as absolute localhost URLs — undo that. */
+function sanitizeHtml(html) {
+  return html
+    .replaceAll(`${ORIGIN}`, "")
+    .replaceAll(`http://localhost:${PORT}`, "")
+    .replaceAll(`http://127.0.0.1:${PORT}`, "");
+}
+
 async function prerenderRoute(page, route) {
-  await page.goto(`${ORIGIN}${route.path}`, {
+  const urlPath =
+    route.path === "/"
+      ? `${BASE}/` || "/"
+      : `${BASE}${route.path}`;
+
+  await page.goto(`${ORIGIN}${urlPath}`, {
     waitUntil: "load",
     timeout: 60_000,
   });
@@ -104,17 +133,17 @@ async function prerenderRoute(page, route) {
     { timeout: 60_000 },
   );
 
-  // Give layout effects a tick to flush meta tags.
   await new Promise((r) => setTimeout(r, 400));
 
-  const html = await page.content();
+  const html = sanitizeHtml(await page.content());
   const outPath = join(distDir, route.out);
   await mkdir(dirname(outPath), { recursive: true });
   await writeFile(outPath, html, "utf8");
-  console.log(`[prerender] ${route.path} → ${route.out}`);
+  console.log(`[prerender] ${urlPath} → ${route.out}`);
 }
 
 async function main() {
+  console.log(`[prerender] VITE_BASE=${BASE || "/"}`);
   const server = await startStaticServer();
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
